@@ -1,5 +1,7 @@
-'use strict';
-module.exports = function(app) {
+  var express = require('express')
+  var app = express()
+
+  const router = new express.Router();
   var blogPosts = require('../controllers/blogPostController');
 
   // todoList Routes
@@ -12,4 +14,5 @@ module.exports = function(app) {
     .get(blogPosts.read_a_blogpost)
     .put(blogPosts.update_a_blogpost)
     .delete(blogPosts.delete_a_blogpost);
-};
+
+  module.exports = app;
