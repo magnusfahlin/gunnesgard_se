@@ -1,3 +1,7 @@
+
+var fs = require('fs');
+var http = require('http');
+var https = require('https');
 const express = require('express');
 const bodyParser = require('body-parser');
 const passport = require('passport');
@@ -6,7 +10,16 @@ const config = require('./config');
 // connect to the database and load models
 require('./server/models').connect(config.dbUri);
 
-const app = express();
+// certs
+var privateKey  = fs.readFileSync(config.certKey).toString();
+var certificate = fs.readFileSync(config.cert).toString();
+
+var credentials = {key: privateKey, cert: certificate};
+
+var app = express();
+var httpServer = http.createServer(app);
+var httpsServer = https.createServer(credentials, app);
+
 // tell the app to look for static files in these directories
 app.use(express.static('./server/static/'));
 app.use(express.static('./client/dist/'));
@@ -33,8 +46,10 @@ const apiRoutes = require('./server/routes/api2');
 app.use('/auth', authRoutes);
 app.use('/api', apiRoutes);
 
+httpServer.listen(3000);
+httpsServer.listen(3001);
 
 // start the server
-app.listen(3000, () => {
-  console.log('Server is running on http://localhost:3000 or http://127.0.0.1:3000');
-});
+// app.listen(3000, () => {
+//   console.log('Server is running on http://localhost:3000 or http://127.0.0.1:3000');
+// });

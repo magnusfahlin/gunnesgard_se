@@ -1,5 +1,6 @@
 mongo_data
 client/dist/
+certificates/
 
 # Logs
 logs
