@@ -11,10 +11,9 @@ const axios = require('axios')
 // remove tap delay, essential for MaterialUI to work properly
 injectTapEventPlugin();
 
-axios.interceptors.request.use(request => {
-  axios.defaults.headers.common['Authorization'] = 'bearer ' + Auth.getToken();
-  return request;
-});
+axios.defaults.headers.common['Authorization'] = 'bearer ' + Auth.getToken();
+axios.defaults.headers.common['Cache-Control'] = 'no-cache, no-store, must-revalidate';
+
 
 ReactDom.render((
   <MuiThemeProvider muiTheme={getMuiTheme()}>

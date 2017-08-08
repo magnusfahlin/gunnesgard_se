@@ -1,6 +1,7 @@
 mongo_data
 client/dist/
 certificates/
+.vscode
 
 # Logs
 logs
