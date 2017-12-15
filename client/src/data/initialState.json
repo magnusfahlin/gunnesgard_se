@@ -1,0 +1,53 @@
+{
+    "authentication" : 
+      {
+        "type" : "LOGOUT_SUCCESS",
+         "username" : ""},
+    "blogpost" :
+    {
+        "type": "LOGOUT_SUCCESS",
+        "showAddComment": false,
+        "showComments": false
+
+    },
+    "Calendar" : 
+    [
+      {
+        "title" : "Julafton",
+        "date" : "2017-12-24"
+      },
+      {
+        "title" : "Bosse fyller år!",
+        "date" : "2017-12-24"
+      }
+    ],
+    "menu" : 
+    [
+      {
+        "topic" : "Home",
+        "link": "/home"
+      },
+      {
+        "topic" : "Blog",
+        "link": "/blog"
+      }
+    ],
+"BlogPosts" :
+  [
+      {
+        "title": "Title",
+        "Created_date" : "2017-01-01",
+        "text": "sfdsfdfsfdssdfsdffdsfds",
+        
+        "author": "Inger",
+        "location": "Lund"
+      },
+      {
+        "title": "Hej",
+        "Created_date": "2017-01-01",
+        "text": "text2text3  fsdf",
+        "author": "Inger",
+        "location": "Lund"
+      }
+    ]
+}
