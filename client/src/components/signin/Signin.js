@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom'
-import * as signInActions from '../../actions'
+import * as authActions from '../../actioncreators/authentication.js'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux';
-import C from './../../constants'
+import {LOGIN_SUCCESS_USER, LOGOUT_SUCCESS} from '../../actionTypes'
 
     let _user
     let _password;
 
 class Signin extends React.Component {
      render() {
-         if (this.props.type == C.LOGOUT_SUCCESS)
+         if (this.props.type == LOGOUT_SUCCESS)
          {
               return(<div className='signin'>
                   Logga in
@@ -37,7 +37,7 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return {actions: bindActionCreators(signInActions, dispatch)}
+  return {actions: bindActionCreators(authActions, dispatch)}
 }
 
 

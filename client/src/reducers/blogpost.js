@@ -1,23 +1,24 @@
-import C from '../constants'
-import initialState from './../data/initialState'
+import { POST_SHOW_FEATURES, POST_HIDE_FEATURES } from "./../actionTypes";
+import initialState from "./../data/initialState";
 
 const blogpost = (state = initialState.blogpost, action) => {
-    switch (action.type) {
-        case C.LOGIN_SUCCESS_USER:
-            return {
-                ...state,
-                type: action.type,
-                showAddComment: true,
-                showComments: true
-            }
-        default:
-            return {
-                    ...state,
-                    type: action.type,
-                    showAddComment: false,
-                    showComments: false
-                }
-    }
-}
+  switch (action.type) {
+    case POST_SHOW_FEATURES:
+      return {
+        type: action.type,
+        showAddComment: true,
+        showComments: true
+      };
+    case POST_HIDE_FEATURES:
+      return {
+        type: action.type,
+        showAddComment: false,
+        showComments: false
+      };
+
+    default:
+      return state
+  }
+};
 
 export default blogpost;

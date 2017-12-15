@@ -6,6 +6,7 @@ import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import rootReducer from './reducers/'
 import thunk from "redux-thunk"
+import multi from 'redux-multi'
 import { logger } from 'redux-logger'
 
 //import registerServiceWorker from './registerServiceWorker'; TODO remove?
@@ -14,7 +15,7 @@ import { logger } from 'redux-logger'
 //const store = storeFactory();
 const store = createStore(
     rootReducer,
-    applyMiddleware(thunk, logger)
+    applyMiddleware(thunk, multi, logger)
 )
 
 render(

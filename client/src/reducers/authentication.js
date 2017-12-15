@@ -1,15 +1,15 @@
-import C from '../constants'
+import {LOGIN_SUCCESS_USER, LOGOUT_SUCCESS} from '../actionTypes'
 import initialState from './../data/initialState'
 
 const authentication = (state = initialState.authentication, action) => {
     switch (action.type) {
-        case C.LOGIN_SUCCESS_USER:
+        case LOGIN_SUCCESS_USER:
             return {
                 ...state,
                 type: action.type,
                 username: action.username
             }
-        case C.LOGOUT_SUCCESS:
+        case LOGOUT_SUCCESS:
             return {
                     ...state,
                     type: action.type,
