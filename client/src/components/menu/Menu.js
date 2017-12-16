@@ -15,6 +15,11 @@ const menuItems = [
     showAlways: false
   },
   {
+    topic: "Skriv inlägg",
+    link: "/editor",
+    showAlways: false
+  },
+  {
     topic: "Mina Uppgifter",
     link: "/myaccount",
     showAlways: false

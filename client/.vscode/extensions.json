@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        "formulahendry.auto-close-tag",
+        "dzannotti.vscode-babel-coloring",
+        "HookyQR.beautify",
+        "msjsdiag.debugger-for-chrome",
+        "dbaeumer.vscode-eslint",
+        "xabikos.javascriptsnippets",
+        "eg2.vscode-npm-script",
+        "christian-kohler.npm-intellisense",
+        "esbenp.prettier-vscode",
+        "ms-vsts.team",
+        "robertohuertasm.vscode-icons"
+    ]
+}

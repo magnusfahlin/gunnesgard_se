@@ -1,7 +1,7 @@
 mongo_data
 client/dist/
 certificates/
-.vscode
+*.TMP
 
 # Logs
 logs

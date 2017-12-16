@@ -58,7 +58,6 @@ body {
   font-size: 14px;
 }
 
-
 #right {
     text-align: left;
     font-size: 14px;
@@ -123,6 +122,16 @@ body {
 {
   text-decoration: underline;
 }
+
+.editor{
+    text-align: center;
+}
+.editor textarea
+{
+  width: 250px;
+  height: 250px;
+}
+
 
 /*
 .blogPosts

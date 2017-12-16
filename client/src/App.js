@@ -5,6 +5,7 @@ import BlogPosts from './components/blogposts/BlogPosts.js';
 import Menu from './components/menu/Menu.js'
 import Signin from './components/signin/Signin.js'
 import Calendar from './components/calendar/Calendar.js'
+import Editor from './components/editor/Editor.js'
 import stateData from './data/initialState'
 import PropTypes from 'prop-types';
 
@@ -19,7 +20,8 @@ const App = ({store}) =>
               <div id='center'>
                 <Route path="/blog" component={() => <BlogPosts BlogPosts={stateData.BlogPosts}/>}/>
                 <Route path="/(|home)" component={() => <BlogPosts BlogPosts={stateData.BlogPosts}/>}/> 
-                 <Route path="/myaccount" component={() => <BlogPosts BlogPosts={stateData.BlogPosts}/>}/> 
+                <Route path="/myaccount" component={() => <BlogPosts BlogPosts={stateData.BlogPosts}/>}/> 
+                <Route path="/editor" component={() => <Editor/>}/> 
               </div>
               <div id='right'>
                 <Signin/>
