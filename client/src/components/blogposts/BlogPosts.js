@@ -10,14 +10,14 @@ class BlogPosts extends Component {
 
     render() {
         let blogPostItems;
-        if (this.props.BlogPosts && this.props.BlogPosts.length > 0) {
-            blogPostItems = this.props.BlogPosts.map(post =>
+        if (this.props.posts) {
+            blogPostItems = this.props.posts.map(post =>
             <BlogPost
                 title={post.title} 
                 text={post.text}
                 author={post.author}
                 location={post.location}
-                date={post.date}
+                date={post.date ? post.date.toLocaleTimeString('sv-SE',  {year: 'numeric', month: 'short', day: 'numeric'}) : ""}
                 showAddComment={this.props.showAddComment}/>
                 );
         }
@@ -29,21 +29,15 @@ class BlogPosts extends Component {
     }
 }
 
-
-
-BlogPosts.propTypes = {
-    blogPosts: PropTypes.array
-}
-
 function mapStateToProps(state) {   
     return {
-        showAddComment:  state.blogpost.showAddComment,
-        showComments:  state.blogpost.showComments
+        posts : state.posts.posts,
+        showAddComment:  state.postViewer.showAddComment,
+        showComments:  state.postViewer.showComments
     }
 }
 
 function mapDispatchToProps(dispatch) {
-    return {};
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(BlogPosts);

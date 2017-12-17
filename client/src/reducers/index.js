@@ -1,11 +1,12 @@
 import {combineReducers} from 'redux';
 import authentication from './authentication';
 import menu from './menu';
-import blogpost from './blogpost';
-
+import postViewer from './postViewer';
+import posts from './posts';
 const rootReducer = combineReducers({
   authentication,
-  blogpost,
+  posts,
+  postViewer,
   menu
 })
 
