@@ -1,0 +1,27 @@
+{
+  "name": "gunnesgard_se_v2",
+  "version": "1.0.0",
+  "description": "<h1>Gunnesgard Version 2</h1>",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/magnusfahlin/gunnesgard_se_v2.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/magnusfahlin/gunnesgard_se_v2/issues"
+  },
+  "homepage": "https://github.com/magnusfahlin/gunnesgard_se_v2#readme",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "lodash": "^4.17.4",
+    "mongodb": "^3.0.0-rc0",
+    "mongoose": "^4.13.7"
+  }
+}

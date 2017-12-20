@@ -17,7 +17,7 @@
   ],
   "menu": { "type": "MENU_SHOW_DEFAULT" },
   "posts": {
-    "type": "POSTS_LOADED_SUCCESS", 
+    "type": "POSTS_FETCH_REQUEST", 
     "posts" : [
       {
         "title": "Title",
