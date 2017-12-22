@@ -1,6 +1,7 @@
-const mongoose = require('mongoose') // 1
- 
-const Post = mongoose.model('post', { // 2
+const mongoose = require("mongoose"); // 1
+
+const Post = mongoose.model("post", {
+  // 2
   title: {
     type: String,
     required: false,
@@ -21,14 +22,14 @@ const Post = mongoose.model('post', { // 2
   },
   date: {
     type: Date,
-    required: false,
+    required: false
   },
   userId: {
     type: String,
     required: false,
     minlength: 1,
     trim: true
-  },
-})
- 
-module.exports = {Post} 
+  }
+});
+
+module.exports = { Post };

@@ -15,7 +15,7 @@ export default function postsReducer (state = initialState.posts, action) {
     case POSTS_FETCH_SUCCESS:{
       return {
         "type": action.type,
-        "posts" : action.result.post};
+        "posts" : action.result};
     }
     case POSTS_FETCH_FAILURE: {
       return action;
