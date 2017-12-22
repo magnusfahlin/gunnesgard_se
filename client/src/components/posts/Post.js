@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
-class BlogPost extends Component {
+class Post extends Component {
       constructor(props) {
           super(props);
       }
@@ -24,7 +24,7 @@ class BlogPost extends Component {
       }
 }
 
-BlogPost.propTypes = {
+Post.propTypes = {
     title: PropTypes.string,
     text: PropTypes.string,
     author: PropTypes.string,
@@ -33,4 +33,4 @@ BlogPost.propTypes = {
     showAddComment: PropTypes.bool
 }
 
-export default BlogPost;
+export default Post;

@@ -1,16 +1,14 @@
-import { POSTS_CREATE_POST, POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE } from '../actionTypes'
-import { thunkCreator, getApi } from './utils'
+import { POSTS_CREATE_SUCCESS, POSTS_CREATE_FAILURE, POSTS_CREATE_REQUEST, POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE } from '../actionTypes'
+import { thunkCreator, getApi, postApi } from './utils'
 
-export const createPost = (username, title, text, location) => {
-
-  return {
-    type: POSTS_CREATE_POST,
-    post: { author: username, title, text, location, date : new Date() },
-  }
-}
+export const createPost = (username, title, text, location) => thunkCreator({
+  types: [ POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE ],
+  promise: postApi("posts", { author: username, title, text, location, date : new Date() })
+             .then(response => response.json())
+})
 
 export const fetchPosts = () => thunkCreator({
   types: [ POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE ],
-  promise: getApi("post")
+  promise: getApi("posts")
              .then(response => response.json())
 })

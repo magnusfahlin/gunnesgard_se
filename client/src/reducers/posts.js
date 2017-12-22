@@ -1,9 +1,9 @@
-import { POSTS_CREATE_POST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE } from "../actionTypes";
+import { POSTS_CREATE_SUCCESS, POSTS_CREATE_FAILURE, POSTS_CREATE_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE } from "../actionTypes";
 import initialState from "./../data/initialState";
 
 export default function postsReducer (state = initialState.posts, action) {
   switch (action.type) {
-    case POSTS_CREATE_POST: {
+    case POSTS_CREATE_SUCCESS: {
       const { type, post } = action
       const ts = Date.now()
       return {
@@ -19,18 +19,14 @@ export default function postsReducer (state = initialState.posts, action) {
     }
     case POSTS_FETCH_FAILURE: {
       return action;
-      //const { type, post } = action
-     // return [ ...state, post ]
-    //   const { type, post } = action
-    //   const ts = Date.now()
-    //   return [
-    //     ...state,
-    //     { ...post, date: ts},
-    //   ]
     }
-
+    case POSTS_CREATE_REQUEST:
+    case POSTS_CREATE_FAILURE:
+    case POSTS_CREATE_SUCCESS: {
+      return action;
+    }
     default:
-      return state
+    return state
   }
 }
 

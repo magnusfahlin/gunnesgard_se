@@ -1,7 +1,7 @@
 import { POST_VIEWER_SHOW_FEATURES, POST_VIEWER_HIDE_FEATURES } from "./../actionTypes";
 import initialState from "./../data/initialState";
 
-const postViewer = (state = initialState.blogpost, action) => {
+const postViewer = (state = initialState.posts, action) => {
   switch (action.type) {
     case POST_VIEWER_SHOW_FEATURES:
       return {

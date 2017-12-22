@@ -19,7 +19,7 @@ app.use(function(req, res, next) {
 });
 
  
-app.post('/post', (req, res) => {
+app.post('/posts', (req, res) => {
   let todo = new Post({
     title: req.body.title,
     location: req.body.location,
@@ -37,7 +37,7 @@ app.post('/post', (req, res) => {
 })
 
 // GET HTTP request is called on /post path
-app.get('/post', (req, res) => {
+app.get('/posts', (req, res) => {
  
   // Calls find function on Post
   Post.find().then((post) => {
@@ -48,7 +48,7 @@ app.get('/post', (req, res) => {
 })
  
 // GET HTTP request is called to retrieve individual post
-app.get('/post/:id', (req, res) => {
+app.get('/posts/:id', (req, res) => {
   let id = req.params.id
   
   // Validates id
@@ -67,7 +67,7 @@ app.get('/post/:id', (req, res) => {
 })
  
 // HTTP DELETE request routed to /post/:id
-app.delete('/post/:id', (req, res) => {
+app.delete('/posts/:id', (req, res) => {
  
   let id = req.params.id
   // Validates id
@@ -92,7 +92,7 @@ app.delete('/post/:id', (req, res) => {
 })
  
 // HTTP PATCH requested routed to /post/:id
-app.patch('/post/:id', (req, res) => {
+app.patch('/posts/:id', (req, res) => {
   let id = req.params.id
  
   //  Creates an object called body of the picked values (text and completed), from the response gotten

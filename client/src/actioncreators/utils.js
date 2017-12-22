@@ -25,3 +25,13 @@ export const getApi = (path) =>  fetch('http://localhost:3001/' + path,
       'Accept': 'application/json',
     },
     cache: 'no-store'});
+
+    export const postApi = (path, data) =>  fetch('http://localhost:3001/' + path,
+{
+    method: 'POST',
+    headers: {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+    },
+    cache: 'no-store',
+    body: JSON.stringify(data)});

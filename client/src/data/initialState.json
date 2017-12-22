@@ -4,7 +4,7 @@
     "username": "",
     "userId" : "123"
   },
-  "blogpost": { "type": "POST_HIDE_FEATURES" },
+  "posts": { "type": "POST_HIDE_FEATURES" },
   "Calendar": [
     {
       "title": "Julafton",
@@ -15,25 +15,5 @@
       "date": "2017-12-24"
     }
   ],
-  "menu": { "type": "MENU_SHOW_DEFAULT" },
-  "posts": {
-    "type": "POSTS_FETCH_REQUEST", 
-    "posts" : [
-      {
-        "title": "Title",
-        "Created_date": "2017-01-01",
-        "text": "sfdsfdfsfdssdfsdffdsfds",
-
-        "author": "Inger",
-        "location": "Lund"
-      },
-      {
-        "title": "Hej",
-        "Created_date": "2017-01-01",
-        "text": "text2text3  fsdf",
-        "author": "Inger",
-        "location": "Lund"
-      }
-    ]
-  }
+  "menu": { "type": "MENU_SHOW_DEFAULT" }
 }
