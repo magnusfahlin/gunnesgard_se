@@ -9,6 +9,6 @@ export const createPost = (username, title, text, location) => thunkCreator({
 
 export const fetchPosts = () => thunkCreator({
   types: [ POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE ],
-  promise: getApi("posts")
+  promise: getApi("posts?sort=date&sortOrder=desc")
              .then(response => response.json())
 })

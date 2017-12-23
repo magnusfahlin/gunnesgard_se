@@ -30,7 +30,7 @@ class Posts extends Component {
         <Post
           title={post.title}
           text={post.text}
-          author={post.userId}
+          author={post.userName}
           location={post.location}
           date={post.date}
           showAddComment={this.props.showAddComment}
@@ -38,8 +38,11 @@ class Posts extends Component {
       ));
     } else if (this.props.type == POSTS_FETCH_REQUEST) {
       postItems = <Spinner />;
-    } else {
+    } else if (this.props.type == POSTS_FETCH_FAILURE){
       postItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
+    }
+    else{
+      return <div></div>
     }
 
     return <div className="blogPosts">{postItems}</div>;

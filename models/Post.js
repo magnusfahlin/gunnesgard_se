@@ -24,7 +24,7 @@ const Post = mongoose.model("post", {
     type: Date,
     required: false
   },
-  userId: {
+  userName: {
     type: String,
     required: false,
     minlength: 1,

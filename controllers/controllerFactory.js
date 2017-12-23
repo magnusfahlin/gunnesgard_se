@@ -15,7 +15,14 @@ const createController = function(app, entityName, model, parseRequest) {
 
   // GET HTTP request is called on /[entityName] path
   app.get(entityPath, (req, res) => {
-    model.find().then(
+    
+    let sort = {};
+    if(req.query.sort)
+    {
+      sort[req.query.sort] = req.query.sortOrder === "desc" ? -1 : 1;
+    }
+
+    model.find().sort(sort).then(
       entity => {
         res.send(entity);
       },
