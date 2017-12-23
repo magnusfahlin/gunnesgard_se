@@ -1,7 +1,7 @@
 var mysql = require("mysql");
 var MongoClient = require("mongodb").MongoClient;
 
-const dropDb = function(mongoPort, dbName) {
+const dropDb = function(mongoPort, dbName, callback) {
   MongoClient.connect(
     "mongodb://localhost:" + mongoPort + "/" + dbName,
     { native_parser: true },
@@ -17,6 +17,9 @@ const dropDb = function(mongoPort, dbName) {
           clearInterval(interval);
           console.log("Done! Dropped " + dbName);
           db.close();
+
+          if(callback)
+            callback();
         }
       }, 300);
     }

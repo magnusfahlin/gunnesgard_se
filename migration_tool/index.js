@@ -40,6 +40,27 @@ function transform(data) {
 
   transformedData.comments = commentsArray;
 
+  let calendarArray = [];
+  data.kalender2.forEach(function(element) {
+
+    let userName = "";
+    data.users.forEach(function(user) {
+      if ( user.user_id == element.userid)
+      userName = user.username;
+    }, this);
+
+    calendarArray.push({
+      _id: element._id,
+      date: element.datum,
+      title: element.name,
+      text: element.descr,
+      recurring: element.aterkommande ? true : false,
+      userName: userName
+    });
+  }, this);
+
+  transformedData.calendar = calendarArray;
+
   return transformedData;
 }
 
