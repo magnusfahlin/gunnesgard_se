@@ -1,32 +1,71 @@
-import { POSTS_CREATE_SUCCESS, POSTS_CREATE_FAILURE, POSTS_CREATE_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE } from "../actionTypes";
+import {
+  POSTS_CREATE_SUCCESS,
+  POSTS_CREATE_FAILURE,
+  POSTS_CREATE_REQUEST,
+  POSTS_FETCH_REQUEST,
+  POSTS_FETCH_SUCCESS,
+  POSTS_FETCH_FAILURE,
+  LOGIN_SUCCESS_USER,
+  LOGOUT_SUCCESS
+} from "../actionTypes";
 import initialState from "./../data/initialState";
+import * as postActions from "./../actioncreators/posts.js";
 
-export default function postsReducer (state = initialState.posts, action) {
+export default function postsReducer(state = initialState.posts, action) {
   switch (action.type) {
-    case POSTS_CREATE_SUCCESS: {
-      const { type, post } = action
-      const ts = Date.now()
+    case POSTS_FETCH_REQUEST: {
       return {
         ...state,
-        type : POSTS_FETCH_SUCCESS,
-        posts :  [...state.posts, action.post]
-      }
+        loading: true,
+        error: false
+      };
     }
-    case POSTS_FETCH_SUCCESS:{
+    case POSTS_FETCH_SUCCESS: {
       return {
-        "type": action.type,
-        "posts" : action.result};
+        loading: false,
+        error: false,
+        posts: action.result
+      };
     }
     case POSTS_FETCH_FAILURE: {
-      return action;
+      return {
+        ...state,
+        loading: false,
+        error: true
+      };
     }
-    case POSTS_CREATE_REQUEST:
-    case POSTS_CREATE_FAILURE:
+    case POSTS_CREATE_REQUEST: {
+      return {
+        ...state,
+        loading: true,
+        error: false
+      };
+    }
     case POSTS_CREATE_SUCCESS: {
-      return action;
+      return () => postActions.fetchPosts();
+    }
+    case POSTS_CREATE_FAILURE: {
+      return {
+        ...state,
+        loading: false,
+        error: true
+      };
+    }
+    case LOGIN_SUCCESS_USER: {
+      return {
+        ...state,
+        showAddComment: true,
+        showComments: true
+      };
+    }
+    case LOGOUT_SUCCESS: {
+      return {
+        ...state,
+        showAddComment: false,
+        showComments: false
+      };
     }
     default:
-    return state
+      return state;
   }
 }
-

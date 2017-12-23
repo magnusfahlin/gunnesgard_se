@@ -25,7 +25,7 @@ class Posts extends Component {
   render() {
     let postItems;
 
-    if (this.props.type == POSTS_FETCH_SUCCESS && this.props.posts) {
+    if (!this.props.loading && !this.props.error) {
       postItems = this.props.posts.map(post => (
         <Post
           title={post.title}
@@ -34,11 +34,12 @@ class Posts extends Component {
           location={post.location}
           date={post.date}
           showAddComment={this.props.showAddComment}
+          showComments={this.props.showComments}
         />
       ));
-    } else if (this.props.type == POSTS_FETCH_REQUEST) {
+    } else if (this.props.loading) {
       postItems = <Spinner />;
-    } else if (this.props.type == POSTS_FETCH_FAILURE){
+    } else if (this.props.error){
       postItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
     }
     else{
@@ -51,10 +52,11 @@ class Posts extends Component {
 
 function mapStateToProps(state) {
   return {
-    type: state.posts.type,
+    loading: state.posts.loading,
+    error: state.posts.error,
     posts: state.posts.posts,
-    showAddComment: state.postViewer.showAddComment,
-    showComments: state.postViewer.showComments
+    showAddComment: state.posts.showAddComment,
+    showComments: state.posts.showComments
   };
 }
 
