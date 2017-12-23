@@ -2,9 +2,16 @@
   "authentication": {
     "type": "LOGOUT_SUCCESS",
     "username": "",
-    "userId" : "123"
+    "userId": "123"
   },
-  "posts": { "type": "POST_HIDE_FEATURES" },
+  "posts": {
+    "type": "POSTS_CREATE_REQUEST",
+    "loading": true,
+    "error": false,
+    "posts": [],
+    "showAddComment": true,
+    "showComments": true
+  },
   "Calendar": [
     {
       "title": "Julafton",
