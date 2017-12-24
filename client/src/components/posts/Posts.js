@@ -34,7 +34,7 @@ class Posts extends Component {
           location={post.location}
           date={post.date}
           showAddComment={this.props.showAddComment}
-          showComments={this.props.showComments}
+          comments={post.comments}
         />
       ));
     } else if (this.props.loading) {

@@ -1,4 +1,24 @@
-const mongoose = require("mongoose"); // 1
+const mongoose = require("mongoose");
+const Schema = require("mongoose").Schema;
+
+const CommentSchema = new Schema({
+  text: {
+    type: String,
+    required: false,
+    minlength: 1,
+    trim: true
+  },
+  date: {
+    type: Date,
+    required: false,
+  },
+  userId: {
+    type: String,
+    required: false,
+    minlength: 1,
+    trim: true
+  }
+});
 
 const Post = mongoose.model("post", {
   // 2
@@ -23,6 +43,9 @@ const Post = mongoose.model("post", {
   date: {
     type: Date,
     required: false
+  },
+  comments: {
+    type: [CommentSchema]
   },
   userName: {
     type: String,

@@ -1,5 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
+import Comment from "./../comments/Comment";
+import CommentEditor from "./../comments/CommentEditor";
 
 class Post extends Component {
   constructor(props) {
@@ -8,9 +10,16 @@ class Post extends Component {
 
   render() {
     let showAddComment;
+    let comments;
+    let commentEditor;
     if (this.props.showAddComment) {
       showAddComment = <div>Kommentera</div>;
     }
+    if (this.props.comments) {
+      comments = this.props.comments.map((item) =>
+          <Comment comment={item}/>)
+    }
+    commentEditor = <CommentEditor/>;
     return (
       <div className="blogPost">
         <div className="title">{this.props.title}</div>
@@ -27,7 +36,11 @@ class Post extends Component {
         <div className="author">
           av {this.props.author}, {this.props.location} {this.props.date}
         </div>
-        {showAddComment}
+       {showAddComment}
+       <div>
+        {comments}
+        </div>
+        {commentEditor}
         <hr />
       </div>
     );

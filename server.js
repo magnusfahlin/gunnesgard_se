@@ -11,7 +11,6 @@ const {Post} = require('./models/post')   // 7
 const app = express()   // 8
 const port = process.env.PORT || 3000  // 9
 
-const { registerComment } = require('./controllers/comment')
 const { registerEvent } = require('./controllers/event')
 const { registerPost } = require('./controllers/post')
 const { registerUser } = require('./controllers/user')
@@ -25,7 +24,6 @@ app.use(function(req, res, next) {
 
 registerPost(app);
 registerEvent(app);
-registerComment(app);
 registerUser(app);
  
 // Listens for connection on the given port
