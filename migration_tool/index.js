@@ -7,12 +7,27 @@ function transform(data) {
 
   let postsArray = [];
   data.nyblog.forEach(function(element) {
+    let comments = [];
+    data.comments.forEach(function(comment) {
+      if (element.id == comment.blogid) {
+
+        comments.push({
+          _id: element._id,
+          text: element.text,
+          date: element.date,
+          userName: element.namn
+        });
+        
+      }
+    }, this);
+
     postsArray.push({
       _id: element._id,
       title: element.rubrik,
       text: element.text,
       location: element.plats,
       date: element.date,
+      comments: comments,
       galleryId: element.albumId,
       userName: element.namn
     });
@@ -20,33 +35,31 @@ function transform(data) {
 
   transformedData.posts = postsArray;
 
-  let commentsArray = [];
-  data.comments.forEach(function(element) {
-    let postId;
-    data.nyblog.forEach(function(oldBlogPost) {
-      postId = oldBlogPost._id;
-    }, this);
+  // let commentsArray = [];
+  // data.comments.forEach(function(element) {
+  //   // let postId;
+  //   // data.nyblog.forEach(function(oldBlogPost) {
+  //   //   postId = oldBlogPost._id;
+  //   // }, this);
 
-    if (!postId) throw error;
+  //   // if (!postId) throw error;
 
-    commentsArray.push({
-      _id: element._id,
-      text: element.text,
-      date: element.date,
-      postId: postId,
-      userName: element.namn
-    });
-  }, this);
+  //   commentsArray.push({
+  //     _id: element._id,
+  //     text: element.text,
+  //     date: element.date,
+  //    // postId: postId,
+  //     userName: element.namn
+  //   });
+  // }, this);
 
-  transformedData.comments = commentsArray;
+  // transformedData.comments = commentsArray;
 
   let calendarArray = [];
   data.kalender2.forEach(function(element) {
-
     let userName = "";
     data.users.forEach(function(user) {
-      if ( user.user_id == element.userid)
-      userName = user.username;
+      if (user.user_id == element.userid) userName = user.username;
     }, this);
 
     calendarArray.push({

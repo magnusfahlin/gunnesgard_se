@@ -15,14 +15,15 @@ const createController = function(app, entityName, model, parseRequest) {
 
   // GET HTTP request is called on /[entityName] path
   app.get(entityPath, (req, res) => {
-    
     let sort = {};
-    if(req.query.sort)
-    {
+    var find = model.find();
+    
+    if (req.query.sort) {
       sort[req.query.sort] = req.query.sortOrder === "desc" ? -1 : 1;
+      find = find.sort(sort);
     }
 
-    model.find().sort(sort).then(
+    find.sort(sort).then(
       entity => {
         res.send(entity);
       },
@@ -41,7 +42,8 @@ const createController = function(app, entityName, model, parseRequest) {
       return res.status(404).send("ID is not valid");
     }
 
-    model.findById(id)
+    model
+      .findById(id)
       .then(entity => {
         if (!entity) {
           return res.status(404).send();
@@ -103,7 +105,8 @@ const createController = function(app, entityName, model, parseRequest) {
 
     // Finds a todo with id that matches the retrieved id.
     // Sets the body of the retrieved id to a new one
-    model.findOneAndUpdate(id, { $set: body }, { new: true })
+    model
+      .findOneAndUpdate(id, { $set: body }, { new: true })
       .then(todo => {
         // If no todo is found with that id, an error is sent
         if (!todo) {
@@ -119,6 +122,6 @@ const createController = function(app, entityName, model, parseRequest) {
         res.status(400).send();
       });
   });
-}
+};
 
 module.exports = { createController };
