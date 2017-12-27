@@ -1,4 +1,12 @@
-const createController = function(app, entityName, model, parseRequest) {
+const ObjectID = require("mongodb").ObjectId;
+
+const createController = function(
+  app,
+  entityName,
+  model,
+  parseRequest,
+  embeddedDocuments
+) {
   var entityPath = "/" + entityName + "s";
   app.post(entityPath, (req, res) => {
     let entity = parseRequest(req);
@@ -17,7 +25,7 @@ const createController = function(app, entityName, model, parseRequest) {
   app.get(entityPath, (req, res) => {
     let sort = {};
     var find = model.find();
-    
+
     if (req.query.sort) {
       sort[req.query.sort] = req.query.sortOrder === "desc" ? -1 : 1;
       find = find.sort(sort);
@@ -38,7 +46,7 @@ const createController = function(app, entityName, model, parseRequest) {
     let id = req.params.id;
 
     // Validates id
-    if (!ObjectId.isValid(id)) {
+    if (!ObjectID.isValid(id)) {
       return res.status(404).send("ID is not valid");
     }
 
@@ -55,11 +63,91 @@ const createController = function(app, entityName, model, parseRequest) {
       });
   });
 
+  function modifyEmbeddedDoc(parameter, model, id, embeddedDocName, embeddedDoc, req, res) {
+    // Validates id
+    if (!ObjectID.isValid(id) || !ObjectID.isValid(embeddedDoc._id)) {
+      return res.status(404).send("ID is not valid");
+    }
+
+    let mongoDbInput = { }
+    let mongoDbInnerInput = {};
+    mongoDbInnerInput[embeddedDocName] = embeddedDoc;
+    mongoDbInput[parameter] = mongoDbInnerInput;
+
+    model.update({_id: id }, mongoDbInput).then(
+      doc => {
+        res.send(doc);
+      },
+      e => {
+        res.status(400).send(e);
+      }
+    );
+  }
+
+  if (embeddedDocuments) {
+    embeddedDocuments.forEach(element => {
+
+      app.get(entityPath + "/:id/" + element.embeddedEntity, (req, res) => {
+        let id = req.params.id;
+
+        // Validates id
+        if (!ObjectID.isValid(id)) {
+          return res.status(404).send("ID is not valid");
+        }
+    
+        model
+          .findById(id)
+          .then(entity => {
+            if (!entity) {
+              return res.status(404).send();
+            }
+            const embeddedDocs = entity[element.embeddedEntity];
+            res.send(embeddedDocs);
+          })
+          .catch(e => {
+            res.status(400).send();
+          });
+      });
+
+      app.post(entityPath + "/:id/" + element.embeddedEntity, (req, res) => {
+        let id = req.params.id;
+        let embeddedDoc = element.embeddedEntityParser(req);
+        if(!embeddedDoc._id || !ObjectID.isValid(embeddedDoc._idd))
+        {
+          embeddedDoc._id = new ObjectID();
+        }
+        modifyEmbeddedDoc("$push", model, id, element.embeddedEntity, embeddedDoc, req, res);
+      });
+
+      app.put(entityPath + "/:id/" + element.embeddedEntity + "/:embeddedId/", (req, res) => {
+        let id = req.params.id;
+        let embeddedDoc = element.embeddedEntityParser(req);
+        embeddedDoc._id = req.params.embeddedId;
+        modifyEmbeddedDoc("$set", model, id, element.embeddedEntity, embeddedDoc, req, res);
+      });
+
+      app.delete(entityPath + "/:id/" + element.embeddedEntity  + "/:embeddedId/", (req, res) => {
+        let id = req.params.id;
+       // let embeddedDoc = element.embeddedEntityParser(req);
+       let embeddedDoc = { _id : req.params.embeddedId }
+       modifyEmbeddedDoc(
+          "$pull",
+          model,
+          id,
+          element.embeddedEntity,
+          embeddedDoc,
+          req,
+          res
+        );
+      });
+    });
+  }
+
   // HTTP DELETE request routed to /[entityName]/:id
   app.delete(entityPath + ":id", (req, res) => {
     let id = req.params.id;
     // Validates id
-    if (!ObjectId.isValid(id)) {
+    if (!ObjectID.isValid(id)) {
       return res.status(404).send();
     }
     // Finds todo with the retrieved id, and removes it
@@ -88,7 +176,7 @@ const createController = function(app, entityName, model, parseRequest) {
     let body = _.pick(req.body, ["text", "completed"]);
 
     // Validates id
-    if (!ObjectId.isValid(id)) {
+    if (!ObjectID.isValid(id)) {
       // Returns 400 error and error message when id is not valid
       return res.status(404).send();
     }
