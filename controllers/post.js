@@ -22,7 +22,7 @@ const registerPost = function(app) {
           return {
             text: req.body.text,
             date: req.body.date,
-            userId: req.body.userId
+            userName: req.body.userName
           };
         }
       }

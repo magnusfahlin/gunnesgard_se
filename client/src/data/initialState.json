@@ -8,7 +8,10 @@
     "type": "POSTS_CREATE_REQUEST",
     "loading": true,
     "error": false,
-    "posts": [],
+    "posts": {
+      "byId": [],
+      "byHash": []
+    },
     "showAddComment": true,
     "showComments": true
   },

@@ -1,27 +1,27 @@
-require('./config/config')   // 1
+require('./config/config')
  
-const _ = require('lodash')   // 2
-const express = require('express') // 3
-const bodyParser = require('body-parser')  // 4
-const {ObjectId} = require('mongodb')   // 5
+const _ = require('lodash')
+const express = require('express')
+var cors = require('cors')
+const bodyParser = require('body-parser') 
  
 const {mongoose} = require('./db/mongoose')   // 6
 const {Post} = require('./models/post')   // 7
  
 const app = express()   // 8
+app.use(cors())
 const port = process.env.PORT || 3000  // 9
 
 const { registerEvent } = require('./controllers/event')
 const { registerPost } = require('./controllers/post')
 const { registerUser } = require('./controllers/user')
 
-app.use(bodyParser.json())  // 10
+app.use(bodyParser.json())
 app.use(function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   next();
 });
 
+ 
 registerPost(app);
 registerEvent(app);
 registerUser(app);
