@@ -7,7 +7,7 @@ export const thunkCreator = (action) => {
 
     return promise
       .then(result => {
-        if (result.error) throw new Error(result.error)
+        if (result.error) return Promise.reject(result.error)
         dispatch({ ...rest, type: RESOLVED, result })
         return result
       })

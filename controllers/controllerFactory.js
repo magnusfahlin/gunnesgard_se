@@ -56,7 +56,7 @@ const createController = function(
         if (!entity) {
           return res.status(404).send();
         }
-        res.send({ entity });
+        res.send(entity);
       })
       .catch(e => {
         res.status(400).send();
@@ -112,7 +112,7 @@ const createController = function(
       app.post(entityPath + "/:id/" + element.embeddedEntity, (req, res) => {
         let id = req.params.id;
         let embeddedDoc = element.embeddedEntityParser(req);
-        if(!embeddedDoc._id || !ObjectID.isValid(embeddedDoc._idd))
+        if(!embeddedDoc._id || !ObjectID.isValid(embeddedDoc._id))
         {
           embeddedDoc._id = new ObjectID();
         }
@@ -159,7 +159,7 @@ const createController = function(
         }
 
         // Responds with todo
-        res.send({ entity });
+        res.send(entity);
 
         // Error handler to catch and send error
       })

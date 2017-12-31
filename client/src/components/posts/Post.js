@@ -2,6 +2,11 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Comment from "./../comments/Comment";
 import CommentEditor from "./../comments/CommentEditor";
+import ErrorMessage from "./../errorMessage/ErrorMessage";
+import Spinner from "../spinner/Spinner";
+import { connect } from "react-redux";
+import { bindActionCreators } from "redux";
+import * as postActions from "../../actioncreators/post.js";
 
 class Post extends Component {
   constructor(props) {
@@ -12,14 +17,32 @@ class Post extends Component {
     let showAddComment;
     let comments;
     let commentEditor;
+    let commentCreateError;
     if (this.props.showAddComment) {
       showAddComment = <div>Kommentera</div>;
     }
     if (this.props.comments) {
-      comments = this.props.comments.map((item) =>
-          <Comment comment={item}/>)
+      comments = this.props.comments.byId.map(id => (
+        <Comment comment={this.props.comments.byHash[id]} />
+      ));
     }
-    commentEditor = <CommentEditor/>;
+    if (this.props.commentCreateError) {
+      commentCreateError = (
+        <ErrorMessage message="Det var ett problem att ladda upp kommentaren" />
+      );
+    }
+
+    if (this.props.commentCreateRequest) {
+      commentEditor = <Spinner />;
+    } else {
+      commentEditor = (
+        <CommentEditor
+          onCreateComment={text => {
+            this.props.actions.createComment(this.props._id, text);
+          }}
+        />
+      );
+    }
     return (
       <div className="blogPost">
         <div className="title">{this.props.title}</div>
@@ -34,12 +57,11 @@ class Post extends Component {
           })}
         </div>
         <div className="author">
-          av {this.props.author}, {this.props.location} {this.props.date}
+          av {this.props.userName}, {this.props.location} {this.props.date}
         </div>
-       {showAddComment}
-       <div>
-        {comments}
-        </div>
+        {showAddComment}
+        <div>{comments}</div>
+        {commentCreateError}
         {commentEditor}
         <hr />
       </div>
@@ -48,12 +70,21 @@ class Post extends Component {
 }
 
 Post.propTypes = {
+  _id: PropTypes.string,
   title: PropTypes.string,
   text: PropTypes.string,
-  author: PropTypes.string,
+  userName: PropTypes.string,
   location: PropTypes.location,
   date: PropTypes.date,
   showAddComment: PropTypes.bool
 };
 
-export default Post;
+function mapStateToProps(state, props) {
+  return Object.assign({}, state.posts.posts.byHash[props._id]);
+}
+
+function mapDispatchToProps(dispatch) {
+  return { actions: bindActionCreators(postActions, dispatch) };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Post);
