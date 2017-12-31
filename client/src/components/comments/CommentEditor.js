@@ -23,13 +23,13 @@ class CommentEditor extends Component {
           </div>
           <span className="bold singature">
             <button
+              disabled={!this.state.text}
               onClick={() => {
                 this.props.onCreateComment(this.state.text);
               }}
             >
               Skriv
             </button>
-            <button>Släng</button>
           </span>
         </div>
       </div>
@@ -38,7 +38,7 @@ class CommentEditor extends Component {
 }
 
 CommentEditor.propTypes = {
-  onCreateComment: PropTypes.func,
+  onCreateComment: PropTypes.func
 };
 
 export default CommentEditor;

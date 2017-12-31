@@ -50,6 +50,8 @@ export default function postsReducer(state = initialState.posts, action) {
       return {
         loading: false,
         error: false,
+        postCreateRequest: false,
+        postCreateError: false,
         posts: { byId, byHash }
       };
     }
@@ -63,13 +65,18 @@ export default function postsReducer(state = initialState.posts, action) {
     case POSTS_CREATE_REQUEST: {
       return {
         ...state,
-        loading: true,
-        error: false
+        PostCreateRequest: true,
+        PostCreateError: false
       };
     }
-    case POSTS_CREATE_SUCCESS: {
-      return () => postActions.fetchPosts();
+    case POSTS_CREATE_FAILURE: {
+      return {
+        ...state,
+        postCreateRequest: false,
+        postCreateError: true
+      };
     }
+    case POSTS_CREATE_SUCCESS:
     case POST_FETCH_SUCCESS: {
       let post = action.result;
       let commentsById = [];
@@ -87,7 +94,7 @@ export default function postsReducer(state = initialState.posts, action) {
       };
 
       if (state.posts.byHash[post._id] == undefined) {
-        state.posts.byId = [...state.posts.byId, post._id];
+        state.posts.byId = [post._id, ...state.posts.byId];
       }
 
       state.posts.byHash[post._id] = post;

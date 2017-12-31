@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Comment from "./../comments/Comment";
 import CommentEditor from "./../comments/CommentEditor";
+import ErrorMessage from "./../errorMessage/ErrorMessage";
 import Spinner from "../spinner/Spinner";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
@@ -27,7 +28,7 @@ class Post extends Component {
     }
     if (this.props.commentCreateError) {
       commentCreateError = (
-        <span className="red">Det var ett problem att ladda upp kommentaren</span>
+        <ErrorMessage message="Det var ett problem att ladda upp kommentaren" />
       );
     }
 
@@ -56,7 +57,7 @@ class Post extends Component {
           })}
         </div>
         <div className="author">
-          av {this.props.author}, {this.props.location} {this.props.date}
+          av {this.props.userName}, {this.props.location} {this.props.date}
         </div>
         {showAddComment}
         <div>{comments}</div>
@@ -72,17 +73,13 @@ Post.propTypes = {
   _id: PropTypes.string,
   title: PropTypes.string,
   text: PropTypes.string,
-  author: PropTypes.string,
+  userName: PropTypes.string,
   location: PropTypes.location,
   date: PropTypes.date,
   showAddComment: PropTypes.bool
 };
 
 function mapStateToProps(state, props) {
-  // let a = state.posts.posts.byHash[props._id];
-  // return {commentCreateError : state.posts.posts.byHash[props._id].commentCreateError,
-  //   commentCreateError : state.posts.posts.byHash[props._id].commentCreateError
-  // }
   return Object.assign({}, state.posts.posts.byHash[props._id]);
 }
 

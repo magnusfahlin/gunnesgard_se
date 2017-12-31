@@ -8,11 +8,11 @@ import {
 } from "../actionTypes";
 import { thunkCreator, getApi, postApi } from "./utils";
 
-export const createPost = (username, title, text, location) =>
+export const createPost = (title, text, location) =>
   thunkCreator({
-    types: [POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE],
+    types: [POSTS_CREATE_REQUEST, POSTS_CREATE_SUCCESS, POSTS_CREATE_FAILURE],
     promise: postApi("posts", {
-      author: username,
+      userName : "Magnus-placeholder",
       title,
       text,
       location,
