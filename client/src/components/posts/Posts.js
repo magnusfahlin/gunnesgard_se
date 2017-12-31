@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Post from "./Post";
-import PostEditor from "./PostEditor";
+import Post from "./../post/Post";
+import PostEditor from "./../post/PostEditor";
 import Spinner from "./../spinner/Spinner";
 import ErrorMessage from "./../errorMessage/ErrorMessage";
 import { connect } from "react-redux";
