@@ -1,6 +1,9 @@
 mongo_data
 client/dist/
 certificates/
+build/
+.vscode/chrome*
+
 *.TMP
 
 # Logs

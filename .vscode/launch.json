@@ -1,17 +1,84 @@
 {
-    // Use IntelliSense to learn about possible Node.js debug attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
-    "version": "0.2.0",
-    "configurations": [
-      {
-        "name" : "Debug server",
-        "type": "node",
-        "request": "launch",
-        "runtimeExecutable": "nodemon",
-        "program": "${workspaceRoot}/server.js",
-        "restart": true,
-        "console": "integratedTerminal",
+  // Use IntelliSense to learn about possible Node.js debug attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug server",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "nodemon",
+      "program": "${workspaceRoot}/server.js",
+      "restart": true,
+      "console": "integratedTerminal",
+    },
+    {
+      "name": "Debug client",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceRoot}/node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+      "args": [
+        "-d",
+        "--config",
+        "${workspaceRoot}/webpack.config.js"
+      ],
+      "outFiles": [
+        "${workspaceRoot}/build/client/*"
+      ],
+      "stopOnEntry": false,
+      "trace": true,
+      "cwd": "${workspaceRoot}",
+      "runtimeExecutable": null,
+      "runtimeArgs": [],
+      "env": {
+        "NODE_ENV": "development"
+      },
+      "console": "internalConsole",
+      "sourceMaps": true,
+      "sourceMapPathOverrides": {
+        "webpack:///*": "${workspaceRoot}/client/src/*"
       }
-    ]
+    },
+    // {
+    //   "name": "Chrome",
+    //   "type": "chrome",
+    //   "request": "launch",
+    //   "url": "http://localhost:8080",
+    //   "sourceMaps": true,
+    //   "webRoot": "${workspaceRoot}",
+    //   "userDataDir": "${workspaceRoot}/.vscode/chrome",
+    //   "trace": true,
+    //   "sourceMapPathOverrides": {
+    //     "webpack:///*": "${workspaceRoot}/client/src/*"
+    //   }
+    // },
+    // {
+    //   "name": "Attach",
+    //   "type": "chrome",
+    //   "request": "attach",
+    //   "port": 8080,
+    //   "urlFilter": "http://localhost:8080/*",
+    //   "webRoot": "${workspaceRoot}/client/src"
+    // },
+    // {
+    //   "type": "node",
+    //   "request": "launch",
+    //   "name": "webpack-dev-server2",
+    //   "program": "${workspaceRoot}/node_modules/webpack-dev-server/bin/webpack-dev-server.js",
+    //   "args": [
+    //     "-d"
+    //   ],
+    //   "trace": true,
+    //   "cwd": "${workspaceRoot}",
+    //   "outFiles": [
+    //     "${workspaceFolder}/build/client/*.js"
+    //   ],
+    //   "sourceMaps": true,
+    //   "sourceMapPathOverrides": {
+    //     "webpack:///*": "${workspaceRoot}/client/src/*"
+    //   },
+    //   "protocol": "inspector"
+    // }
+  ]
 }

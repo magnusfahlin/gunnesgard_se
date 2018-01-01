@@ -1,29 +1,17 @@
-import {
-  POSTS_CREATE_SUCCESS,
-  POSTS_CREATE_FAILURE,
-  POSTS_CREATE_REQUEST,
-  POSTS_FETCH_REQUEST,
-  POSTS_FETCH_SUCCESS,
-  POSTS_FETCH_FAILURE,
-  POST_COMMENT_CREATE_REQUEST,
-  POST_COMMENT_CREATE_FAILURE,
-  POST_FETCH_SUCCESS,
-  LOGIN_SUCCESS_USER,
-  LOGOUT_SUCCESS
-} from "../actionTypes";
+import * as Action from "../actionTypes";
 import initialState from "./../data/initialState";
 import * as postActions from "./../actioncreators/posts.js";
 
 export default function postsReducer(state = initialState.posts, action) {
   switch (action.type) {
-    case POSTS_FETCH_REQUEST: {
+    case Action.POSTS_FETCH_REQUEST: {
       return {
         ...state,
         loading: true,
         error: false
       };
     }
-    case POSTS_FETCH_SUCCESS: {
+    case Action.POSTS_FETCH_SUCCESS: {
       let byId = action.result.map(post => post._id);
       let byHash = action.result.reduce((map, post) => {
         let commentsById = [];
@@ -55,29 +43,29 @@ export default function postsReducer(state = initialState.posts, action) {
         posts: { byId, byHash }
       };
     }
-    case POSTS_FETCH_FAILURE: {
+    case Action.POSTS_FETCH_FAILURE: {
       return {
         ...state,
         loading: false,
         error: true
       };
     }
-    case POSTS_CREATE_REQUEST: {
+    case Action.POSTS_CREATE_REQUEST: {
       return {
         ...state,
         PostCreateRequest: true,
         PostCreateError: false
       };
     }
-    case POSTS_CREATE_FAILURE: {
+    case Action.POSTS_CREATE_FAILURE: {
       return {
         ...state,
         postCreateRequest: false,
         postCreateError: true
       };
     }
-    case POSTS_CREATE_SUCCESS:
-    case POST_FETCH_SUCCESS: {
+    case Action.POSTS_CREATE_SUCCESS:
+    case Action.POST_FETCH_SUCCESS: {
       let post = action.result;
       let commentsById = [];
       let commentsByHash = [];
@@ -108,14 +96,7 @@ export default function postsReducer(state = initialState.posts, action) {
         }
       };
     }
-    case POSTS_CREATE_FAILURE: {
-      return {
-        ...state,
-        loading: false,
-        error: true
-      };
-    }
-    case POST_COMMENT_CREATE_REQUEST: {
+    case Action.POST_COMMENT_CREATE_REQUEST: {
       state.posts.byHash[action.postId].commentCreateRequest = true;
       state.posts.byHash[action.postId].commentCreateError = false;
 
@@ -123,7 +104,7 @@ export default function postsReducer(state = initialState.posts, action) {
         ...state
       };
     }
-    case POST_COMMENT_CREATE_FAILURE: {
+    case Action.POST_COMMENT_CREATE_FAILURE: {
       state.posts.byHash[action.postId].commentCreateRequest = false;
       state.posts.byHash[action.postId].commentCreateError = true;
 
@@ -131,14 +112,14 @@ export default function postsReducer(state = initialState.posts, action) {
         ...state
       };
     }
-    case LOGIN_SUCCESS_USER: {
+    case Action.LOGIN_SUCCESS_USER: {
       return {
         ...state,
         showAddComment: true,
         showComments: true
       };
     }
-    case LOGOUT_SUCCESS: {
+    case Action.LOGOUT_SUCCESS: {
       return {
         ...state,
         showAddComment: false,

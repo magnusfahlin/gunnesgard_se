@@ -1,5 +1,6 @@
 require('./config/config')
- 
+const path = require('path') 
+
 const _ = require('lodash')
 const express = require('express')
 var cors = require('cors')
@@ -25,7 +26,18 @@ app.use(function(req, res, next) {
 registerPost(app);
 registerEvent(app);
 registerUser(app);
+
+//app.use(express.static(__dirname + '\build'));
  
+const publicPath = express.static(path.join(__dirname, '/build/client'));
+const indexPath = path.join(__dirname, '/build/client/index.html');
+
+app.use(publicPath);
+
+app.get('/', (req, res) => {
+    res.sendFile(indexPath);
+})
+
 // Listens for connection on the given port
 app.listen(port, () => {
   console.log(`Starting on port ${port}`)
