@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router, Route } from 'react-router-dom'
+import {BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import Posts from './components/posts/Posts.js';
 import Menu from './components/menu/Menu.js'
 import Signin from './components/signin/Signin.js'
 import Calendar from './components/calendar/Calendar.js'
 import Editor from './components/editor/Editor.js'
-import stateData from './data/initialState'
+import stateData from './data/initialState.json'
 import PropTypes from 'prop-types';
 
 const App = ({store}) =>
