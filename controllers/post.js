@@ -1,5 +1,5 @@
 const { createController } = require("./controllerFactory.js");
-const { Post } = require("./../models/post");
+const { Post } = require("./../models/Post");
 
 const registerPost = function(app) {
   createController(

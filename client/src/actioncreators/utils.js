@@ -1,3 +1,5 @@
+const port = process.env.PORT || 3001
+
 export const thunkCreator = (action) => {
   const { types, promise, ...rest } = action
   const [ REQUESTED, RESOLVED, REJECTED ] = types
@@ -18,7 +20,7 @@ export const thunkCreator = (action) => {
   }
 }
 
-export const getApi = (path) =>  fetch('http://localhost:3001/' + path,
+export const getApi = (path) =>  fetch('http://localhost:' + port +'/' + path,
 {
     method: 'GET',
     headers: {
@@ -26,7 +28,7 @@ export const getApi = (path) =>  fetch('http://localhost:3001/' + path,
     },
     cache: 'no-store'});
 
-    export const postApi = (path, data) =>  fetch('http://localhost:3001/' + path,
+    export const postApi = (path, data) =>  fetch('http://localhost:' + port +'/' + path,
 {
     method: 'POST',
     headers: {

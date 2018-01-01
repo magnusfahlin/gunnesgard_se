@@ -1,5 +1,5 @@
 const { createController } = require("./controllerFactory.js");
-const { Event } = require("./../models/event");
+const { Event } = require("./../models/Event");
 
 const registerEvent = function(app) {
   createController(

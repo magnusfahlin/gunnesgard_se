@@ -6,12 +6,10 @@ const express = require('express')
 var cors = require('cors')
 const bodyParser = require('body-parser') 
  
-const {mongoose} = require('./db/mongoose')   // 6
-const {Post} = require('./models/post')   // 7
- 
-const app = express()   // 8
+const {mongoose} = require('./db/mongoose')  
+const app = express()
 app.use(cors())
-const port = process.env.PORT || 3000  // 9
+const port = process.env.PORT || 3000
 
 const { registerEvent } = require('./controllers/event')
 const { registerPost } = require('./controllers/post')
@@ -27,8 +25,6 @@ registerPost(app);
 registerEvent(app);
 registerUser(app);
 
-//app.use(express.static(__dirname + '\build'));
- 
 const publicPath = express.static(path.join(__dirname, '/build/client'));
 const indexPath = path.join(__dirname, '/build/client/index.html');
 

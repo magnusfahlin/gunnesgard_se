@@ -1,5 +1,5 @@
 const { createController } = require("./controllerFactory.js");
-const { User } = require("./../models/user");
+const { User } = require("./../models/User");
 
 const registerUser = function(app) {
   createController(
