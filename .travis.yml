@@ -9,3 +9,8 @@ notifications:
 cache:
   directories:
     - node_modules
+
+deploy:
+  provider: heroku
+  api_key:
+    secure: $HEROKU_API_KEY
