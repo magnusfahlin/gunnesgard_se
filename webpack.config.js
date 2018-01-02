@@ -42,6 +42,10 @@ module.exports = {
     ]
   },
   plugins: [
+    new webpack.DefinePlugin({
+      PRODUCTION: JSON.stringify(false),
+      SAME_ORIGIN: JSON.stringify(process.env.SAME_ORIGIN),
+    }),
     new HtmlWebpackPlugin({
       template: "./client/public/index.html",
       filename: "index.html",

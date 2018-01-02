@@ -1,4 +1,5 @@
 const port = process.env.PORT || 3001
+const endpointRoot = process.env.SAME_ORIGIN ? "" : "http://localhost:" + port +"/"
 
 export const thunkCreator = (action) => {
   const { types, promise, ...rest } = action
@@ -20,7 +21,7 @@ export const thunkCreator = (action) => {
   }
 }
 
-export const getApi = (path) =>  fetch('http://localhost:' + port +'/' + path,
+export const getApi = (path) =>  fetch(endpointRoot + path,
 {
     method: 'GET',
     headers: {
@@ -28,7 +29,7 @@ export const getApi = (path) =>  fetch('http://localhost:' + port +'/' + path,
     },
     cache: 'no-store'});
 
-    export const postApi = (path, data) =>  fetch('http://localhost:' + port +'/' + path,
+    export const postApi = (path, data) =>  fetch(endpointRoot + path,
 {
     method: 'POST',
     headers: {
