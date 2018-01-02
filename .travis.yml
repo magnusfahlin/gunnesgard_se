@@ -12,5 +12,6 @@ cache:
 
 deploy:
   provider: heroku
+  app: gunnesgard
   api_key:
     secure: $HEROKU_API_KEY
