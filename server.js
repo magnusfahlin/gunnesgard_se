@@ -40,9 +40,10 @@ app.get("/", (req, res) => {
 });
 
 // Listens for connection on the given port
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Starting on port ${port}`);
 });
 
+app.close = (callback) => server.close(callback)
 // Exports the module as app.
-module.exports = { app };
+module.exports = app;
