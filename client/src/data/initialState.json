@@ -9,8 +9,8 @@
     "loading": true,
     "error": false,
     "posts": {
-      "byId": [],
-      "byHash": []
+      "byIndex": [],
+      "byId": []
     },
     "showAddComment": true,
     "showComments": true

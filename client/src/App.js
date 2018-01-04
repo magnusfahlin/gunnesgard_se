@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
-import Posts from './components/posts/Posts.js';
+import PostListContainer from './components/PostList/PostListContainer';
 import Menu from './components/menu/Menu.js'
 import Signin from './components/signin/Signin.js'
 import Calendar from './components/calendar/Calendar.js'
-import Editor from './components/editor/Editor.js'
 import stateData from './data/initialState.json'
 import PropTypes from 'prop-types';
 
@@ -18,10 +17,9 @@ const App = ({store}) =>
                 <Menu/>
               </div>
               <div id='center'>
-                <Route path="/blog" component={() => <Posts/>}/>
-                <Route path="/(|home)" component={() =><Posts/>}/> 
-                <Route path="/myaccount" component={() => <Posts/>}/> 
-                <Route path="/editor" component={() => <Editor/>}/> 
+                <Route path="/blog" component={() => <PostListContainer/>}/>
+                <Route path="/(|home)" component={() =><PostListContainer/>}/> 
+                <Route path="/myaccount" component={() => <PostListContainer/>}/> 
               </div>
               <div id='right'>
                 <Signin/>
