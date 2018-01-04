@@ -1,32 +1,34 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Post from "./../post/Post";
-import PostEditor from "./../post/PostEditor";
+import Post from "./Post";
+import PostEditor from "./PostEditor.js";
 import Spinner from "./../spinner/Spinner";
 import ErrorMessage from "./../errorMessage/ErrorMessage";
-import { connect } from "react-redux";
-import { bindActionCreators } from "redux";
-import * as postsActions from "../../actioncreators/posts.js";
-import {
-  POSTS_CREATE_SUCCESS,
-  POSTS_FETCH_REQUEST,
-  POSTS_FETCH_SUCCESS,
-  POSTS_FETCH_FAILURE
-} from "../../actionTypes";
 
 class PostList extends Component {
   constructor(props) {
     super(props);
   }
 
-  componentWillMount() {
-    this.props.actions.fetchPosts();
-  }
-
   render() {
-    let postItems;
+    let postEditor;
+    if (this.props.postCreateRequest) {
+      postEditor = <Spinner />;
+    } else {
+      postEditor = (
+        <PostEditor onCreatePost={this.props.actions.createPost} />
+      );
+    }
 
-    if (!this.props.loading && !this.props.error) {
+    let postItems;
+    if (this.props.loading) {
+      postItems = <Spinner />;
+    } else if (this.props.error) {
+      postItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
+    } else {
+      if (!this.props.posts || this.props.posts.length < 1) {
+        postItems = <div />;
+      }
       postItems = this.props.posts.byIndex.map(postId => {
         let post = this.props.posts.byId[postId];
         return (
@@ -43,37 +45,18 @@ class PostList extends Component {
         );
       });
 
-      let postEditor;
-      if (this.props.postCreateRequest) {
-        postEditor = <Spinner />;
-      } else {
-        postEditor = (
-          <PostEditor onCreatePost={this.props.actions.createPost} />
-        );
-      }
       postItems = [postEditor, ...postItems];
 
       if (this.props.postCreateError) {
-        postItems = [<ErrorMessage message="Kunde ladda upp inlägget" />, ...postItems];
+        postItems = [
+          <ErrorMessage message="Kunde ladda upp inlägget" />,
+          ...postItems
+        ];
       }
-    } else if (this.props.loading) {
-      postItems = <Spinner />;
-    } else if (this.props.error) {
-      postItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
-    } else {
-      return <div />;
     }
 
     return <div className="blogPosts">{postItems}</div>;
   }
 }
 
-function mapStateToProps(state) {
-  return Object.assign({}, state.posts);
-}
-
-function mapDispatchToProps(dispatch) {
-  return { actions: bindActionCreators(postsActions, dispatch) };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(PostList);
+export default PostList;

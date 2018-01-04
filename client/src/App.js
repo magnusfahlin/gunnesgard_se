@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
-import PostList from './components/PostList/PostList.js';
+import PostList from './components/PostList';
 import Menu from './components/menu/Menu.js'
 import Signin from './components/signin/Signin.js'
 import Calendar from './components/calendar/Calendar.js'
