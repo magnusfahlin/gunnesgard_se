@@ -1,10 +1,11 @@
 import React, { Component } from "react";
+import Text from "../../Common/Text";
 
 const Comment = comment => (
   <div className="comment">
     <div className="innerComment roundCorners">
       <div>
-        <span className="text">{comment.comment.text}</span>
+        <Text text={comment.comment.text} />
       </div>
       <span className="bold singature">
         {comment.comment.userName + " , " + comment.comment.date}{" "}

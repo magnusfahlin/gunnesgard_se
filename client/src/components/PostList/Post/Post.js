@@ -1,9 +1,10 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import Comment from "./../../comments/Comment";
-import CommentEditor from "./../../comments/CommentEditor";
+import Comment from "./Comment";
+import CommentEditor from ".//CommentEditor";
 import ErrorMessage from "./../../errorMessage/ErrorMessage";
 import Spinner from "../../spinner/Spinner";
+import Text from "../../Common/Text";
 
 class Post extends Component {
   constructor(props) {
@@ -44,16 +45,7 @@ class Post extends Component {
       return (
         <div className="blogPost">
           <div className="title">{this.props.title}</div>
-          <div className="text">
-            {this.props.text.split("\n").map((item, key) => {
-              return (
-                <span key={key}>
-                  {item}
-                  <br />
-                </span>
-              );
-            })}
-          </div>
+          <Text text={this.props.text} />
           <div className="author">
             av {this.props.userName}, {this.props.location} {this.props.date}
           </div>
