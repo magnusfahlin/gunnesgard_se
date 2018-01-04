@@ -12,20 +12,20 @@ export default function postsReducer(state = initialState.posts, action) {
       };
     }
     case Action.POSTS_FETCH_SUCCESS: {
-      let byId = action.result.map(post => post._id);
-      let byHash = action.result.reduce((map, post) => {
-        let commentsById = [];
-        let commentsByHash = [];
+      let byIndex = action.result.map(post => post._id);
+      let byId = action.result.reduce((map, post) => {
+        let commentsbyIndex = [];
+        let commentsbyId = [];
         if (post.comments && Array.isArray(post.comments)) {
-          commentsById = post.comments.map(comment => comment._id);
-          commentsByHash = post.comments.reduce((commentMap, comment) => {
+          commentsbyIndex = post.comments.map(comment => comment._id);
+          commentsbyId = post.comments.reduce((commentMap, comment) => {
             commentMap[comment._id] = post;
             return commentMap;
           }, {});
         }
         post.comments = {
-          byId: commentsById,
-          byHash: commentsByHash
+          byIndex: commentsbyIndex,
+          byId: commentsbyId
         };
 
         post.commentCreateRequest = false;
@@ -40,7 +40,7 @@ export default function postsReducer(state = initialState.posts, action) {
         error: false,
         postCreateRequest: false,
         postCreateError: false,
-        posts: { byId, byHash }
+        posts: { byIndex, byId }
       };
     }
     case Action.POSTS_FETCH_FAILURE: {
@@ -67,46 +67,46 @@ export default function postsReducer(state = initialState.posts, action) {
     case Action.POSTS_CREATE_SUCCESS:
     case Action.POST_FETCH_SUCCESS: {
       let post = action.result;
-      let commentsById = [];
-      let commentsByHash = [];
+      let commentsbyIndex = [];
+      let commentsbyId = [];
       if (post.comments && Array.isArray(post.comments)) {
-        commentsById = post.comments.map(comment => comment._id);
-        commentsByHash = post.comments.reduce((commentMap, comment) => {
+        commentsbyIndex = post.comments.map(comment => comment._id);
+        commentsbyId = post.comments.reduce((commentMap, comment) => {
           commentMap[comment._id] = comment;
           return commentMap;
         }, {});
       }
       post.comments = {
-        byId: commentsById,
-        byHash: commentsByHash
+        byIndex: commentsbyIndex,
+        byId: commentsbyId
       };
 
-      if (state.posts.byHash[post._id] == undefined) {
-        state.posts.byId = [post._id, ...state.posts.byId];
+      if (state.posts.byId[post._id] == undefined) {
+        state.posts.byIndex = [post._id, ...state.posts.byIndex];
       }
 
-      state.posts.byHash[post._id] = post;
+      state.posts.byId[post._id] = post;
 
       return {
         loading: false,
         error: false,
         posts: {
-          byId: state.posts.byId,
-          byHash: state.posts.byHash
+          byIndex: state.posts.byIndex,
+          byId: state.posts.byId
         }
       };
     }
     case Action.POST_COMMENT_CREATE_REQUEST: {
-      state.posts.byHash[action.postId].commentCreateRequest = true;
-      state.posts.byHash[action.postId].commentCreateError = false;
+      state.posts.byId[action.postId].commentCreateRequest = true;
+      state.posts.byId[action.postId].commentCreateError = false;
 
       return {
         ...state
       };
     }
     case Action.POST_COMMENT_CREATE_FAILURE: {
-      state.posts.byHash[action.postId].commentCreateRequest = false;
-      state.posts.byHash[action.postId].commentCreateError = true;
+      state.posts.byId[action.postId].commentCreateRequest = false;
+      state.posts.byId[action.postId].commentCreateError = true;
 
       return {
         ...state

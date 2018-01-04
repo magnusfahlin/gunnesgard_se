@@ -22,8 +22,8 @@ class Post extends Component {
       showAddComment = <div>Kommentera</div>;
     }
     if (this.props.comments) {
-      comments = this.props.comments.byId.map(id => (
-        <Comment comment={this.props.comments.byHash[id]} />
+      comments = this.props.comments.byIndex.map(id => (
+        <Comment comment={this.props.comments.byId[id]} />
       ));
     }
     if (this.props.commentCreateError) {
@@ -80,7 +80,7 @@ Post.propTypes = {
 };
 
 function mapStateToProps(state, props) {
-  return Object.assign({}, state.posts.posts.byHash[props._id]);
+  return Object.assign({}, state.posts.posts.byId[props._id]);
 }
 
 function mapDispatchToProps(dispatch) {

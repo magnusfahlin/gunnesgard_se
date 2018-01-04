@@ -27,8 +27,8 @@ class Posts extends Component {
     let postItems;
 
     if (!this.props.loading && !this.props.error) {
-      postItems = this.props.posts.byId.map(postId => {
-        let post = this.props.posts.byHash[postId];
+      postItems = this.props.posts.byIndex.map(postId => {
+        let post = this.props.posts.byId[postId];
         return (
           <Post
             _id={post._id}
