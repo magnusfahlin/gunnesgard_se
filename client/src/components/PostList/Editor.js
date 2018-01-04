@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 
-class PostEditor extends Component {
+class Editor extends Component {
   constructor(props) {
     super(props);
 
@@ -62,8 +62,8 @@ class PostEditor extends Component {
   }
 }
 
-PostEditor.propTypes = {
+Editor.propTypes = {
   onCreatePost: PropTypes.func
 };
 
-export default PostEditor;
+export default Editor;

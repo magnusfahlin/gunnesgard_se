@@ -6,8 +6,8 @@ import * as postsActions from "../../actioncreators/posts.js";
 
 
 class PostListContainer extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
   }
 
   componentDidMount() {
