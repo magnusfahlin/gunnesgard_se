@@ -1,3 +1,5 @@
+// Very ugly code...
+
 var { importMySql } = require("./mysqlImport");
 var { migrateData } = require("./migrateData");
 var { dropDb } = require("./dbOperations");
@@ -10,14 +12,12 @@ function transform(data) {
     let comments = [];
     data.comments.forEach(function(comment) {
       if (element.id == comment.blogid) {
-
         comments.push({
-          _id: element._id,
-          text: element.text,
-          date: element.date,
-          userName: element.namn
+          _id: comment._id,
+          text: comment.text,
+          date: comment.date,
+          userName: comment.namn
         });
-        
       }
     }, this);
 
@@ -55,36 +55,40 @@ function transform(data) {
 
   // transformedData.comments = commentsArray;
 
-  let calendarArray = [];
-  data.kalender2.forEach(function(element) {
-    let userName = "";
-    data.users.forEach(function(user) {
-      if (user.user_id == element.userid) userName = user.username;
-    }, this);
+  // let calendarArray = [];
+  // data.kalender2.forEach(function(element) {
+  //   let userName = "";
+  //   data.users.forEach(function(user) {
+  //     if (user.user_id == element.userid) userName = user.username;
+  //   }, this);
 
-    calendarArray.push({
-      _id: element._id,
-      date: element.datum,
-      title: element.name,
-      text: element.descr,
-      recurring: element.aterkommande ? true : false,
-      userName: userName
-    });
-  }, this);
+  //   calendarArray.push({
+  //     _id: element._id,
+  //     date: element.datum,
+  //     title: element.name,
+  //     text: element.descr,
+  //     recurring: element.aterkommande ? true : false,
+  //     userName: userName
+  //   });
+  // }, this);
 
-  transformedData.calendar = calendarArray;
+  // transformedData.calendar = calendarArray;
 
   return transformedData;
 }
 
-importMySql("temp_importDB", 27017, {
-  host: "localhost",
-  user: "root",
-  password: "",
-  port: 3306,
-  database: "gunnesgard_se"
-});
-
-migrateData(27017, "gunnesgard", "temp_importDB", transform, function() {
-  dropDb(27017, "temp_importDB");
-});
+importMySql(
+  "temp_importDB",
+  27017,
+  {
+    host: "localhost",
+    user: "root",
+    password: "",
+    port: 3306,
+    database: "gunnesgard_se"
+  },
+  () =>
+    migrateData(27017, "gunnesgard", "temp_importDB", transform, function() {
+      dropDb(27017, "temp_importDB");
+    })
+);

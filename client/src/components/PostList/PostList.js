@@ -26,7 +26,7 @@ const PostList = (props) => {
       let post = props.posts.byId[postId];
       return (
         <PostContainer
-          _id={post._id}
+          id={post.id}
           title={post.title}
           text={post.text}
           userName={post.userName}

@@ -12,14 +12,14 @@ export default function postsReducer(state = initialState.posts, action) {
       };
     }
     case Action.POSTS_FETCH_SUCCESS: {
-      let byIndex = action.result.map(post => post._id);
+      let byIndex = action.result.map(post => post.id);
       let byId = action.result.reduce((map, post) => {
         let commentsbyIndex = [];
         let commentsbyId = [];
         if (post.comments && Array.isArray(post.comments)) {
-          commentsbyIndex = post.comments.map(comment => comment._id);
+          commentsbyIndex = post.comments.map(comment => comment.id);
           commentsbyId = post.comments.reduce((commentMap, comment) => {
-            commentMap[comment._id] = post;
+            commentMap[comment.id] = comment;
             return commentMap;
           }, {});
         }
@@ -31,7 +31,7 @@ export default function postsReducer(state = initialState.posts, action) {
         post.commentCreateRequest = false;
         post.commentCreateError = false;
 
-        map[post._id] = post;
+        map[post.id] = post;
         return map;
       }, {});
 
@@ -70,9 +70,9 @@ export default function postsReducer(state = initialState.posts, action) {
       let commentsbyIndex = [];
       let commentsbyId = [];
       if (post.comments && Array.isArray(post.comments)) {
-        commentsbyIndex = post.comments.map(comment => comment._id);
+        commentsbyIndex = post.comments.map(comment => comment.id);
         commentsbyId = post.comments.reduce((commentMap, comment) => {
-          commentMap[comment._id] = comment;
+          commentMap[comment.id] = comment;
           return commentMap;
         }, {});
       }
@@ -81,11 +81,11 @@ export default function postsReducer(state = initialState.posts, action) {
         byId: commentsbyId
       };
 
-      if (state.posts.byId[post._id] == undefined) {
-        state.posts.byIndex = [post._id, ...state.posts.byIndex];
+      if (state.posts.byId[post.id] == undefined) {
+        state.posts.byIndex = [post.id, ...state.posts.byIndex];
       }
 
-      state.posts.byId[post._id] = post;
+      state.posts.byId[post.id] = post;
 
       return {
         loading: false,

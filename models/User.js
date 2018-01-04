@@ -1,7 +1,8 @@
-const mongoose = require("mongoose"); // 1
+const mongoose = require("mongoose");
+const Schema = require("mongoose").Schema;
 
-const User = mongoose.model("user", {
-  userId: {
+const userSchema = new Schema({
+  userName: {
     type: String,
     required: true,
     unique: true,
@@ -10,52 +11,58 @@ const User = mongoose.model("user", {
   },
   password: {
     type: String,
-    required: false,
+    required: true,
     minlength: 1,
-    trim: true
+    bcrypt: true,
+    hide: true, 
+    select: false 
   },
   name: {
     type: String,
     required: false,
-    minlength: 1,
+    trim: true
+  },
+  Surname: {
+    type: String,
+    required: false,
     trim: true
   },
   address: {
     type: String,
     required: false,
-    minlength: 1,
     trim: true
   },
   town: {
     type: String,
-    required: false,
     minlength: 1,
+    required: false,
     trim: true
   },
   country: {
     type: String,
     required: false,
-    minlength: 1,
     trim: true
   },
   email: {
     type: String,
     required: false,
-    minlength: 1,
     trim: true
   },
   homePhone: {
     type: String,
     required: false,
-    minlength: 1,
     trim: true
   },
   cellPhone: {
     type: String,
     required: false,
-    minlength: 1,
     trim: true
   }
 });
+
+userSchema.plugin(require("mongoose-bcrypt"));
+userSchema.set('toJSON', { getters: true, virtuals: true });
+userSchema.plugin(require("mongoose-hidden")());
+const User = mongoose.model("user", userSchema);
 
 module.exports = { User };

@@ -1,7 +1,7 @@
 var mysql = require("mysql");
 var MongoClient = require("mongodb").MongoClient;
 
-const importMySql = function(destDbName, mongoPort, sourceDbOptions) {
+const importMySql = function(destDbName, mongoPort, sourceDbOptions, finalCallback) {
 
 
   function getMysqlTables(mysqlConnection, callback) {
@@ -73,6 +73,13 @@ const importMySql = function(destDbName, mongoPort, sourceDbOptions) {
           tableToCollection(MysqlCon, table, collection, function(error) {
             if (error) throw error;
             --jobs;
+            if (jobs <= 0) {
+              clearInterval(interval);
+              console.log("done!");
+              db.close();
+              MysqlCon.end();
+              finalCallback()
+            }
           });
         });
       });
@@ -85,7 +92,7 @@ const importMySql = function(destDbName, mongoPort, sourceDbOptions) {
           db.close();
           MysqlCon.end();
         }
-      }, 300);
+      }, 30000);
     }
   );
 };

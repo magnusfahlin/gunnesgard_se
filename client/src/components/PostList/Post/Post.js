@@ -31,7 +31,7 @@ const Post = props => {
     commentEditor = (
       <CommentEditor
         onCreateComment={text => {
-          props.actions.createComment(props._id, text);
+          props.actions.createComment(props.id, text);
         }}
       />
     );
@@ -53,7 +53,7 @@ const Post = props => {
 };
 
 Post.propTypes = {
-  _id: PropTypes.string,
+  id: PropTypes.string,
   title: PropTypes.string,
   text: PropTypes.string,
   userName: PropTypes.string,
