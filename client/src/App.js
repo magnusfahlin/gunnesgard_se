@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
-import Posts from './components/posts/Posts.js';
+import PostList from './components/PostList/PostList.js';
 import Menu from './components/menu/Menu.js'
 import Signin from './components/signin/Signin.js'
 import Calendar from './components/calendar/Calendar.js'
@@ -18,9 +18,9 @@ const App = ({store}) =>
                 <Menu/>
               </div>
               <div id='center'>
-                <Route path="/blog" component={() => <Posts/>}/>
-                <Route path="/(|home)" component={() =><Posts/>}/> 
-                <Route path="/myaccount" component={() => <Posts/>}/> 
+                <Route path="/blog" component={() => <PostList/>}/>
+                <Route path="/(|home)" component={() =><PostList/>}/> 
+                <Route path="/myaccount" component={() => <PostList/>}/> 
                 <Route path="/editor" component={() => <Editor/>}/> 
               </div>
               <div id='right'>

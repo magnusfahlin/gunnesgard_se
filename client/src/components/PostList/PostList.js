@@ -14,7 +14,7 @@ import {
   POSTS_FETCH_FAILURE
 } from "../../actionTypes";
 
-class Posts extends Component {
+class PostList extends Component {
   constructor(props) {
     super(props);
   }
@@ -76,4 +76,4 @@ function mapDispatchToProps(dispatch) {
   return { actions: bindActionCreators(postsActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Posts);
+export default connect(mapStateToProps, mapDispatchToProps)(PostList);
