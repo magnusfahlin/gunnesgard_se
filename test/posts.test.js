@@ -1,27 +1,11 @@
 "use strict";
 
-require(".././config/config");
-
 const app = require("../server"),
   chai = require("chai"),
   request = require("supertest"),
-  expect = require("chai").expect,
-  mongoose = require("mongoose");
+  expect = require("chai").expect;
 
 describe("Post API Integration Tests", function() {
-  before(function(done) {
-    mongoose.connection.once("connected", () => {
-      mongoose.connection.db.dropDatabase();
-      done();
-    });
-  });
-
-  after(function(done) {
-    app.close(() => {
-      mongoose.connection.close(done);
-    });
-  });
-
   describe("GET posts", function() {
     it("should get all posts", function(done) {
       request(app)

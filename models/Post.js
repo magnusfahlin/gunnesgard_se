@@ -14,7 +14,7 @@ const CommentSchema = new Schema({
   },
   date: {
     type: Date,
-    required: false,
+    required: false
   },
   userName: {
     type: String,
@@ -24,8 +24,9 @@ const CommentSchema = new Schema({
   }
 });
 
-const Post = mongoose.model("post", {
-  // 2
+CommentSchema.set("toJSON", { getters: true, virtuals: true });
+
+const PostSchema = new Schema({
   title: {
     type: String,
     required: false,
@@ -58,5 +59,9 @@ const Post = mongoose.model("post", {
     trim: true
   }
 });
+
+PostSchema.set("toJSON", { getters: true, virtuals: true });
+
+const Post = mongoose.model("post", PostSchema);
 
 module.exports = { Post };

@@ -1,7 +1,7 @@
-const mongoose = require("mongoose"); // 1
+const mongoose = require("mongoose");
+const Schema = require("mongoose").Schema;
 
-const Event = mongoose.model("event", {
-  // 2
+const EventSchema = new Schema({
   text: {
     type: String,
     required: false,
@@ -17,5 +17,8 @@ const Event = mongoose.model("event", {
     required: false
   }
 });
+
+EventSchema.set("toJSON", { getters: true, virtuals: true });
+const Event = mongoose.model("event", EventSchema);
 
 module.exports = { Event };
