@@ -7,7 +7,8 @@ import * as postActions from "../../../actioncreators/post.js";
 const PostContainer = (props) => <Post {...props} />;
 
 function mapStateToProps(state, props) {
-  return Object.assign({}, state.posts.posts.byId[props.id]);
+  let properties = Object.assign({}, state.posts.posts.byId[props.id]);
+  return Object.assign(properties, state.session);
 }
 
 function mapDispatchToProps(dispatch) {

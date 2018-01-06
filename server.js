@@ -20,10 +20,13 @@ const port = process.env.PORT || 3000;
 const { registerEvent } = require("./controllers/event");
 const { registerPost } = require("./controllers/post");
 const { registerUser } = require("./controllers/user");
-const {registerLogin } = require("./controllers/login");
+const { registerLogin } = require("./controllers/login");
+const { addUserIfNeeded } = require("./bootstrapUser");
+
+addUserIfNeeded();
 
 app.use(bodyParser.json());
-app.use(require('./verifyAuth'));
+app.use(require("./verifyAuth"));
 app.use(function(req, res, next) {
   next();
 });
@@ -31,7 +34,7 @@ app.use(function(req, res, next) {
 registerPost(app);
 registerEvent(app);
 registerUser(app);
-registerLogin(app)
+registerLogin(app);
 
 const publicPath = express.static(path.join(__dirname, "/build/client"));
 const indexPath = path.join(__dirname, "/build/client/index.html");
@@ -47,6 +50,6 @@ const server = app.listen(port, () => {
   console.log(`Starting on port ${port}`);
 });
 
-app.close = (callback) => server.close(callback)
+app.close = callback => server.close(callback);
 // Exports the module as app.
 module.exports = app;

@@ -112,7 +112,7 @@ export default function postsReducer(state = initialState.posts, action) {
         ...state
       };
     }
-    case Action.LOGIN_SUCCESS_USER: {
+    case Action.LOGIN_SUCCESS: {
       return {
         ...state,
         showAddComment: true,

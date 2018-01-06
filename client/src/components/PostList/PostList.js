@@ -5,23 +5,25 @@ import PostEditor from "./Editor.js";
 import Spinner from "./../Common/Spinner";
 import ErrorMessage from "./../Common/ErrorMessage";
 
-const PostList = (props) => {
+const PostList = props => {
   let postEditor;
   if (props.postCreateRequest) {
     postEditor = <Spinner />;
-  } else {
-    postEditor = <PostEditor onCreatePost={props.actions.createPost} />;
+  } else if (props.loggedIn){
+    postEditor = (
+      <PostEditor onCreatePost={(title, text, location) => props.actions.createPost(title, text, location, props.token)} />
+    );
+  }
+
+  let loading;
+  if (props.loading) {
+    loading = <Spinner />;
   }
 
   let postItems;
-  if (props.loading) {
-    postItems = <Spinner />;
-  } else if (props.error) {
+  if (props.error) {
     postItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
   } else {
-    if (!props.posts || props.posts.length < 1) {
-      postItems = <div />;
-    }
     postItems = props.posts.byIndex.map(postId => {
       let post = props.posts.byId[postId];
       return (
@@ -38,7 +40,7 @@ const PostList = (props) => {
       );
     });
 
-    postItems = [postEditor, ...postItems];
+    postItems = [postEditor, ...postItems, loading];
 
     if (props.postCreateError) {
       postItems = [

@@ -4,7 +4,6 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as postsActions from "../../actioncreators/posts.js";
 
-
 class PostListContainer extends Component {
     constructor(props) {
         super(props);
@@ -20,7 +19,8 @@ class PostListContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  return Object.assign({}, state.posts);
+  let properties = Object.assign({}, state.posts);
+  return Object.assign(properties, state.session);
 }
 
 function mapDispatchToProps(dispatch) {

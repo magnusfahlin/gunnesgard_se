@@ -23,7 +23,7 @@ const createController = function(
 
     entity.save().then(
       doc => {
-        res.send(doc);
+        res.status(201).send(doc);
       },
       e => {
         res.status(400).send(e);
@@ -112,7 +112,8 @@ const createController = function(
     embeddedDocName,
     embeddedDoc,
     req,
-    res
+    res,
+    statusCode
   ) {
     // Validates id
     if (!ObjectID.isValid(id) || !ObjectID.isValid(embeddedDoc._id)) {
@@ -126,7 +127,7 @@ const createController = function(
 
     model.update({ _id: id }, mongoDbInput).then(
       doc => {
-        res.send(doc);
+        res.status(statusCode).send(doc);
       },
       e => {
         res.status(400).send(e);
@@ -171,7 +172,8 @@ const createController = function(
           element.embeddedEntity,
           embeddedDoc,
           req,
-          res
+          res,
+          201
         );
       });
 
@@ -188,7 +190,8 @@ const createController = function(
             element.embeddedEntity,
             embeddedDoc,
             req,
-            res
+            res,
+            200
           );
         }
       );
@@ -206,7 +209,8 @@ const createController = function(
             element.embeddedEntity,
             embeddedDoc,
             req,
-            res
+            res,
+            204
           );
         }
       );
@@ -232,7 +236,7 @@ const createController = function(
         }
 
         // Responds with todo
-        res.send(entity);
+        res.status(204).send(entity);
 
         // Error handler to catch and send error
       })

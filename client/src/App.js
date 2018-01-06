@@ -3,7 +3,7 @@ import {BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import PostListContainer from './components/PostList/PostListContainer';
 import Menu from './components/menu/Menu.js'
-import Signin from './components/signin/Signin.js'
+import LoginContainer from './components/Login/LoginContainer.js'
 import Calendar from './components/calendar/Calendar.js'
 import stateData from './data/initialState.json'
 import PropTypes from 'prop-types';
@@ -22,7 +22,7 @@ const App = ({store}) =>
                 <Route path="/myaccount" component={() => <PostListContainer/>}/> 
               </div>
               <div id='right'>
-                <Signin/>
+                <LoginContainer/>
                 <Calendar Calendar={stateData.Calendar}/>
               </div>
             </div>
