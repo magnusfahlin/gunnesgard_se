@@ -9,7 +9,17 @@ const createController = function(
 ) {
   var entityPath = "/" + entityName + "s";
   app.post(entityPath, (req, res) => {
+    if (!req.auth) {
+      return res.status(404).send();
+    }
+
     let entity = parseRequest(req);
+
+    if (embeddedDocuments) {
+      embeddedDocuments.forEach(element => {
+        entity[element.embeddedEntity] = [];
+      });
+    }
 
     entity.save().then(
       doc => {
@@ -23,15 +33,43 @@ const createController = function(
 
   // GET HTTP request is called on /[entityName] path
   app.get(entityPath, (req, res) => {
+    let includeEmbeddedDocs = true;
     let sort = {};
-    var find = model.find();
+    let projectionArg = {};
+    let limit = 0;
 
-    if (req.query.sort) {
-      sort[req.query.sort] = req.query.sortOrder === "desc" ? -1 : 1;
-      find = find.sort(sort);
+    if (!req.auth) {
+      if (entityName == "post") {
+        limit = parseInt(process.env.POSTS_SHOWN_NOT_LOGGED_IN);
+        includeEmbeddedDocs = false;
+      } else {
+        return res.status(404).send();
+      }
     }
 
-    find.sort(sort).then(
+    if (!includeEmbeddedDocs ||
+      (req.query.includeEmbeddedDocs && req.query.includeEmbeddedDocs.toLowerCase()  === "false")) {
+      includeEmbeddedDocs = false;
+      embeddedDocuments.forEach(element => {
+        projectionArg[element.embeddedEntity] = 0;
+      });
+    }
+
+    if (req.query.sort) {
+      sort[req.query.sort] = 1;
+      if (req.query.sortOrder && req.query.sortOrder.toLowerCase() === "desc") {
+        sort[req.query.sort] = -1;
+      }
+    }
+
+    if (req.query.count) {
+      limit = parseInt(req.query.count);
+    }
+
+    var find = projectionArg ? model.find({}, projectionArg) : model.find();
+    find = find.limit(limit).sort(sort);
+
+    find.then(
       entity => {
         res.send(entity);
       },
@@ -43,6 +81,10 @@ const createController = function(
 
   // GET HTTP request is called to retrieve individual entity
   app.get(entityPath + "/:id", (req, res) => {
+    if (!req.auth) {
+      return res.status(404).send();
+    }
+
     let id = req.params.id;
 
     // Validates id
@@ -63,18 +105,26 @@ const createController = function(
       });
   });
 
-  function modifyEmbeddedDoc(parameter, model, id, embeddedDocName, embeddedDoc, req, res) {
+  function modifyEmbeddedDoc(
+    parameter,
+    model,
+    id,
+    embeddedDocName,
+    embeddedDoc,
+    req,
+    res
+  ) {
     // Validates id
     if (!ObjectID.isValid(id) || !ObjectID.isValid(embeddedDoc._id)) {
       return res.status(404).send("ID is not valid");
     }
 
-    let mongoDbInput = { }
+    let mongoDbInput = {};
     let mongoDbInnerInput = {};
     mongoDbInnerInput[embeddedDocName] = embeddedDoc;
     mongoDbInput[parameter] = mongoDbInnerInput;
 
-    model.update({_id: id }, mongoDbInput).then(
+    model.update({ _id: id }, mongoDbInput).then(
       doc => {
         res.send(doc);
       },
@@ -86,7 +136,6 @@ const createController = function(
 
   if (embeddedDocuments) {
     embeddedDocuments.forEach(element => {
-
       app.get(entityPath + "/:id/" + element.embeddedEntity, (req, res) => {
         let id = req.params.id;
 
@@ -94,7 +143,7 @@ const createController = function(
         if (!ObjectID.isValid(id)) {
           return res.status(404).send("ID is not valid");
         }
-    
+
         model
           .findById(id)
           .then(entity => {
@@ -112,26 +161,11 @@ const createController = function(
       app.post(entityPath + "/:id/" + element.embeddedEntity, (req, res) => {
         let id = req.params.id;
         let embeddedDoc = element.embeddedEntityParser(req);
-        if(!embeddedDoc._id || !ObjectID.isValid(embeddedDoc._id))
-        {
+        if (!embeddedDoc._id || !ObjectID.isValid(embeddedDoc._id)) {
           embeddedDoc._id = new ObjectID();
         }
-        modifyEmbeddedDoc("$push", model, id, element.embeddedEntity, embeddedDoc, req, res);
-      });
-
-      app.put(entityPath + "/:id/" + element.embeddedEntity + "/:embeddedId/", (req, res) => {
-        let id = req.params.id;
-        let embeddedDoc = element.embeddedEntityParser(req);
-        embeddedDoc._id = req.params.embeddedId;
-        modifyEmbeddedDoc("$set", model, id, element.embeddedEntity, embeddedDoc, req, res);
-      });
-
-      app.delete(entityPath + "/:id/" + element.embeddedEntity  + "/:embeddedId/", (req, res) => {
-        let id = req.params.id;
-       // let embeddedDoc = element.embeddedEntityParser(req);
-       let embeddedDoc = { _id : req.params.embeddedId }
-       modifyEmbeddedDoc(
-          "$pull",
+        modifyEmbeddedDoc(
+          "$push",
           model,
           id,
           element.embeddedEntity,
@@ -140,11 +174,50 @@ const createController = function(
           res
         );
       });
+
+      app.put(
+        entityPath + "/:id/" + element.embeddedEntity + "/:embeddedId/",
+        (req, res) => {
+          let id = req.params.id;
+          let embeddedDoc = element.embeddedEntityParser(req);
+          embeddedDoc._id = req.params.embeddedId;
+          modifyEmbeddedDoc(
+            "$set",
+            model,
+            id,
+            element.embeddedEntity,
+            embeddedDoc,
+            req,
+            res
+          );
+        }
+      );
+
+      app.delete(
+        entityPath + "/:id/" + element.embeddedEntity + "/:embeddedId/",
+        (req, res) => {
+          let id = req.params.id;
+          // let embeddedDoc = element.embeddedEntityParser(req);
+          let embeddedDoc = { _id: req.params.embeddedId };
+          modifyEmbeddedDoc(
+            "$pull",
+            model,
+            id,
+            element.embeddedEntity,
+            embeddedDoc,
+            req,
+            res
+          );
+        }
+      );
     });
   }
 
   // HTTP DELETE request routed to /[entityName]/:id
   app.delete(entityPath + ":id", (req, res) => {
+    if (!req.auth) {
+      return res.status(404).send();
+    }
     let id = req.params.id;
     // Validates id
     if (!ObjectID.isValid(id)) {
@@ -170,6 +243,10 @@ const createController = function(
 
   // HTTP PATCH requested routed to /[entityName]/:id
   app.patch(entityPath + ":id", (req, res) => {
+    if (!req.auth) {
+      return res.status(404).send();
+    }
+
     let id = req.params.id;
 
     //  Creates an object called body of the picked values (text and completed), from the response gotten
