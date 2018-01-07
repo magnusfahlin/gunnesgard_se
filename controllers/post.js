@@ -10,19 +10,15 @@ const registerPost = function(app) {
       new Post({
         title: req.body.title,
         location: req.body.location,
-        userName: req.body.userName,
         text: req.body.text,
-        title: req.body.title,
-        date: req.body.date
+        title: req.body.title
       }),
     [
       {
         embeddedEntity: "comments",
         embeddedEntityParser: req => {
           return {
-            text: req.body.text,
-            date: req.body.date,
-            userName: req.body.userName
+            text: req.body.text
           };
         }
       }

@@ -31,10 +31,9 @@ const PostList = props => {
           id={post.id}
           title={post.title}
           text={post.text}
-          userName={post.userName}
+          createdBy={post.createdBy}
           location={post.location}
-          date={post.date}
-          showAddComment={props.showAddComment}
+          createdAt={post.createdAt}
           comments={post.comments}
         />
       );

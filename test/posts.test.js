@@ -89,6 +89,26 @@ describe("Post API Integration Tests", function() {
     });
   });
 
+  // TODO comment is not returned
+  // describe("Create comment to post", function() {
+  //   it("should create a post", function(done) {
+  //     const comment2 = {
+  //       text: "comment2"
+  //     };
+
+  //     request(app)
+  //       .post("/posts/" + post1Id + "/comments")
+  //       .set("x-auth", "test")
+  //       .send(comment2)
+  //       .end(function(err, res) {
+  //         expect(res.statusCode).to.equal(201);
+  //         let postResponse = res.body;
+          
+  //         expect(postResponse.text).to.equal("comment2");
+  //         done();
+  //       });
+  //   });
+  // });
 
   describe("GET posts when NOT logged in", function() {
     it("should get 1 post with no comments", function(done) {

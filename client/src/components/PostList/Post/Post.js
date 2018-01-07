@@ -7,13 +7,10 @@ import Spinner from "../../Common/Spinner";
 import Text from "../../Common/Text";
 
 const Post = props => {
-  let showAddComment;
   let comments;
   let commentEditor;
   let commentCreateError;
-  if (props.showAddComment) {
-    showAddComment = <div>Kommentera</div>;
-  }
+
   if (props.comments) {
     comments = props.comments.byIndex.map(id => (
       <Comment comment={props.comments.byId[id]} />
@@ -39,11 +36,10 @@ const Post = props => {
   return (
     <div className="blogPost">
       <div className="title">{props.title}</div>
-      <Text text={props.text} />
-      <div className="author">
-        av {props.userName}, {props.location} {props.date}
-      </div>
-      {showAddComment}
+        <Text text={props.text} />
+        <div className="author">
+          av {props.createdBy}, {props.location} {props.createdAt}
+        </div>
       <div>{comments}</div>
       {commentCreateError}
       {commentEditor}
@@ -56,10 +52,9 @@ Post.propTypes = {
   id: PropTypes.string,
   title: PropTypes.string,
   text: PropTypes.string,
-  userName: PropTypes.string,
+  createdBy: PropTypes.string,
   location: PropTypes.location,
-  date: PropTypes.date,
-  showAddComment: PropTypes.bool
+  createdAt: PropTypes.date
 };
 
 export default Post;

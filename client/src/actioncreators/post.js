@@ -5,17 +5,13 @@ import {
 } from "../actionTypes";
 import { thunkCreator, getApi, postApi } from "./utils";
 
-let postCommentPromise = (postId, text) =>
-  postApi("posts/" + postId + "/comments", {
-    userName: "Magnus-placeholder",
-    text,
-    date: new Date()
-  });
+let postCommentPromise = (postId, text, token) =>
+  postApi("posts/" + postId + "/comments", { text }, token);
 
 export const createComment = (postId, text, token) => dispatch => {
   dispatch({ postId, type: POST_COMMENT_CREATE_REQUEST });
 
-  return postCommentPromise(postId, text)
+  return postCommentPromise(postId, text, token)
     .then(result => {
       if (!result.ok)
         return Promise.reject(result.statusText + " " + result.url);

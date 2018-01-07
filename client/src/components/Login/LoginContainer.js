@@ -8,7 +8,7 @@ const LoginContainer = (props) => <Login {...props}/>;
   
 function mapStateToProps(state) {
   let properties = Object.assign({}, state.login);
-  return Object.assign({}, state.session);
+  return Object.assign(properties, state.session);
 }
 
 function mapDispatchToProps(dispatch) {

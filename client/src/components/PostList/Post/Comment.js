@@ -8,7 +8,7 @@ const Comment = comment => (
         <Text text={comment.comment.text} />
       </div>
       <span className="bold singature">
-        {comment.comment.userName + " , " + comment.comment.date}{" "}
+        {comment.comment.createdBy + " , " + comment.comment.createdAt}{" "}
       </span>
     </div>
   </div>

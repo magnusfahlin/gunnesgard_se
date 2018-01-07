@@ -10,7 +10,7 @@ class CalendarItem extends Component {
                 return (
                     <div className='calendarItem'>
                         <div className='red'>{this.props.title}</div>
-                        <div className='text'>{this.props.date}</div>
+                        <div className='text'>{this.props.createdAt}</div>
                     </div>
                 );
       }
@@ -18,7 +18,7 @@ class CalendarItem extends Component {
 
 CalendarItem.propTypes = {
     title: PropTypes.string,
-    date: PropTypes.date
+    createdAt: PropTypes.date
 }
 
 export default CalendarItem;

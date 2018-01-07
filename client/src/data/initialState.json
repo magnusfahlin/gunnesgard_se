@@ -15,9 +15,7 @@
     "posts": {
       "byIndex": [],
       "byId": []
-    },
-    "showAddComment": false,
-    "showComments": false
+    }
   },
   "Calendar": [
     {
