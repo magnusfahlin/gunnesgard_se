@@ -21,7 +21,7 @@ describe("User API Integration Tests", function() {
   });
 
   describe("GET users", function() {
-    it("should get all users", function(done) {
+    it("should return the bootstrap user", function(done) {
       request(app)
         .get("/users")
         .set('x-auth', "test")
@@ -29,7 +29,7 @@ describe("User API Integration Tests", function() {
           expect(res.statusCode).equal(200);
           expect(res.body).to.be.an("array");
           expect(res.body).to.have.lengthOf(1);
-          expect(res.body[0].userName === "admin").to.true;
+          expect(res.body[0].username === "admin").to.true;
           done();
         });
     });
@@ -38,10 +38,9 @@ describe("User API Integration Tests", function() {
   describe("Create user", function() {
     it("should create a user, password should not be returned", function(done) {
       const user = {
-        userName: "name",
+        username: "name",
         password: "top secret"
       };
-
       request(app)
         .post("/users")
         .set('x-auth', "test")
@@ -50,7 +49,7 @@ describe("User API Integration Tests", function() {
           expect(res.statusCode).to.equal(201);
           let postResponse = res.body;
 
-          expect(postResponse.userName).to.equal("name");
+          expect(postResponse.username).to.equal("name");
           expect(postResponse.password).to.be.undefined;
           done();
         });
@@ -60,7 +59,7 @@ describe("User API Integration Tests", function() {
   describe("GET and verify user", function() {
     it("should get a user, password should not be returned", function(done) {
       const user = {
-        userName: "name2",
+        username: "name2",
         password: "top secret"
       };
 
@@ -72,7 +71,7 @@ describe("User API Integration Tests", function() {
           expect(res.statusCode).to.equal(201);
           let postResponse = res.body;
 
-          expect(postResponse.userName).to.equal("name2");
+          expect(postResponse.username).to.equal("name2");
           expect(postResponse.password).to.be.undefined;
 
           request(app)
@@ -83,7 +82,7 @@ describe("User API Integration Tests", function() {
               expect(res.statusCode).to.equal(200);
               let getResponse = res.body;
 
-              expect(getResponse.userName).to.equal("name2");
+              expect(getResponse.username).to.equal("name2");
               expect(getResponse.password).to.be.undefined;
               done();
             });

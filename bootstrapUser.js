@@ -8,9 +8,18 @@ const addUserIfNeeded = function() {
       return;
     }
     if (count < 1) {
+      const username = process.env.bootstrapUsername
+        ? process.env.bootstrapUsername
+        : "admin";
+      const password = process.env.bootstrapUserPassword
+        ? process.env.bootstrapUserPassword
+        : "admin";
+
       const bootstrapUser = new User({
-        userName: process.env.bootstrapUsername ? process.env.bootstrapUsername : "admin",
-        password: process.env.bootstrapUserPassword ? process.env.bootstrapUserPassword : "admin"
+        username: username,
+        password: password,
+        createdBy: username,
+        updatedBy: username
       });
       bootstrapUser.save().then(
         doc => {
@@ -24,4 +33,4 @@ const addUserIfNeeded = function() {
   });
 };
 
-module.exports = { addUserIfNeeded }
+module.exports = { addUserIfNeeded };

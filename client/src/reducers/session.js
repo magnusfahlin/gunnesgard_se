@@ -7,14 +7,14 @@ const session = (state = initialState.session, action) => {
       return {
         ...state,
         token: action.result.token,
-        userName: action.result.userName,
+        username: action.result.username,
         loggedIn: true,
       };
     case LOGOUT_SUCCESS:
       return {
         ...state,
         token: "",
-        userName: " ",
+        username: " ",
         loggedIn: false,
       };
     default:

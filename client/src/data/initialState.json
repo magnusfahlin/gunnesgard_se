@@ -1,7 +1,7 @@
 {
   "session": {
     "loggedIn": false,
-    "userName": "",
+    "username": "",
     "token" : ""
   },
   "login": {
@@ -15,9 +15,7 @@
     "posts": {
       "byIndex": [],
       "byId": []
-    },
-    "showAddComment": false,
-    "showComments": false
+    }
   },
   "Calendar": [
     {

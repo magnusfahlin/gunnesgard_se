@@ -112,20 +112,6 @@ export default function postsReducer(state = initialState.posts, action) {
         ...state
       };
     }
-    case Action.LOGIN_SUCCESS: {
-      return {
-        ...state,
-        showAddComment: true,
-        showComments: true
-      };
-    }
-    case Action.LOGOUT_SUCCESS: {
-      return {
-        ...state,
-        showAddComment: false,
-        showComments: false
-      };
-    }
     default:
       return state;
   }

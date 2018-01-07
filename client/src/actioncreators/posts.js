@@ -14,11 +14,10 @@ export const createPost = (title, text, location, token) =>
     promise: postApi(
       "posts",
       {
-        userName: "Magnus-placeholder",
+        username: "Magnus-placeholder",
         title,
         text,
-        location,
-        date: new Date()
+        location
       },
       token
     ).then(response => {
@@ -30,7 +29,7 @@ export const createPost = (title, text, location, token) =>
 export const fetchPosts = token =>
   thunkCreator({
     types: [POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE],
-    promise: getApi("posts?sort=date&sortOrder=desc", token).then(response => {
+    promise: getApi("posts?sort=createdAt&sortOrder=desc", token).then(response => {
       if (response.status != 200) throw response.status;
       return response.json();
     })

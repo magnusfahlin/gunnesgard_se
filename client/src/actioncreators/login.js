@@ -9,10 +9,10 @@ import {
 import { postApi } from "./utils";
 import { fetchPosts } from "./posts";
 
-export const login = (userName, password) => dispatch => {
+export const login = (username, password) => dispatch => {
   dispatch({ type: LOGIN_REQUEST });
 
-  return postApi("login", { userName, password })
+  return postApi("login", { username, password })
     .then(response => {
       if (response.status != 201) return Promise.reject(response.error);
       return response.json();
