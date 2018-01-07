@@ -18,7 +18,7 @@ const CommentSchema = new Schema(
       type: Date,
       required: false
     },
-    userName: {
+    username: {
       type: String,
       required: false,
       minlength: 1,
@@ -70,7 +70,7 @@ const PostSchema = new Schema(
     comments: {
       type: [CommentSchema]
     },
-    userName: {
+    username: {
       type: String,
       required: false,
       minlength: 1,

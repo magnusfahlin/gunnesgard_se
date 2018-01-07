@@ -14,7 +14,7 @@ export const createPost = (title, text, location, token) =>
     promise: postApi(
       "posts",
       {
-        userName: "Magnus-placeholder",
+        username: "Magnus-placeholder",
         title,
         text,
         location

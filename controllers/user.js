@@ -8,7 +8,7 @@ const registerUser = function(app) {
     User,
     (req) =>
       new User({
-        userName: req.body.userName,
+        username: req.body.username,
         password: req.body.password,
         name: req.body.name,
         surname: req.body.surname,

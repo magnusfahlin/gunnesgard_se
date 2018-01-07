@@ -11,7 +11,7 @@ const toJSON = (doc, ret, options) => {
 
 const userSchema = new Schema(
   {
-    userName: {
+    username: {
       type: String,
       required: true,
       unique: true,

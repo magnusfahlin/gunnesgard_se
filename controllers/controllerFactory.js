@@ -14,8 +14,8 @@ const createController = function(
     }
 
     let entity = parseRequest(req);
-    entity.createdBy = req.auth.userName;
-    entity.updatedBy = req.auth.userName;
+    entity.createdBy = req.auth.username;
+    entity.updatedBy = req.auth.username;
 
     if (embeddedDocuments) {
       embeddedDocuments.forEach(element => {
@@ -167,8 +167,8 @@ const createController = function(
         if (!embeddedDoc._id || !ObjectID.isValid(embeddedDoc._id)) {
           embeddedDoc._id = new ObjectID();
         }
-        embeddedDoc.createdBy = req.auth.userName;
-        embeddedDoc.updatedBy = req.auth.userName;
+        embeddedDoc.createdBy = req.auth.username;
+        embeddedDoc.updatedBy = req.auth.username;
 
         modifyEmbeddedDoc(
           "$push",
@@ -188,7 +188,7 @@ const createController = function(
           let id = req.params.id;
           let embeddedDoc = element.embeddedEntityParser(req);
           embeddedDoc._id = req.params.embeddedId;
-          embeddedDoc.updatedBy = req.auth.userName;
+          embeddedDoc.updatedBy = req.auth.username;
           modifyEmbeddedDoc(
             "$set",
             model,
@@ -208,7 +208,7 @@ const createController = function(
           let id = req.params.id;
           // let embeddedDoc = element.embeddedEntityParser(req);
           let embeddedDoc = { _id: req.params.embeddedId };
-          embeddedDoc.updatedBy = req.auth.userName;
+          embeddedDoc.updatedBy = req.auth.username;
 
           modifyEmbeddedDoc(
             "$pull",
@@ -280,7 +280,7 @@ const createController = function(
       body.completedAt = null;
     }
 
-    body.updatedBy = req.auth.userName;
+    body.updatedBy = req.auth.username;
     // Finds a todo with id that matches the retrieved id.
     // Sets the body of the retrieved id to a new one
     model

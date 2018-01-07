@@ -16,7 +16,7 @@ function transform(data) {
           _id: comment._id,
           text: comment.text,
           date: comment.date,
-          userName: comment.namn
+          username: comment.namn
         });
       }
     }, this);
@@ -29,7 +29,7 @@ function transform(data) {
       date: element.date,
       comments: comments,
       galleryId: element.albumId,
-      userName: element.namn
+      username: element.namn
     });
   }, this);
 
@@ -49,7 +49,7 @@ function transform(data) {
   //     text: element.text,
   //     date: element.date,
   //    // postId: postId,
-  //     userName: element.namn
+  //     username: element.namn
   //   });
   // }, this);
 
@@ -57,9 +57,9 @@ function transform(data) {
 
   // let calendarArray = [];
   // data.kalender2.forEach(function(element) {
-  //   let userName = "";
+  //   let username = "";
   //   data.users.forEach(function(user) {
-  //     if (user.user_id == element.userid) userName = user.username;
+  //     if (user.user_id == element.userid) username = user.username;
   //   }, this);
 
   //   calendarArray.push({
@@ -68,7 +68,7 @@ function transform(data) {
   //     title: element.name,
   //     text: element.descr,
   //     recurring: element.aterkommande ? true : false,
-  //     userName: userName
+  //     username: username
   //   });
   // }, this);
 

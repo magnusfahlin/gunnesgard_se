@@ -3,16 +3,16 @@ const { User } = require("./../models/User");
 
 const registerLogin = function(app) {
   app.post("/login", function(req, res, next) {
-    User.findOne({ userName: req.body.userName }).then(user =>
+    User.findOne({ username: req.body.username }).then(user =>
       {
       user.comparePassword(req.body.password, (err, valid) => {
         if (valid) {
           var token = jwt.encode(
-            { userName: user.userName },
+            { username: user.username },
             process.env.SECRET
           );
           res.status(201).send({
-            userName: user.userName,
+            username: user.username,
             token: token
           });
         } else {

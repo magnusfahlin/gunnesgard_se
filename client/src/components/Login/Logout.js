@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 const Logout = props => (
   <div>
     {"Välkommen " +
-      (props.userName ? props.userName : "ingen-alls") +
+      (props.username ? props.username : "ingen-alls") +
       "!!"}
     <button type="button" onClick={() => props.onLogout()}>
       Logga ut
@@ -14,7 +14,7 @@ const Logout = props => (
 
 Logout.propTypes = {
   onLogout: PropTypes.func,
-  userName: PropTypes.string
+  username: PropTypes.string
 };
 
 export default Logout;

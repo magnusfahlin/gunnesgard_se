@@ -23,7 +23,7 @@ const Login = props => {
   } else if (props.loggedIn) {
     return (
       <div className="login">
-        <Logout onLogout={props.actions.signOut} userName={props.userName} />
+        <Logout onLogout={props.actions.signOut} username={props.username} />
       </div>
     );
   } else {
