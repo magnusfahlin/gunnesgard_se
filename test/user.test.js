@@ -28,7 +28,8 @@ describe("User API Integration Tests", function() {
         .end(function(err, res) {
           expect(res.statusCode).equal(200);
           expect(res.body).to.be.an("array");
-          expect(res.body).to.be.empty;
+          expect(res.body).to.have.lengthOf(1);
+          expect(res.body[0].userName === "admin").to.true;
           done();
         });
     });
@@ -46,7 +47,7 @@ describe("User API Integration Tests", function() {
         .set('x-auth', "test")
         .send(user)
         .end(function(err, res) {
-          expect(res.statusCode).to.equal(200);
+          expect(res.statusCode).to.equal(201);
           let postResponse = res.body;
 
           expect(postResponse.userName).to.equal("name");
@@ -68,7 +69,7 @@ describe("User API Integration Tests", function() {
         .set('x-auth', "test")
         .send(user)
         .end(function(err, res) {
-          expect(res.statusCode).to.equal(200);
+          expect(res.statusCode).to.equal(201);
           let postResponse = res.body;
 
           expect(postResponse.userName).to.equal("name2");

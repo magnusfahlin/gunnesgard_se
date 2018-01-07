@@ -27,7 +27,7 @@ describe("Post API Integration Tests", function() {
       .set("x-auth", "test")
       .send(post1)
       .end(function(err, res) {
-        expect(res.statusCode).to.equal(200);
+        expect(res.statusCode).to.equal(201);
         post1Id = res.body.id;
 
         request(app)
@@ -35,14 +35,14 @@ describe("Post API Integration Tests", function() {
           .set("x-auth", "test")
           .send(post2)
           .end(function(err, res) {
-            expect(res.statusCode).to.equal(200);
+            expect(res.statusCode).to.equal(201);
 
             request(app)
               .post("/posts/" + post1Id + "/comments")
               .set("x-auth", "test")
               .send(comment1)
               .end(function(err, res) {
-                expect(res.statusCode).to.equal(200);
+                expect(res.statusCode).to.equal(201);
                 done();
               });
           });
@@ -78,7 +78,7 @@ describe("Post API Integration Tests", function() {
         .set("x-auth", "test")
         .send(post)
         .end(function(err, res) {
-          expect(res.statusCode).to.equal(200);
+          expect(res.statusCode).to.equal(201);
           let postResponse = res.body;
 
           expect(postResponse.title).to.equal("3_thirdPost");
