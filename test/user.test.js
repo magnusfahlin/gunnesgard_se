@@ -21,7 +21,7 @@ describe("User API Integration Tests", function() {
   });
 
   describe("GET users", function() {
-    it("should get all users", function(done) {
+    it("should return the bootstrap user", function(done) {
       request(app)
         .get("/users")
         .set('x-auth', "test")
@@ -41,7 +41,6 @@ describe("User API Integration Tests", function() {
         userName: "name",
         password: "top secret"
       };
-
       request(app)
         .post("/users")
         .set('x-auth', "test")
