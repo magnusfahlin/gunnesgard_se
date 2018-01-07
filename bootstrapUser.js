@@ -9,8 +9,8 @@ const addUserIfNeeded = function() {
     }
     if (count < 1) {
       const bootstrapUser = new User({
-        userName: "admin",
-        password: "blogga"
+        userName: process.env.bootstrapUsername ? process.env.bootstrapUsername : "admin",
+        password: process.env.bootstrapUserPassword ? process.env.bootstrapUserPassword : "admin"
       });
       bootstrapUser.save().then(
         doc => {
