@@ -14,22 +14,27 @@ function transform(data) {
       if (element.id == comment.blogid) {
         comments.push({
           _id: comment._id,
-          text: comment.text,
-          date: comment.date,
-          username: comment.namn
+          createdAt: comment.date,
+          updatedAt: comment.date,
+          createdBy: comment.namn,
+          updatedBy: comment.namn,
+          text: comment.text
         });
       }
     }, this);
 
     postsArray.push({
       _id: element._id,
+      createdAt: element.date,
+      updatedAt: element.date,
+      createdBy: element.namn,
+      updatedBy: element.namn,
       title: element.rubrik,
       text: element.text,
       location: element.plats,
       date: element.date,
       comments: comments,
       galleryId: element.albumId,
-      username: element.namn
     });
   }, this);
 
