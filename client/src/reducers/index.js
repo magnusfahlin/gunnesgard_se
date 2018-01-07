@@ -1,11 +1,13 @@
 import {combineReducers} from 'redux';
-import authentication from './authentication';
+import login from './login';
 import menu from './menu';
 import posts from './posts';
+import session from './session';
 const rootReducer = combineReducers({
-  authentication,
+  login,
   posts,
-  menu
+  menu,
+  session
 })
 
 export default rootReducer;

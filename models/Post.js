@@ -24,7 +24,20 @@ const CommentSchema = new Schema({
   }
 });
 
-CommentSchema.set("toJSON", { getters: true, virtuals: true });
+CommentSchema.set('toJSON', {
+  transform: function (doc, ret, options) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+  }
+});
+
+CommentSchema.set('toObject', {
+  transform: function (doc, ret, options) {
+      ret._id = ret.id;
+      delete ret.id;
+  }
+}); 
 
 const PostSchema = new Schema({
   title: {
@@ -60,7 +73,20 @@ const PostSchema = new Schema({
   }
 });
 
-PostSchema.set("toJSON", { getters: true, virtuals: true });
+PostSchema.set('toJSON', {
+  transform: function (doc, ret, options) {
+      ret.id = ret._id;
+      delete ret._id;
+      delete ret.__v;
+  }
+});
+
+PostSchema.set('toObject', {
+  transform: function (doc, ret, options) {
+      ret._id = ret.id;
+      delete ret.id;
+  }
+}); 
 
 const Post = mongoose.model("post", PostSchema);
 

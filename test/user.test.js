@@ -7,15 +7,29 @@ const app = require("../server"),
   request = require("supertest"),
   expect = require("chai").expect;
 
-describe("Post API Integration Tests", function() {
+describe("User API Integration Tests", function() {
+
+  describe("GET users when NOT logged in", function() {
+    it("should get error", function(done) {
+      request(app)
+        .get("/users")
+        .end(function(err, res) {
+          expect(res.statusCode).equal(404);
+          done();
+        });
+    });
+  });
+
   describe("GET users", function() {
     it("should get all users", function(done) {
       request(app)
         .get("/users")
+        .set('x-auth', "test")
         .end(function(err, res) {
           expect(res.statusCode).equal(200);
           expect(res.body).to.be.an("array");
-          expect(res.body).to.be.empty;
+          expect(res.body).to.have.lengthOf(1);
+          expect(res.body[0].userName === "admin").to.true;
           done();
         });
     });
@@ -30,9 +44,10 @@ describe("Post API Integration Tests", function() {
 
       request(app)
         .post("/users")
+        .set('x-auth', "test")
         .send(user)
         .end(function(err, res) {
-          expect(res.statusCode).to.equal(200);
+          expect(res.statusCode).to.equal(201);
           let postResponse = res.body;
 
           expect(postResponse.userName).to.equal("name");
@@ -42,7 +57,7 @@ describe("Post API Integration Tests", function() {
     });
   });
 
-  describe("Get user", function() {
+  describe("GET and verify user", function() {
     it("should get a user, password should not be returned", function(done) {
       const user = {
         userName: "name2",
@@ -51,9 +66,10 @@ describe("Post API Integration Tests", function() {
 
       request(app)
         .post("/users")
+        .set('x-auth', "test")
         .send(user)
         .end(function(err, res) {
-          expect(res.statusCode).to.equal(200);
+          expect(res.statusCode).to.equal(201);
           let postResponse = res.body;
 
           expect(postResponse.userName).to.equal("name2");
@@ -61,6 +77,7 @@ describe("Post API Integration Tests", function() {
 
           request(app)
             .get("/users/" + postResponse.id)
+            .set('x-auth', "test")
             .send(user)
             .end(function(err, res) {
               expect(res.statusCode).to.equal(200);

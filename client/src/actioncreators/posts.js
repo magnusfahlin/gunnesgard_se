@@ -8,22 +8,30 @@ import {
 } from "../actionTypes";
 import { thunkCreator, getApi, postApi } from "./utils";
 
-export const createPost = (title, text, location) =>
+export const createPost = (title, text, location, token) =>
   thunkCreator({
     types: [POSTS_CREATE_REQUEST, POSTS_CREATE_SUCCESS, POSTS_CREATE_FAILURE],
-    promise: postApi("posts", {
-      userName : "Magnus-placeholder",
-      title,
-      text,
-      location,
-      date: new Date()
-    }).then(response => response.json())
+    promise: postApi(
+      "posts",
+      {
+        userName: "Magnus-placeholder",
+        title,
+        text,
+        location,
+        date: new Date()
+      },
+      token
+    ).then(response => {
+      if (response.status != 201) throw response.status;
+      return response.json();
+    })
   });
 
-export const fetchPosts = () =>
+export const fetchPosts = token =>
   thunkCreator({
     types: [POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE],
-    promise: getApi("posts?sort=date&sortOrder=desc").then(response =>
-      response.json()
-    )
+    promise: getApi("posts?sort=date&sortOrder=desc", token).then(response => {
+      if (response.status != 200) throw response.status;
+      return response.json();
+    })
   });

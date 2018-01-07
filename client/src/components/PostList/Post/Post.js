@@ -27,11 +27,11 @@ const Post = props => {
 
   if (props.commentCreateRequest) {
     commentEditor = <Spinner />;
-  } else {
+  } else if (props.loggedIn) {
     commentEditor = (
       <CommentEditor
         onCreateComment={text => {
-          props.actions.createComment(props.id, text);
+          props.actions.createComment(props.id, text, props.token);
         }}
       />
     );
