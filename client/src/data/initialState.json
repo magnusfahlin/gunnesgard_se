@@ -8,6 +8,9 @@
     "loading": false,
     "error": false
   },
+  "modal" : {
+    "show" : false
+  },
   "posts": {
     "type": "POSTS_CREATE_REQUEST",
     "loading": true,
