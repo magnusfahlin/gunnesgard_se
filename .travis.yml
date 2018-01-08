@@ -13,10 +13,6 @@ notifications:
   email:
     on_failure: change
 
-cache:
-  directories:
-    - node_modules
-
 deploy:
   on:
     branch: master

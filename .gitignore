@@ -3,6 +3,7 @@ client/dist/
 certificates/
 build/
 .vscode/chrome*
+*.css
 
 *.TMP
 

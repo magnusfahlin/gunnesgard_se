@@ -1,6 +1,9 @@
-const path = require("path");
-const webpack = require("webpack");
-var HtmlWebpackPlugin = require("html-webpack-plugin");
+var Path = require("path");
+var Webpack = require("webpack");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const LoaderOptionsPlugin = require("webpack").LoaderOptionsPlugin;
+const WriteFilePlugin = require("write-file-webpack-plugin");
+const ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 module.exports = () => {
   console.log("process.env.SAME_ORIGIN = " + process.env.SAME_ORIGIN);
@@ -8,21 +11,24 @@ module.exports = () => {
     devtool: "source-map",
     entry: ["./client/src/index.js"],
     output: {
-      path: path.join(__dirname, "build/client"),
+      path: Path.join(__dirname, "build/client"),
       filename: "bundle.js"
     },
     plugins: [
-      new webpack.DefinePlugin({
+      new Webpack.DefinePlugin({
         "process.env": {
           PRODUCTION: JSON.stringify(true),
           SAME_ORIGIN: JSON.stringify(process.env.SAME_ORIGIN)
         }
       }),
-      new webpack.optimize.UglifyJsPlugin({
+      new Webpack.optimize.UglifyJsPlugin({
         minimize: true,
         compress: {
           warnings: false
         }
+      }),
+      new ExtractTextPlugin({
+        filename: "[name].[contenthash].css"
       }),
       new HtmlWebpackPlugin({
         template: "./client/public/index.html",
@@ -31,31 +37,37 @@ module.exports = () => {
       })
     ],
     module: {
-      loaders: [
+      rules: [
+        {
+          test: /\.scss$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: "style-loader"
+            },
+            {
+              loader: "css-loader"
+            },
+            {
+              loader: "sass-loader",
+              options: {
+                includePaths: ["client/src"]
+              }
+            }
+          ]
+        },
+        {
+          test: /\.jpe?g$|\.ico$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/,
+          loader: "file-loader?name=[name].[ext]" // <-- retain original file name
+        },
         {
           test: /.js$/,
           loader: "babel-loader",
-          include: path.join(__dirname, "client/src"),
+          include: Path.join(__dirname, "client/src"),
           exclude: /node_modules/,
           query: {
             presets: ["es2015", "react", "stage-0"]
           }
-        },
-        {
-          test: /\.css$/,
-          use: ["style-loader", "css-loader"],
-          exclude: /node_modules/
-        },
-        //   {
-        //     test: /\.(jpe?g|png|gif|svg)$/i,
-        //     loaders: [
-        //       "file-loader?hash=sha512&digest=hex&name=[hash].[ext]",
-        //       "image-webpack-loader?bypassOnDebug&optimizationLevel=7&interlaced=false"
-        //     ]
-        //   },
-        {
-          test: /\.jpe?g$|\.ico$|\.gif$|\.png$|\.svg$|\.woff$|\.ttf$|\.wav$|\.mp3$/,
-          loader: "file-loader?name=[name].[ext]" // <-- retain original file name
         }
       ]
     }

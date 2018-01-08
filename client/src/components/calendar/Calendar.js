@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CalendarItem from './CalendarItem';
+import "./Calendar.css"
 
 class Calendar extends Component {
       constructor(props) {
