@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import Spinner from "../Common/Spinner";
 import Logout from "./Logout";
 import LoginEditor from "./LoginEditor";
+import "./Login.css"
 
 const Login = props => {
   let error;

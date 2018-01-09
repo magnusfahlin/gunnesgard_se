@@ -1,6 +1,6 @@
-import React, { Component } from "react";
+import React from "react";
 import Text from "../../Common/Text";
-
+import "./Comment.css"
 const Comment = comment => (
   <div className="comment">
     <div className="innerComment roundCorners">

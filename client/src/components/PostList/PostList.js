@@ -4,6 +4,7 @@ import PostContainer from "./Post/PostContainer";
 import PostEditor from "./Editor.js";
 import Spinner from "./../Common/Spinner";
 import ErrorMessage from "./../Common/ErrorMessage";
+import "./PostList.css";
 
 const PostList = props => {
   let postEditor;
