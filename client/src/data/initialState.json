@@ -1,7 +1,7 @@
 {
   "session": {
-    "loggedIn": false,
-    "username": "",
+    "loggedIn": true,
+    "username": "a",
     "token" : ""
   },
   "login": {
@@ -9,7 +9,8 @@
     "error": false
   },
   "modal" : {
-    "show" : false
+    "show" : true,
+    "modalType" : "MODAL_LOGGED_OUT"
   },
   "posts": {
     "type": "POSTS_CREATE_REQUEST",

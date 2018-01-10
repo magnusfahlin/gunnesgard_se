@@ -4,33 +4,46 @@ import {
   POSTS_CREATE_REQUEST,
   POSTS_FETCH_REQUEST,
   POSTS_FETCH_SUCCESS,
-  POSTS_FETCH_FAILURE
+  POSTS_FETCH_FAILURE,
+  MODAL_OPEN
 } from "../actionTypes";
 import { thunkCreator, getApi, postApi } from "./utils";
 
-export const createPost = (title, text, location, token) =>
-  thunkCreator({
-    types: [POSTS_CREATE_REQUEST, POSTS_CREATE_SUCCESS, POSTS_CREATE_FAILURE],
-    promise: postApi(
-      "posts",
-      {
-        username: "Magnus-placeholder",
-        title,
-        text,
-        location
-      },
-      token
-    ).then(response => {
-      if (response.status != 201) throw response.status;
-      return response.json();
+export const createPost = (title, text, location, token) => dispatch => {
+  postApi(
+    "posts",
+    {
+      username: "Magnus-placeholder",
+      title,
+      text,
+      location
+    },
+    token
+  )
+    .then(response => {
+      if (response.status != 201) {
+        dispatch({ type: MODAL_OPEN, result: response.status });
+        return Promise.reject(response.status);
+      }
+      return response.json;
     })
-  });
+    .then(result => {
+      if (result.error) return Promise.reject(result.error);
+      dispatch({ type: POSTS_CREATE_SUCCESS, result });
+      return result;
+    })
+    .catch(error => {
+      dispatch({type: POSTS_CREATE_FAILURE, error });
+    });
+};
 
 export const fetchPosts = token =>
   thunkCreator({
     types: [POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE],
-    promise: getApi("posts?sort=createdAt&sortOrder=desc", token).then(response => {
-      if (response.status != 200) throw response.status;
-      return response.json();
-    })
+    promise: getApi("posts?sort=createdAt&sortOrder=desc", token).then(
+      response => {
+        if (response.status != 200) throw response.status;
+        return response.json();
+      }
+    )
   });

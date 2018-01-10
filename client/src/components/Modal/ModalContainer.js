@@ -1,30 +1,37 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import * as modalActions from "../../actioncreators/modal.js";
 import * as loginActions from "../../actioncreators/login.js";
 import Modal from "./Modal";
 
 const ModalContainer = props => <Modal {...props} />;
 
 function getModalSpecificProps(modalType) {
-  switch (state.modal.type) {
+  switch (modalType) {
     case "MODAL_LOGGED_OUT":
       return {
         onClose: props => {
-          props.actions.signOut();
-        }
+            props.loginActions.signOut();
+            props.modalActions.closeModal();
+        },
+        text: "Du verkar tyvärr loggats ut, \r\n logga in igen."
       };
     default:
-      return { onClose: () => {} };
+      return { onClose: props =>  props.loginActions.closeModal() };
   }
 }
 
 function mapStateToProps(state) {
-  return Object.assign(getModalSpecificProps(state.modal.type), state.modal);
+  const modalSpecificProps = getModalSpecificProps(state.modal.modalType);
+  return Object.assign(Object.assign(modalSpecificProps, state.modal));
 }
 
 function mapDispatchToProps(dispatch) {
-  return { actions: bindActionCreators(loginActions, dispatch) };
+  return {
+    modalActions: bindActionCreators(modalActions, dispatch),
+    loginActions: bindActionCreators(loginActions, dispatch)
+  };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(ModalContainer);

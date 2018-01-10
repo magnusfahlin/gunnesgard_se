@@ -1,0 +1,26 @@
+@import "./../../Theme.scss";
+
+.modal_backdrop {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: $transparent-overlay;
+    padding: 50px;
+    z-index: 1;
+    .modal {
+        margin-top: 50px;
+        background-color: white;
+        border-radius: $borderRadius;
+        max-width: 500px;
+        margin: 0 auto;
+        padding: 20px;
+        z-index: 1;
+      };
+
+      .footer{
+        text-align: right;
+        display: block;
+      }
+  };

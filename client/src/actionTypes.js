@@ -11,7 +11,7 @@ export const POST_VIEWER_SHOW_FEATURES = "POST_VIEWER_SHOW_FEATURES";
 
 // modal
 export const MODAL_OPEN = "MODAL_OPEN";
-export const MODAL_CLOSE = "MODAL_OPEN";
+export const MODAL_CLOSE = "MODAL_CLOSE";
 
 // menu
 export const MENU_SHOW_DEFAULT = "MENU_SHOW_DEFAULT";

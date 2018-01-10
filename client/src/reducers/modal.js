@@ -8,14 +8,14 @@ const modal = (state = initialState.modal, action) => {
         ...state,
         show: true,
         type : action.modalType,
-        text : action.text
+        arg : action.arg
       };
     case MODAL_CLOSE:
       return {
         ...state,
         show: false,
         type : undefined,
-        text : undefined
+        arg : undefined
       };
     default:
       return state;
