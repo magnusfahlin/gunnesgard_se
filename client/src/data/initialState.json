@@ -8,6 +8,10 @@
     "loading": false,
     "error": false
   },
+  "modal" : {
+    "show" : false,
+    "modalType" : "MODAL_LOGGED_OUT"
+  },
   "posts": {
     "type": "POSTS_CREATE_REQUEST",
     "loading": true,

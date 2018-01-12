@@ -2,7 +2,7 @@ import React from "react";
 import Post from "./Post";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as postActions from "../../../actioncreators/post.js";
+import * as postsActions from "../../../actioncreators/posts.js";
 
 const PostContainer = (props) => <Post {...props} />;
 
@@ -12,7 +12,7 @@ function mapStateToProps(state, props) {
 }
 
 function mapDispatchToProps(dispatch) {
-  return { actions: bindActionCreators(postActions, dispatch) };
+  return { actions: bindActionCreators(postsActions, dispatch) };
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(PostContainer);

@@ -2,10 +2,8 @@ require('dotenv').config()
 
 let env = process.env.NODE_ENV || 'development'
 
-if (!process.env.POSTS_SHOWN_NOT_LOGGED_IN)
- {
-  process.env.POSTS_SHOWN_NOT_LOGGED_IN = 5;
- }
+process.env.POSTS_SHOWN_NOT_LOGGED_IN = process.env.POSTS_SHOWN_NOT_LOGGED_IN ? process.env.POSTS_SHOWN_NOT_LOGGED_IN : 5;
+process.env.JWT_EXPIRE_TIME_SECONDS = process.env.JWT_EXPIRE_TIME_SECONDS ? process.env.JWT_EXPIRE_TIME_SECONDS : 60 * 60 * 12;
 
 if (env === 'development') {
   process.env.SECRET = "secret"

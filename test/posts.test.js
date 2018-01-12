@@ -60,7 +60,7 @@ describe("Post API Integration Tests", function() {
         .post("/posts")
         .send(post)
         .end(function(err, res) {
-          expect(res.statusCode).to.equal(404);
+          expect(res.statusCode).to.equal(403);
           done();
         });
     });

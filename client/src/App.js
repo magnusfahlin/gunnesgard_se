@@ -5,6 +5,7 @@ import PostListContainer from './components/PostList/PostListContainer';
 import Menu from './components/menu/Menu.js'
 import LoginContainer from './components/Login/LoginContainer.js'
 import Calendar from './components/calendar/Calendar.js'
+import ModalContainer from './components/Modal/ModalContainer.js'
 import stateData from './data/initialState.json'
 import PropTypes from 'prop-types';
 
@@ -12,6 +13,7 @@ const App = ({store}) =>
         <Router>
           <div id="App">
             <HeaderItem/>
+              <ModalContainer/>
             <div className='container'>
               <div id='left'>
                 <Menu/>

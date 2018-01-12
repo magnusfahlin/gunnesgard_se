@@ -14,7 +14,7 @@ describe("User API Integration Tests", function() {
       request(app)
         .get("/users")
         .end(function(err, res) {
-          expect(res.statusCode).equal(404);
+          expect(res.statusCode).equal(403);
           done();
         });
     });
