@@ -1,26 +1,9 @@
+import { MODAL_OPEN } from "../actionTypes";
+
 const port = process.env.PORT || 3001;
 const endpointRoot = process.env.SAME_ORIGIN
   ? ""
   : "http://localhost:" + port + "/";
-
-export const thunkCreator = action => {
-  const { types, promise, ...rest } = action;
-  const [REQUESTED, RESOLVED, REJECTED] = types;
-
-  return dispatch => {
-    dispatch({ ...rest, type: REQUESTED });
-
-    return promise
-      .then(result => {
-        if (result.error) return Promise.reject(result.error);
-        dispatch({ ...rest, type: RESOLVED, result });
-        return result;
-      })
-      .catch(error => {
-        dispatch({ ...rest, type: REJECTED, error });
-      });
-  };
-};
 
 const createHeaders = (token, contentType) => {
   var headers = {
@@ -34,17 +17,56 @@ const createHeaders = (token, contentType) => {
   return headers;
 };
 
-export const getApi = (path, token) =>
-  fetch(endpointRoot + path, {
+export function handleError(dispatch, toDispatch, error) {
+  if (error.status == 403) {
+    dispatch({ type: MODAL_OPEN, modalType: "MODAL_LOGGED_OUT" });
+  }
+
+  if (process.env.NODE_ENV == "development")
+    console.log(error.status + " " + error.message);
+
+  if (typeof toDispatch === "object") {
+    dispatch(toDispatch, error);
+  } else {
+    dispatch({ type: toDispatch, error });
+  }
+}
+
+function handleErrorResponse(response) {
+  if (!response.ok) {
+    Promise.reject({
+      status: response.status,
+      message: response.message
+    });
+  }
+  return response;
+}
+
+export const getApi = (dispatch, actionType, path, token) => {
+  if (actionType !== null) {
+    dispatch({ type: actionType });
+  }
+  return fetch(endpointRoot + path, {
     method: "GET",
     headers: createHeaders(token),
     cache: "no-store"
-  });
+  })
+    .then(handleErrorResponse)
+    .then(response => response.json());
+};
 
-export const postApi = (path, data, token) =>
-  fetch(endpointRoot + path, {
+export const postApi = (dispatch, toDispatch, path, data, token) => {
+  if (typeof toDispatch === "object") {
+    dispatch(toDispatch);
+  } else {
+    dispatch({ type: toDispatch });
+  }
+  return fetch(endpointRoot + path, {
     method: "POST",
     headers: createHeaders(token, "application/json"),
     cache: "no-store",
     body: JSON.stringify(data)
-  });
+  })
+    .then(handleErrorResponse)
+    .then(response => response.json());
+};

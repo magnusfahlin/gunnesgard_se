@@ -5,12 +5,16 @@ import {
   POSTS_FETCH_REQUEST,
   POSTS_FETCH_SUCCESS,
   POSTS_FETCH_FAILURE,
-  MODAL_OPEN
+  POST_COMMENT_CREATE_REQUEST,
+  POST_FETCH_SUCCESS,
+  POST_COMMENT_CREATE_FAILURE
 } from "../actionTypes";
-import { thunkCreator, getApi, postApi } from "./utils";
+import { getApi, postApi, handleError } from "./utils";
 
 export const createPost = (title, text, location, token) => dispatch => {
   postApi(
+    dispatch,
+    POSTS_CREATE_REQUEST,
     "posts",
     {
       username: "Magnus-placeholder",
@@ -20,30 +24,39 @@ export const createPost = (title, text, location, token) => dispatch => {
     },
     token
   )
-    .then(response => {
-      if (response.status != 201) {
-        dispatch({ type: MODAL_OPEN, result: response.status });
-        return Promise.reject(response.status);
-      }
-      return response.json;
-    })
-    .then(result => {
-      if (result.error) return Promise.reject(result.error);
-      dispatch({ type: POSTS_CREATE_SUCCESS, result });
-      return result;
-    })
-    .catch(error => {
-      dispatch({type: POSTS_CREATE_FAILURE, error });
-    });
+    .then(result => dispatch({ type: POSTS_CREATE_SUCCESS, result }))
+    .catch(error => handleError(dispatch, POSTS_CREATE_FAILURE, error));
 };
 
-export const fetchPosts = token =>
-  thunkCreator({
-    types: [POSTS_FETCH_REQUEST, POSTS_FETCH_SUCCESS, POSTS_FETCH_FAILURE],
-    promise: getApi("posts?sort=createdAt&sortOrder=desc", token).then(
-      response => {
-        if (response.status != 200) throw response.status;
-        return response.json();
-      }
-    )
-  });
+export const fetchPosts = token => dispatch => {
+  getApi(
+    dispatch,
+    POSTS_FETCH_REQUEST,
+    "posts?sort=createdAt&sortOrder=desc",
+    token
+  )
+    .then(result => dispatch({ type: POSTS_FETCH_SUCCESS, result }))
+    .catch(error => handleError(dispatch, POSTS_FETCH_FAILURE, error));
+};
+
+export const createComment = (postId, text, token) => dispatch => {
+  postApi(
+    dispatch,
+    {
+      postId,
+      type: POST_COMMENT_CREATE_REQUEST
+    },
+    "posts/" + postId + "/comments",
+    { text },
+    token
+  )
+    .then(() => getApi(dispatch, null, "posts/" + postId, token))
+    .then(result => dispatch({ type: POST_FETCH_SUCCESS, result }))
+    .catch(error =>
+      handleError(
+        dispatch,
+        { type: POST_COMMENT_CREATE_FAILURE, postId },
+        error
+      )
+    );
+};

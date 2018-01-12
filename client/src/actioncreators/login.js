@@ -6,26 +6,13 @@ import {
   LOGOUT_SUCCESS,
   POSTS_FETCH_REQUEST
 } from "../actionTypes";
-import { postApi } from "./utils";
+import { postApi, handleError } from "./utils";
 import { fetchPosts } from "./posts";
 
 export const login = (username, password) => dispatch => {
-  dispatch({ type: LOGIN_REQUEST });
-
-  return postApi("login", { username, password })
-    .then(response => {
-      if (response.status != 201) return Promise.reject(response.error);
-      return response.json();
-    })
-    .then(result => {
-      Promise.all([
-        dispatch({ type: LOGIN_SUCCESS, result }),
-        dispatch(fetchPosts(result.token))
-      ]);
-    })
-    .catch(error => {
-      dispatch({ type: LOGIN_ERROR, error });
-    });
+  postApi(dispatch, LOGIN_REQUEST, "login", { username, password })
+    .then(result => dispatch({ type: LOGIN_SUCCESS, result }))
+    .catch(error => dispatch({ type: LOGIN_ERROR, error }));
 };
 
 export const signOut = () => dispatch => {
