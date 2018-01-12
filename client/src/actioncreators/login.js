@@ -11,7 +11,9 @@ import { fetchPosts } from "./posts";
 
 export const login = (username, password) => dispatch => {
   postApi(dispatch, LOGIN_REQUEST, "login", { username, password })
-    .then(result => dispatch({ type: LOGIN_SUCCESS, result }))
+    .then(result => {
+      return Promise.all([dispatch({ type: LOGIN_SUCCESS, result }), dispatch(fetchPosts(result.token))]);
+    })
     .catch(error => dispatch({ type: LOGIN_ERROR, error }));
 };
 
