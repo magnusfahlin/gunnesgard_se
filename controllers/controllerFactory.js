@@ -10,7 +10,7 @@ const createController = function(
   var entityPath = "/" + entityName + "s";
   app.post(entityPath, (req, res) => {
     if (!req.auth) {
-      return res.status(404).send();
+      return res.status(403).send();
     }
 
     let entity = parseRequest(req);
@@ -45,7 +45,7 @@ const createController = function(
         limit = parseInt(process.env.POSTS_SHOWN_NOT_LOGGED_IN);
         includeEmbeddedDocs = false;
       } else {
-        return res.status(404).send();
+        return res.status(403).send();
       }
     }
 
@@ -84,7 +84,7 @@ const createController = function(
   // GET HTTP request is called to retrieve individual entity
   app.get(entityPath + "/:id", (req, res) => {
     if (!req.auth) {
-      return res.status(404).send();
+      return res.status(403).send();
     }
 
     let id = req.params.id;
@@ -228,7 +228,7 @@ const createController = function(
   // HTTP DELETE request routed to /[entityName]/:id
   app.delete(entityPath + ":id", (req, res) => {
     if (!req.auth) {
-      return res.status(404).send();
+      return res.status(403).send();
     }
     let id = req.params.id;
     // Validates id
@@ -256,7 +256,7 @@ const createController = function(
   // HTTP PATCH requested routed to /[entityName]/:id
   app.patch(entityPath + ":id", (req, res) => {
     if (!req.auth) {
-      return res.status(404).send();
+      return res.status(403).send();
     }
 
     let id = req.params.id;

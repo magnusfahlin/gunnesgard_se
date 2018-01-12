@@ -34,10 +34,10 @@ export function handleError(dispatch, toDispatch, error) {
 
 function handleErrorResponse(response) {
   if (!response.ok) {
-    Promise.reject({
+    throw {
       status: response.status,
       message: response.message
-    });
+    };
   }
   return response;
 }
@@ -52,7 +52,7 @@ export const getApi = (dispatch, actionType, path, token) => {
     cache: "no-store"
   })
     .then(handleErrorResponse)
-    .then(response => response.json());
+    .then(response => response.json())
 };
 
 export const postApi = (dispatch, toDispatch, path, data, token) => {
