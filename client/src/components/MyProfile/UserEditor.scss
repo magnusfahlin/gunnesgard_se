@@ -1,0 +1,16 @@
+.UserEditor {
+    padding: 10px;
+    width: 100%;
+    td {
+      width: 50%;
+    }
+    .save {
+      margin-right: 10%;
+      float: right;
+      display: block;
+    }
+    .errorMessage{
+      display: inline;
+    }
+  }
+  

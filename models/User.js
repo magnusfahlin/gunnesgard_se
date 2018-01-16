@@ -28,12 +28,17 @@ const userSchema = new Schema(
       required: false,
       trim: true
     },
-    Surname: {
+    surname: {
       type: String,
       required: false,
       trim: true
     },
     address: {
+      type: String,
+      required: false,
+      trim: true
+    },
+    zipCode: {
       type: String,
       required: false,
       trim: true
