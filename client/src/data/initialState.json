@@ -2,6 +2,7 @@
   "session": {
     "loggedIn": false,
     "username": "",
+    "userId": "",
     "token" : ""
   },
   "login": {
@@ -11,6 +12,10 @@
   "modal" : {
     "show" : false,
     "modalType" : "MODAL_LOGGED_OUT"
+  },
+  "password": {
+    "loading": false,
+    "error": false
   },
   "posts": {
     "type": "POSTS_CREATE_REQUEST",

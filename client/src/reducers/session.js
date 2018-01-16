@@ -8,13 +8,15 @@ const session = (state = initialState.session, action) => {
         ...state,
         token: action.result.token,
         username: action.result.username,
+        userId: action.result.userId,
         loggedIn: true,
       };
     case LOGOUT_SUCCESS:
       return {
         ...state,
         token: "",
-        username: " ",
+        username: "",
+        userId: "",
         loggedIn: false,
       };
     default:

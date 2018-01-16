@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import {BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import PostListContainer from './components/PostList/PostListContainer';
-import Menu from './components/menu/Menu.js'
+import MyProfile from './components/MyProfile/MyProfile';
+import MenuContainer from './components/Menu/MenuContainer'
 import LoginContainer from './components/Login/LoginContainer.js'
 import Calendar from './components/calendar/Calendar.js'
 import ModalContainer from './components/Modal/ModalContainer.js'
@@ -16,12 +17,12 @@ const App = ({store}) =>
               <ModalContainer/>
             <div className='container'>
               <div id='left'>
-                <Menu/>
+                <MenuContainer/>
               </div>
               <div id='center'>
                 <Route path="/blog" component={() => <PostListContainer/>}/>
                 <Route path="/(|home)" component={() =><PostListContainer/>}/> 
-                <Route path="/myaccount" component={() => <PostListContainer/>}/> 
+                <Route path="/myprofile" component={() => <MyProfile/>}/> 
               </div>
               <div id='right'>
                 <LoginContainer/>

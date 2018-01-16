@@ -70,3 +70,19 @@ export const postApi = (dispatch, toDispatch, path, data, token) => {
     .then(handleErrorResponse)
     .then(response => response.json());
 };
+
+export const patchApi = (dispatch, toDispatch, path, id, data, token) => {
+  if (typeof toDispatch === "object") {
+    dispatch(toDispatch);
+  } else {
+    dispatch({ type: toDispatch });
+  }
+  return fetch(endpointRoot + path + "/" + id, {
+    method: "PATCH",
+    headers: createHeaders(token, "application/json"),
+    cache: "no-store",
+    body: JSON.stringify(data)
+  })
+    .then(handleErrorResponse)
+    .then(response => response.json());
+};
