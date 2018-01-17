@@ -62,6 +62,10 @@ class PasswordEditor extends React.Component {
     return (
       <div className="PasswordEditor">
         <table>
+        <tr>
+        <td>{"Användarnamn:"}</td>
+        <td><input classname="input-readonly" type="text" value={this.props.username} name="username" readonly/></td>
+        </tr>
           <tr>
             <td>Ändra lösenord:</td>
             <td>
@@ -99,7 +103,7 @@ class PasswordEditor extends React.Component {
             onClick={() =>
               this.props.actions.updateUserPassword(
                 this.props.userId,
-                this.props.password,
+                this.state.password,
                 this.props.token
               )
             }

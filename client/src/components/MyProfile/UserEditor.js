@@ -89,8 +89,6 @@ class UserEditor extends React.Component {
     return (
       <div className="UserEditor">
         <table>
-          <td>{"Användarnamn:"}</td>
-          <td>{this.props.username}</td>
           {tableContent}
         </table>
         <div>

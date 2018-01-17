@@ -90,6 +90,23 @@ userSchema.pre("save", function(next) {
   });
 });
 
+userSchema.pre("findOneAndUpdate", function(next) {
+  var user = this;
+
+  if (!user.getUpdate().password) return next();
+
+  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+    if (err) return next(err);
+
+    bcrypt.hash(user.getUpdate().password, salt, function(err, hash) {
+      if (err) return next(err);
+
+      user.getUpdate().password = hash;
+      next();
+    });
+  });
+});
+
 userSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, function(err, isMatch) {
     if (err) return cb(err);

@@ -16,7 +16,7 @@ class LoginEditor extends React.Component {
       return (
         <div>
           Logga in
-          <input onChange={event => this.setState({ user: event.target.value })} type="text" />
+          <input onChange={event => this.setState({ user: event.target.value })} type="text" name="username" />
           <input onChange={event => this.setState({ password: event.target.value })}  type="password" />
           <button
             type="button"
