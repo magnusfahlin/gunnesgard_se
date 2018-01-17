@@ -49,8 +49,11 @@ const createController = function(
       }
     }
 
-    if (!includeEmbeddedDocs ||
-      (req.query.includeEmbeddedDocs && req.query.includeEmbeddedDocs.toLowerCase()  === "false")) {
+    if (
+      !includeEmbeddedDocs ||
+      (req.query.includeEmbeddedDocs &&
+        req.query.includeEmbeddedDocs.toLowerCase() === "false")
+    ) {
       includeEmbeddedDocs = false;
       embeddedDocuments.forEach(element => {
         projectionArg[element.embeddedEntity] = 0;
@@ -162,6 +165,9 @@ const createController = function(
       });
 
       app.post(entityPath + "/:id/" + element.embeddedEntity, (req, res) => {
+        if (!req.auth) {
+          return res.status(403).send();
+        }
         let id = req.params.id;
         let embeddedDoc = element.embeddedEntityParser(req);
         if (!embeddedDoc._id || !ObjectID.isValid(embeddedDoc._id)) {
@@ -182,124 +188,119 @@ const createController = function(
         );
       });
 
-      app.put(
-        entityPath + "/:id/" + element.embeddedEntity + "/:embeddedId/",
-        (req, res) => {
-          let id = req.params.id;
-          let embeddedDoc = element.embeddedEntityParser(req);
-          embeddedDoc._id = req.params.embeddedId;
-          embeddedDoc.updatedBy = req.auth.username;
-          modifyEmbeddedDoc(
-            "$set",
-            model,
-            id,
-            element.embeddedEntity,
-            embeddedDoc,
-            req,
-            res,
-            200
-          );
-        }
-      );
+      // app.put(
+      //   entityPath + "/:id/" + element.embeddedEntity + "/:embeddedId/",
+      //   (req, res) => {
+      //     if (!req.auth) {
+      //       return res.status(403).send();
+      //     }
 
-      app.delete(
-        entityPath + "/:id/" + element.embeddedEntity + "/:embeddedId/",
-        (req, res) => {
-          let id = req.params.id;
-          // let embeddedDoc = element.embeddedEntityParser(req);
-          let embeddedDoc = { _id: req.params.embeddedId };
-          embeddedDoc.updatedBy = req.auth.username;
+      //     let id = req.params.id;
+      //     let embeddedDoc = element.embeddedEntityParser(req);
+      //     embeddedDoc._id = req.params.embeddedId;
+      //     embeddedDoc.updatedBy = req.auth.username;
+      //     modifyEmbeddedDoc(
+      //       "$set",
+      //       model,
+      //       id,
+      //       element.embeddedEntity,
+      //       embeddedDoc,
+      //       req,
+      //       res,
+      //       200
+      //     );
+      //   }
+      // );
 
-          modifyEmbeddedDoc(
-            "$pull",
-            model,
-            id,
-            element.embeddedEntity,
-            embeddedDoc,
-            req,
-            res,
-            204
-          );
-        }
-      );
-    });
+    //   app.delete(
+    //     entityPath + "/:id/" + element.embeddedEntity + "/:embeddedId/",
+    //     (req, res) => {
+    //       let id = req.params.id;
+    //       // let embeddedDoc = element.embeddedEntityParser(req);
+    //       let embeddedDoc = { _id: req.params.embeddedId };
+    //       embeddedDoc.updatedBy = req.auth.username;
+
+    //       modifyEmbeddedDoc(
+    //         "$pull",
+    //         model,
+    //         id,
+    //         element.embeddedEntity,
+    //         embeddedDoc,
+    //         req,
+    //         res,
+    //         204
+    //       );
+    //     }
+    //   );
+     });
   }
 
-  // HTTP DELETE request routed to /[entityName]/:id
-  app.delete(entityPath + ":id", (req, res) => {
-    if (!req.auth) {
-      return res.status(403).send();
-    }
-    let id = req.params.id;
-    // Validates id
-    if (!ObjectID.isValid(id)) {
-      return res.status(404).send();
-    }
-    // Finds todo with the retrieved id, and removes it
-    Model.findByIdAndRemove(id)
-      .then(entity => {
-        // If no todo is found with that id, an error is sent
-        if (!entity) {
-          return res.status(404).send();
-        }
+  // // HTTP DELETE request routed to /[entityName]/:id
+  // app.delete(entityPath + ":id", (req, res) => {
+  //   if (!req.auth) {
+  //     return res.status(403).send();
+  //   }
+  //   let id = req.params.id;
+  //   // Validates id
+  //   if (!ObjectID.isValid(id)) {
+  //     return res.status(404).send();
+  //   }
+  //   // Finds todo with the retrieved id, and removes it
+  //   Model.findByIdAndRemove(id)
+  //     .then(entity => {
+  //       // If no todo is found with that id, an error is sent
+  //       if (!entity) {
+  //         return res.status(404).send();
+  //       }
 
-        // Responds with todo
-        res.status(204).send(entity);
+  //       // Responds with todo
+  //       res.status(204).send(entity);
 
-        // Error handler to catch and send error
-      })
-      .catch(e => {
-        res.status(400).send();
-      });
-  });
+  //       // Error handler to catch and send error
+  //     })
+  //     .catch(e => {
+  //       res.status(400).send();
+  //     });
+  // });
 
-  // HTTP PATCH requested routed to /[entityName]/:id
-  app.patch(entityPath + ":id", (req, res) => {
-    if (!req.auth) {
-      return res.status(403).send();
-    }
+  app
+    .patch(entityPath + "/:id", (req, res) => {
+      if (!req.auth) {
+        return res.status(403).send();
+      }
 
-    let id = req.params.id;
+      let id = req.params.id;
+      let entity = req.body;
+      entity.updatedBy = req.auth.username;
+      delete entity["id"];
+      delete entity["_id"];
+      delete entity["createdBy"];
 
-    //  Creates an object called body of the picked values (text and completed), from the response gotten
-    let body = _.pick(req.body, ["text", "completed"]);
-
-    // Validates id
-    if (!ObjectID.isValid(id)) {
-      // Returns 400 error and error message when id is not valid
-      return res.status(404).send();
-    }
-
-    // Checks if body.completed is boolean, and if it is set
-    if (_.isBoolean(body.completed) && body.completed) {
-      // Sets body.completedAt to the current time
-      body.completedAt = new Date().getTime();
-    } else {
-      // Else body.completed is set to false and body.completedAt is null
-      body.completed = false;
-      body.completedAt = null;
-    }
-
-    body.updatedBy = req.auth.username;
-    // Finds a todo with id that matches the retrieved id.
-    // Sets the body of the retrieved id to a new one
-    model
-      .findOneAndUpdate(id, { $set: body }, { new: true })
-      .then(todo => {
-        // If no todo is found with that id, an error is sent
-        if (!todo) {
-          return res.status(404).send();
-        }
-
-        // Responds with todo
-        res.send({ todo });
-
-        // Error handler to catch and send error
-      })
-      .catch(e => {
-        res.status(400).send();
-      });
-  });
+      model
+        .findOneAndUpdate({ _id: id, createdBy: req.auth.username }, entity, {
+          runValidators: true
+        })
+        .then(doc => {
+          if (!doc) {
+            return res.status(404).send();
+          } else {
+            model
+              .findById(id)
+              .then(updated => {
+                if (!updated) {
+                  return res.status(404).send();
+                }
+                res.status(200).send(updated);
+              })
+              .catch(e => {
+                res.status(400).send();
+              });
+          }
+        })
+        .catch(e => {
+          res.status(400).send(e);
+        });
+    })
 };
 
 module.exports = { createController };
