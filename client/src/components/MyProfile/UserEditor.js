@@ -81,18 +81,16 @@ class UserEditor extends React.Component {
       <tr>
         <td>{field.description + ":"}</td>
         <td>
-          <input onChange={this.handleFieldChange(field.name)} />
+          <input type="text" onChange={this.handleFieldChange(field.name)} />
         </td>
       </tr>
     ));
 
     return (
       <div className="UserEditor">
-        <table>
-          {tableContent}
-        </table>
-        <div>
-          {error}
+        <table>{tableContent}</table>
+        <div className="save-row">
+          <div className="message">{error}</div>
           <button
             className="save"
             type="button"

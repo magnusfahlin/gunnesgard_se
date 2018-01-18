@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import "./PasswordEditor.css";
 import Spinner from "../Common/Spinner";
 import ErrorMessage from "../Common/ErrorMessage";
+import SuccessMessage from "../Common/SuccessMessage";
 
 class PasswordEditor extends React.Component {
   constructor(props) {
@@ -46,9 +47,13 @@ class PasswordEditor extends React.Component {
     });
   }
   render() {
-    let error;
+    let message;
     if (this.props.error) {
-      error = <ErrorMessage message="Det gick inte att uppdatera lösenordet" />;
+      message = (
+        <ErrorMessage message="Det gick inte att uppdatera lösenordet" />
+      );
+    } else if (this.props.success) {
+      message = <SuccessMessage message="Lösenordet har uppdaterats!" />;
     }
 
     if (this.props.loading) {
@@ -62,15 +67,24 @@ class PasswordEditor extends React.Component {
     return (
       <div className="PasswordEditor">
         <table>
-        <tr>
-        <td>{"Användarnamn:"}</td>
-        <td><input classname="input-readonly" type="text" value={this.props.username} name="username" readonly/></td>
-        </tr>
+          <tr>
+            <td>{"Användarnamn:"}</td>
+            <td>
+              <input
+                classname="input-readonly"
+                type="text"
+                value={this.props.username}
+                name="username"
+                readonly
+              />
+            </td>
+          </tr>
           <tr>
             <td>Ändra lösenord:</td>
             <td>
               <input
                 class={this.state.valid ? "" : "invalid-input"}
+                type="text"
                 name="password"
                 placeholder="minst 6 tecken"
                 errorMessage="Password is required"
@@ -84,6 +98,7 @@ class PasswordEditor extends React.Component {
             <td>
               <input
                 class={this.state.valid ? "" : "invalid-input"}
+                type="text"
                 ref="confirmPassword"
                 name="confirmPassword"
                 placeholder="minst 6 tecken"
@@ -94,8 +109,8 @@ class PasswordEditor extends React.Component {
             </td>
           </tr>
         </table>
-        <div>
-          {error}
+        <div className="save-row">
+          <div className="message">{message}</div>
           <button
             className="save"
             type="button"

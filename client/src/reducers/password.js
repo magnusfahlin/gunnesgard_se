@@ -11,19 +11,22 @@ const modal = (state = initialState.password, action) => {
       return {
         ...state,
         loading: true,
-        error: false
+        error: false,
+        success: false,
       };
     case PASSWORD_UPDATE_FAILURE:
       return {
         ...state,
         loading: false,
-        error: true
+        error: true,
+        success: false,
       };
       case PASSWORD_UPDATE_SUCCESS:
       return {
         ...state,
         loading: false,
-        error: false
+        error: false,
+        success: true,
       };
     default:
       return state;

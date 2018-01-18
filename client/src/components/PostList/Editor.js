@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import "./Editor.css"
+import "./Editor.css";
 
 class Editor extends Component {
   constructor(props) {
@@ -20,6 +20,7 @@ class Editor extends Component {
           Nytt inlägg
           <div className="inputContainer">
             <input
+              type="text"
               placeholder="Rubrik"
               className="text titleEditor"
               onChange={event => this.setState({ title: event.target.value })}
@@ -34,6 +35,7 @@ class Editor extends Component {
           </div>
           <div className="inputContainer">
             <input
+            type="text"
               placeholder="Plats"
               className="text location"
               onChange={event =>
