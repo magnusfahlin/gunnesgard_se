@@ -13,6 +13,11 @@
     "show" : false,
     "modalType" : "MODAL_LOGGED_OUT"
   },
+  "user": {
+    "user" : {},
+    "loading": false,
+    "error": false
+  },
   "password": {
     "loading": false,
     "error": false

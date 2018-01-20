@@ -1,18 +1,32 @@
 import React, { Component } from "react";
-import UserEditor from "./UserEditor"
+import UserEditor from "./UserEditor";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as passwordActions from "../../actioncreators/password";
+import * as userActions from "../../actioncreators/user";
 
-const UserEditorContainer = (props) => <UserEditor {...props}/>;
-  
+class UserEditorContainer extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    this.props.actions.fetchUser(this.props.userId, this.props.token);
+  }
+
+  render() {
+    return <UserEditor {...this.props} />;
+  }
+}
+
 function mapStateToProps(state) {
-  let properties = Object.assign({}, state.password);
+  let properties = Object.assign({}, state.user);
   return Object.assign(properties, state.session);
 }
 
 function mapDispatchToProps(dispatch) {
-  return { actions: bindActionCreators(passwordActions, dispatch) };
+  return { actions: bindActionCreators(userActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(UserEditorContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(
+  UserEditorContainer
+);

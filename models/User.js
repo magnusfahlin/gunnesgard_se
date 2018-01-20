@@ -45,7 +45,6 @@ const userSchema = new Schema(
     },
     town: {
       type: String,
-      minlength: 1,
       required: false,
       trim: true
     },
