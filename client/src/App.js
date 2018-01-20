@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {BrowserRouter as Router, Route } from 'react-router-dom';
 import './App.css';
 import PostListContainer from './components/PostList/PostListContainer';
+import AddressBookContainer from './components/AddressBook/AddressBookContainer';
 import MyProfile from './components/MyProfile/MyProfile';
 import MenuContainer from './components/Menu/MenuContainer'
 import LoginContainer from './components/Login/LoginContainer.js'
@@ -21,6 +22,7 @@ const App = ({store}) =>
               </div>
               <div id='center'>
                 <Route path="/blog" component={() => <PostListContainer/>}/>
+                <Route path="/addressbook" component={() => <AddressBookContainer/>}/>
                 <Route path="/(|home)" component={() =><PostListContainer/>}/> 
                 <Route path="/myprofile" component={() => <MyProfile/>}/> 
               </div>

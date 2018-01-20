@@ -5,7 +5,7 @@ import posts from "./posts";
 import session from "./session";
 import modal from "./modal";
 import password from "./password";
-import user from "./user";
+import users from "./users";
 
 const rootReducer = combineReducers({
   login,
@@ -14,7 +14,7 @@ const rootReducer = combineReducers({
   posts,
   password,
   session,
-  user
+  users
 });
 
 export default rootReducer;
