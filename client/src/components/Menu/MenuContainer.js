@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import Menu from "./Menu.js"
+import Menu from "./InnerMenu.js"
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 
