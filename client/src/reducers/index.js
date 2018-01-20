@@ -1,15 +1,20 @@
-import {combineReducers} from 'redux';
-import login from './login';
-import menu from './menu';
-import posts from './posts';
-import session from './session';
-import modal from './modal';
+import { combineReducers } from "redux";
+import login from "./login";
+import menu from "./menu";
+import posts from "./posts";
+import session from "./session";
+import modal from "./modal";
+import password from "./password";
+import user from "./user";
+
 const rootReducer = combineReducers({
   login,
-  posts,
   menu,
   modal,
-  session
-})
+  posts,
+  password,
+  session,
+  user
+});
 
 export default rootReducer;

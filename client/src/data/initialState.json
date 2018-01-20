@@ -1,7 +1,8 @@
 {
   "session": {
-    "loggedIn": false,
-    "username": "",
+    "loggedIn": true,
+    "username": "aafdadfs",
+    "userId": "",
     "token" : ""
   },
   "login": {
@@ -11,6 +12,15 @@
   "modal" : {
     "show" : false,
     "modalType" : "MODAL_LOGGED_OUT"
+  },
+  "user": {
+    "user" : {},
+    "loading": false,
+    "error": false
+  },
+  "password": {
+    "loading": false,
+    "error": false
   },
   "posts": {
     "type": "POSTS_CREATE_REQUEST",

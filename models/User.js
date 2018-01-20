@@ -28,7 +28,7 @@ const userSchema = new Schema(
       required: false,
       trim: true
     },
-    Surname: {
+    surname: {
       type: String,
       required: false,
       trim: true
@@ -38,9 +38,13 @@ const userSchema = new Schema(
       required: false,
       trim: true
     },
+    zipCode: {
+      type: String,
+      required: false,
+      trim: true
+    },
     town: {
       type: String,
-      minlength: 1,
       required: false,
       trim: true
     },
@@ -80,6 +84,23 @@ userSchema.pre("save", function(next) {
       if (err) return next(err);
 
       user.password = hash;
+      next();
+    });
+  });
+});
+
+userSchema.pre("findOneAndUpdate", function(next) {
+  var user = this;
+
+  if (!user.getUpdate().password) return next();
+
+  bcrypt.genSalt(SALT_WORK_FACTOR, function(err, salt) {
+    if (err) return next(err);
+
+    bcrypt.hash(user.getUpdate().password, salt, function(err, hash) {
+      if (err) return next(err);
+
+      user.getUpdate().password = hash;
       next();
     });
   });

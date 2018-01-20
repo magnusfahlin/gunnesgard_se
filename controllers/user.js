@@ -14,6 +14,7 @@ const registerUser = function(app) {
         surname: req.body.surname,
         address: req.body.address,
         town: req.body.town,
+        zipCode: req.body.zipCode,
         country: req.body.country,
         email: req.body.email,
         homePhone: req.body.homePhone,

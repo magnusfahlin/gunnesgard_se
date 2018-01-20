@@ -14,7 +14,7 @@ const modal = (state = initialState.modal, action) => {
       return {
         ...state,
         show: false,
-        type : undefined,
+        type : "",
         arg : undefined
       };
     default:

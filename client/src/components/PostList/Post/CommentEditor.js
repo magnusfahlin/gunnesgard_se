@@ -16,6 +16,7 @@ class CommentEditor extends Component {
         <div className="innerComment roundCorners">
           <div>
             <input
+              type="text"
               placeholder="Skriv en kommentar"
               className="text"
               onChange={event => this.setState({ text: event.target.value })}

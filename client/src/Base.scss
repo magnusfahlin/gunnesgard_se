@@ -41,9 +41,16 @@
   .red {
     color: $red;
   }
+
+  .green {
+    color: $green;
+  }
   
   .title {
     color: $red;
     font-size: 24px;
   }
   
+  .invalid-input {
+    background-color:pink
+}

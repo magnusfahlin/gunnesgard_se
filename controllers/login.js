@@ -17,6 +17,7 @@ const registerLogin = function(app) {
           );
           res.status(201).send({
             username: user.username,
+            userId: user.id,
             token: token
           });
         } else {

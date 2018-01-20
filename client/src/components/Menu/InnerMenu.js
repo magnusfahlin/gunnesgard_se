@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { connect } from "react-redux";
-import "./Menu.css"
+import "./InnerMenu.css"
 
 const menuItems = [
   {
@@ -22,7 +21,7 @@ const menuItems = [
   },
   {
     topic: "Mina Uppgifter",
-    link: "/myaccount",
+    link: "/myprofile",
     showAlways: false
   }
 ];
@@ -34,7 +33,7 @@ class Menu extends Component {
 
   render() {
     const menu = menuItems
-    .filter(item => item.showAlways || this.props.showAll)
+    .filter(item => item.showAlways || this.props.loggedIn)
     .map(item =>
     (<span className="menuItem">
         <Link to={item.link}>{item.topic}</Link>
@@ -44,14 +43,4 @@ class Menu extends Component {
   }
 }
 
-function mapStateToProps(state) {
-  return {
-    showAll: state.menu.showAll
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {};
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(Menu);
+export default Menu;

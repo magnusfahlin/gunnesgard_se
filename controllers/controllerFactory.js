@@ -252,7 +252,6 @@ const createController = function(
   //       if (!entity) {
   //         return res.status(404).send();
   //       }
-
   //       // Responds with todo
   //       res.status(204).send(entity);
 
@@ -271,6 +270,8 @@ const createController = function(
 
       let id = req.params.id;
       let entity = req.body;
+
+      // Should probably be moved to Mongoose hooks
       entity.updatedBy = req.auth.username;
       delete entity["id"];
       delete entity["_id"];
@@ -278,7 +279,7 @@ const createController = function(
 
       model
         .findOneAndUpdate({ _id: id, createdBy: req.auth.username }, entity, {
-          runValidators: true
+          runValidators: true, new: true
         })
         .then(doc => {
           if (!doc) {
