@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router, Route } from 'react-router-dom';
+import {Router , Route} from 'react-router-dom';
 import './App.css';
 import PostListContainer from './components/PostList/PostListContainer';
 import AddressBookContainer from './components/AddressBook/AddressBookContainer';
@@ -10,9 +10,10 @@ import Calendar from './components/calendar/Calendar.js'
 import ModalContainer from './components/Modal/ModalContainer.js'
 import stateData from './data/initialState.json'
 import PropTypes from 'prop-types';
+import history from './history'
 
 const App = ({store}) =>
-        <Router>
+        <Router history={history}>
           <div id="App">
             <HeaderItem/>
               <ModalContainer/>
@@ -21,9 +22,8 @@ const App = ({store}) =>
                 <MenuContainer/>
               </div>
               <div id='center'>
-                <Route path="/blog" component={() => <PostListContainer/>}/>
                 <Route path="/addressbook" component={() => <AddressBookContainer/>}/>
-                <Route path="/(|home)" component={() =><PostListContainer/>}/> 
+                <Route path="/(|blog)" component={() =><PostListContainer/>}/> 
                 <Route path="/myprofile" component={() => <MyProfile/>}/> 
               </div>
               <div id='right'>

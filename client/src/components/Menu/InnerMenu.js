@@ -5,14 +5,9 @@ import "./InnerMenu.css"
 
 const menuItems = [
   {
-    topic: "Home",
-    link: "/home",
+    topic: "Start",
+    link: "/",
     showAlways: true
-  },
-  {
-    topic: "Blog",
-    link: "/blog",
-    showAlways: false
   },
   {
     topic: "Adressbok",
