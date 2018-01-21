@@ -11,6 +11,7 @@ module.exports = function(req, res, next) {
       try {
         req.auth = jwt.decode(req.headers["x-auth"], process.env.SECRET);
       } catch (err) {
+        console.log("Authorization failed: " + err.message)
         req.auth = false;
       }
     }
