@@ -1,6 +1,8 @@
+@import "./../../../Theme.scss";
+
 .innerComment {
   padding: 7px;
-  background-color: WhiteSmoke;
+  background-color: $grey;
 }
 
 .comment .singature {

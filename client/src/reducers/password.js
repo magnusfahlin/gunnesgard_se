@@ -5,7 +5,7 @@ import {
 } from "../actionTypes";
 import initialState from "./../data/initialState";
 
-const modal = (state = initialState.password, action) => {
+const password = (state = initialState.password, action) => {
   switch (action.type) {
     case PASSWORD_UPDATE_REQUEST:
       return {
@@ -33,4 +33,4 @@ const modal = (state = initialState.password, action) => {
   }
 };
 
-export default modal;
+export default password;

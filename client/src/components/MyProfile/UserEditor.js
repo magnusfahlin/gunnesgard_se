@@ -48,7 +48,7 @@ class UserEditor extends React.Component {
           value: ""
         },
         cellPhone: {
-          description: "Fast telefon",
+          description: "Mobiltelefon",
           value: ""
         }
       }
@@ -64,10 +64,12 @@ class UserEditor extends React.Component {
     } else {
       newState.fields = this.clearAllFields(newState.fields);
     }
+    newState.dirty = false;
     this.setState(newState);
   }
 
   componentWillReceiveProps(nextProps) {
+
     this.updateFields(nextProps.user);
   }
 

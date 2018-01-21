@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import UserEditor from "./UserEditor";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import * as userActions from "../../actioncreators/user";
+import * as userActions from "../../actioncreators/users";
 
 class UserEditorContainer extends Component {
   constructor(props) {
@@ -19,7 +19,17 @@ class UserEditorContainer extends Component {
 }
 
 function mapStateToProps(state) {
-  let properties = Object.assign({}, state.user);
+  let user = {};
+  const sessionUserIndex = state.users.usersIdIndexMap[state.session.userId];
+  if (sessionUserIndex !== undefined) {
+    user = state.users.users[sessionUserIndex];
+  }
+  let properties = {
+    user: user,
+    loading: state.users.loading,
+    error: state.users.error
+  };
+
   return Object.assign(properties, state.session);
 }
 

@@ -1,7 +1,7 @@
 {
   "session": {
-    "loggedIn": true,
-    "username": "aafdadfs",
+    "loggedIn": false,
+    "username": "admin",
     "userId": "",
     "token" : ""
   },
@@ -13,10 +13,12 @@
     "show" : false,
     "modalType" : "MODAL_LOGGED_OUT"
   },
-  "user": {
-    "user" : {},
+  "users": {
+    "usersIdIndexMap" : {},
+    "users" : [],
     "loading": false,
-    "error": false
+    "error": false,
+    "success" : true
   },
   "password": {
     "loading": false,

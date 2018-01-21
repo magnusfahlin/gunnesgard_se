@@ -1,4 +1,7 @@
 import {
+    USERS_FETCH_REQUEST,
+    USERS_FETCH_SUCCESS,
+    USERS_FETCH_FAILURE,
     USER_FETCH_REQUEST,
     USER_FETCH_SUCCESS,
     USER_FETCH_FAILURE,
@@ -8,6 +11,17 @@ import {
   } from "../actionTypes";
 
 import { getApi, patchApi, handleError } from "./utils";
+
+export const fetchUsers = (token) => dispatch => {
+    getApi(
+        dispatch,
+        USERS_FETCH_REQUEST,
+        "users/",
+        token
+      )
+        .then(result => dispatch({ type: USERS_FETCH_SUCCESS, result }))
+        .catch(error => handleError(dispatch, USERS_FETCH_FAILURE, error));
+    };
 
 export const fetchUser = (userId, token) => dispatch => {
   getApi(

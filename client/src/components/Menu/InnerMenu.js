@@ -15,8 +15,8 @@ const menuItems = [
     showAlways: false
   },
   {
-    topic: "Skriv inlägg",
-    link: "/editor",
+    topic: "Adressbok",
+    link: "/addressbook",
     showAlways: false
   },
   {
