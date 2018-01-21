@@ -11,7 +11,7 @@ class PostListContainer extends Component {
   }
 
   componentDidMount() {
-    this.props.actions.fetchPosts();
+    this.props.actions.fetchPosts(this.props.token);
   }
 
   render() {

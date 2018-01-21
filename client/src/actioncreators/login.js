@@ -19,5 +19,5 @@ export const login = (username, password) => dispatch => {
 };
 
 export const signOut = () => dispatch => {
-  Promise.all([dispatch({ type: LOGOUT_SUCCESS }),dispatch(() => History.push('/'))]);
+  Promise.all([dispatch({ type: LOGOUT_SUCCESS }), dispatch(fetchPosts(null)), dispatch(() => History.push('/'))]);
 };

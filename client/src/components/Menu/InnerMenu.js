@@ -11,12 +11,12 @@ const menuItems = [
   },
   {
     topic: "Adressbok",
-    link: "/addressbook",
+    link: "/adressbok",
     showAlways: false
   },
   {
     topic: "Mina Uppgifter",
-    link: "/myprofile",
+    link: "/minprofil",
     showAlways: false
   }
 ];
