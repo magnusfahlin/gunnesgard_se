@@ -20,7 +20,7 @@ class UserEditorContainer extends Component {
 
 function mapStateToProps(state) {
   let user = {};
-  const sessionUserIndex = state.users.usersIdIndexMap[state.session.userId];
+  const sessionUserIndex = state.users.indexByIdMap[state.session.userId];
   if (sessionUserIndex !== undefined) {
     user = state.users.users[sessionUserIndex];
   }

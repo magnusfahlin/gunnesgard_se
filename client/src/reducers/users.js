@@ -29,7 +29,7 @@ const users = (state = initialState.users, action) => {
       };
     case USER_FETCH_SUCCESS:
     case USER_UPDATE_SUCCESS:
-      let indexMap = state.usersIdIndexMap;
+      let indexMap = state.indexByIdMap;
       const user = action.result;
       const userIndex = indexMap[user.id];
       let newUsers;
@@ -50,7 +50,7 @@ const users = (state = initialState.users, action) => {
       
       return {
         ...state,
-        usersIdIndexMap : indexMap,
+        indexByIdMap : indexMap,
         users: newUsers,
         loading: false,
         error: false
@@ -58,26 +58,26 @@ const users = (state = initialState.users, action) => {
     case USERS_FETCH_REQUEST:
       return {
         ...state,
-        usersIdIndexMap : {},        
+        indexByIdMap : {},        
         users: [],
         loading: true,
         error: false
       };
     case USERS_FETCH_FAILURE:
       return {
-        usersIdIndexMap : {},        
+        indexByIdMap : {},        
         users: [],
         loading: false,
         error: true
       };
     case USERS_FETCH_SUCCESS:
-      let usersIdIndexMap = {};
+      let indexByIdMap = {};
       let i = 0;
-      action.result.forEach(user => (usersIdIndexMap[user.id] = i++));
+      action.result.forEach(user => (indexByIdMap[user.id] = i++));
 
       return {
         ...state,
-        usersIdIndexMap : usersIdIndexMap,
+        indexByIdMap : indexByIdMap,
         users: action.result,
         loading: false,
         error: false

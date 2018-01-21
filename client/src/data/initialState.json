@@ -14,7 +14,7 @@
     "modalType" : "MODAL_LOGGED_OUT"
   },
   "users": {
-    "usersIdIndexMap" : {},
+    "indexByIdMap" : {},
     "users" : [],
     "loading": false,
     "error": false,
