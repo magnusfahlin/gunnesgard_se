@@ -12,9 +12,8 @@ const Post = props => {
   let commentCreateError;
 
   if (props.comments) {
-    comments = props.comments.byIndex.map(id => (
-      <Comment comment={props.comments.byId[id]} />
-    ));
+    comments = props.comments.map(comment =>
+      <Comment comment={comment} />);
   }
   if (props.commentCreateError) {
     commentCreateError = (

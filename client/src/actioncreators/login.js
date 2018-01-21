@@ -1,4 +1,5 @@
 import * as A from "../actionTypes";
+import History from './../history' 
 import {
   LOGIN_REQUEST,
   LOGIN_SUCCESS,
@@ -18,5 +19,5 @@ export const login = (username, password) => dispatch => {
 };
 
 export const signOut = () => dispatch => {
-  Promise.all([dispatch({ type: LOGOUT_SUCCESS }), dispatch(fetchPosts())]);
+  Promise.all([dispatch({ type: LOGOUT_SUCCESS }), dispatch(fetchPosts(null)), dispatch(() => History.push('/'))]);
 };

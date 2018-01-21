@@ -5,23 +5,18 @@ import "./InnerMenu.css"
 
 const menuItems = [
   {
-    topic: "Home",
-    link: "/home",
+    topic: "Start",
+    link: "/",
     showAlways: true
   },
   {
-    topic: "Blog",
-    link: "/blog",
-    showAlways: false
-  },
-  {
     topic: "Adressbok",
-    link: "/addressbook",
+    link: "/adressbok",
     showAlways: false
   },
   {
     topic: "Mina Uppgifter",
-    link: "/myprofile",
+    link: "/minprofil",
     showAlways: false
   }
 ];

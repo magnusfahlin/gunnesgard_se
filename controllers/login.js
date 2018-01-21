@@ -9,7 +9,7 @@ const registerLogin = function(app) {
         if (valid) {
 
           let exp = Math.round(Date.now() / 1000) + parseInt(process.env.JWT_EXPIRE_TIME_SECONDS)
-          let nbf = Math.round(Date.now() / 1000)
+          let nbf = Math.round(Date.now() / 1000) - 1
 0
           var token = jwt.encode(
             { username: user.username, nbf : nbf, exp: exp },

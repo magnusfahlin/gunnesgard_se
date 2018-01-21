@@ -10,9 +10,13 @@ const PostList = props => {
   let postEditor;
   if (props.postCreateRequest) {
     postEditor = <Spinner />;
-  } else if (props.loggedIn){
+  } else if (props.loggedIn) {
     postEditor = (
-      <PostEditor onCreatePost={(title, text, location) => props.actions.createPost(title, text, location, props.token)} />
+      <PostEditor
+        onCreatePost={(title, text, location) =>
+          props.actions.createPost(title, text, location, props.token)
+        }
+      />
     );
   }
 
@@ -25,20 +29,17 @@ const PostList = props => {
   if (props.error) {
     postItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
   } else {
-    postItems = props.posts.byIndex.map(postId => {
-      let post = props.posts.byId[postId];
-      return (
-        <PostContainer
-          id={post.id}
-          title={post.title}
-          text={post.text}
-          createdBy={post.createdBy}
-          location={post.location}
-          createdAt={post.createdAt}
-          comments={post.comments}
-        />
-      );
-    });
+    postItems = props.posts.map(post => (
+      <PostContainer
+        id={post.id}
+        title={post.title}
+        text={post.text}
+        createdBy={post.createdBy}
+        location={post.location}
+        createdAt={post.createdAt}
+        comments={post.comments}
+      />
+    ));
 
     postItems = [postEditor, ...postItems, loading];
 

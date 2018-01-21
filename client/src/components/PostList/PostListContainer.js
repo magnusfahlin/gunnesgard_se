@@ -3,6 +3,7 @@ import PostList from "./PostList"
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as postsActions from "../../actioncreators/posts.js";
+import { withRouter } from 'react-router-dom';
 
 class PostListContainer extends Component {
     constructor(props) {
@@ -10,7 +11,7 @@ class PostListContainer extends Component {
   }
 
   componentDidMount() {
-    this.props.actions.fetchPosts();
+    this.props.actions.fetchPosts(this.props.token);
   }
 
   render() {
@@ -27,4 +28,4 @@ function mapDispatchToProps(dispatch) {
   return { actions: bindActionCreators(postsActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(PostListContainer);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(PostListContainer));
