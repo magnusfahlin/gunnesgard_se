@@ -4,10 +4,14 @@ import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as postsActions from "../../../actioncreators/posts.js";
 
-const PostContainer = (props) => <Post {...props} />;
+const PostContainer = props => <Post {...props} />;
 
 function mapStateToProps(state, props) {
-  let properties = Object.assign({}, state.posts.posts.byId[props.id]);
+  // let properties = Object.assign({}, state.posts.posts.byId[props.id]);
+  let properties = Object.assign(
+    {},
+    state.posts.posts[state.posts.indexByIdMap[props.id]]
+  );
   return Object.assign(properties, state.session);
 }
 

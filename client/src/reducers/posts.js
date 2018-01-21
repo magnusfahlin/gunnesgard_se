@@ -12,35 +12,32 @@ export default function postsReducer(state = initialState.posts, action) {
       };
     }
     case Action.POSTS_FETCH_SUCCESS: {
-      let byIndex = action.result.map(post => post.id);
-      let byId = action.result.reduce((map, post) => {
-        let commentsbyIndex = [];
-        let commentsbyId = [];
-        if (post.comments && Array.isArray(post.comments)) {
-          commentsbyIndex = post.comments.map(comment => comment.id);
-          commentsbyId = post.comments.reduce((commentMap, comment) => {
-            commentMap[comment.id] = comment;
-            return commentMap;
-          }, {});
-        }
-        post.comments = {
-          byIndex: commentsbyIndex,
-          byId: commentsbyId
-        };
+      let indexByIdMap = {};
+      let i = 0;
+      let newPosts = [];
+      action.result.forEach(post => {
+        indexByIdMap[post.id] = i++;
 
+        let c_indexByIdMap = {};
+        if (post.comments && Array.isArray(post.comments)) {
+          post.comments.forEach(comment => {
+            c_indexByIdMap[comment.id] = i++;
+          });
+        }
+
+        post.commentsIndexByIdMap = c_indexByIdMap;
         post.commentCreateRequest = false;
         post.commentCreateError = false;
-
-        map[post.id] = post;
-        return map;
-      }, {});
+        newPosts.push(post);
+      });
 
       return {
         loading: false,
         error: false,
         postCreateRequest: false,
         postCreateError: false,
-        posts: { byIndex, byId }
+        indexByIdMap: indexByIdMap,
+        posts: newPosts
       };
     }
     case Action.POSTS_FETCH_FAILURE: {
@@ -67,46 +64,51 @@ export default function postsReducer(state = initialState.posts, action) {
     case Action.POSTS_CREATE_SUCCESS:
     case Action.POST_FETCH_SUCCESS: {
       let post = action.result;
-      let commentsbyIndex = [];
-      let commentsbyId = [];
-      if (post.comments && Array.isArray(post.comments)) {
-        commentsbyIndex = post.comments.map(comment => comment.id);
-        commentsbyId = post.comments.reduce((commentMap, comment) => {
-          commentMap[comment.id] = comment;
-          return commentMap;
-        }, {});
+
+      let c_indexByIdMap = {};
+      let i = 0;
+      post.comments.forEach(comment => {
+        c_indexByIdMap[comment.id] = i++;
+      });
+
+      post.commentsIndexByIdMap = c_indexByIdMap;
+      post.commentCreateRequest = false;
+      post.commentCreateError = false;
+
+      let indexByIdMap = state.indexByIdMap;
+      const index = indexByIdMap[post.id];
+      let newPosts;
+      if (index == undefined) {
+        indexByIdMap = {};
+        state.posts.forEach(post => (indexByIdMap[post.id] = i++));
+        newPosts = [post, ...state.posts];
+      } else {
+        newPosts = [
+          ...state.posts.slice(0, index),
+          post,
+          ...state.posts.slice(index + 1)
+        ];
       }
-      post.comments = {
-        byIndex: commentsbyIndex,
-        byId: commentsbyId
-      };
-
-      if (state.posts.byId[post.id] == undefined) {
-        state.posts.byIndex = [post.id, ...state.posts.byIndex];
-      }
-
-      state.posts.byId[post.id] = post;
-
       return {
         loading: false,
         error: false,
-        posts: {
-          byIndex: state.posts.byIndex,
-          byId: state.posts.byId
-        }
+        indexByIdMap: indexByIdMap,
+        posts: newPosts
       };
     }
     case Action.POST_COMMENT_CREATE_REQUEST: {
-      state.posts.byId[action.postId].commentCreateRequest = true;
-      state.posts.byId[action.postId].commentCreateError = false;
+      const index = state.indexByIdMap[action.postId];
+      state.posts[index].commentCreateRequest = true;
+      state.posts[index].commentCreateError = false;
 
       return {
         ...state
       };
     }
     case Action.POST_COMMENT_CREATE_FAILURE: {
-      state.posts.byId[action.postId].commentCreateRequest = false;
-      state.posts.byId[action.postId].commentCreateError = true;
+      const index = state.indexByIdMap[action.postId];
+      state.posts[index].commentCreateRequest = false;
+      state.posts[index].commentCreateError = true;
 
       return {
         ...state
