@@ -3,8 +3,9 @@ const path = require("path");
 
 const _ = require("lodash");
 const express = require("express");
-var cors = require("cors");
+const cors = require("cors");
 const bodyParser = require("body-parser");
+const mongoSanitize = require('express-mongo-sanitize');
 
 const { mongoose } = require("./db/mongoose");
 const app = express();
@@ -26,6 +27,7 @@ const { addUserIfNeeded } = require("./bootstrapUser");
 addUserIfNeeded();
 
 app.use(bodyParser.json());
+app.use(mongoSanitize());
 app.use(require("./verifyAuth"));
 app.use(function(req, res, next) {
   next();
