@@ -6,14 +6,21 @@ import session from "./session";
 import modal from "./modal";
 import password from "./password";
 import users from "./users";
+import { persistReducer } from 'redux-persist'
+import storage from 'redux-persist/lib/storage'
 
+const authPersistConfig = {
+  key: 'session',
+  storage: storage,
+  blacklist: ['somethingTemporary']
+}
 const rootReducer = combineReducers({
+  session: persistReducer(authPersistConfig, session),
   login,
   menu,
   modal,
   posts,
   password,
-  session,
   users
 });
 
