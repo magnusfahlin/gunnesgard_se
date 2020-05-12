@@ -7,6 +7,7 @@ Prerequisite:
 
 Build:
 `docker-compose up` lanches the containers for development
+
 Debug:
 Open Visual studio code and debug the cleint or backend from there
 
