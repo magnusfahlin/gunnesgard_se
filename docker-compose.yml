@@ -54,31 +54,31 @@ services:
       - 27017:27017
     command: mongod
     
-  # mysql:
-  #   image: mariadb
-  #   restart: always
-  #   environment:
-  #       - MYSQL_ROOT_PASSWORD=test_pass
-  #       - MYSQL_DATABASE=gunnesgard_se
-  #   volumes:
-  #       - mariadbdata:/var/lib/mysql
-  #   ports:
-  #       - 3306:3306
-  # phpmyadmin:
-  #   image: phpmyadmin/phpmyadmin
-  #   container_name: phpmyadmin
-  #   environment:
-  #       PMA_PORT: 3306
-  #       PMA_HOST: mysql
-  #       PMA_PASSWORD: test_pass
-  #       PMA_USER: root
-  #   restart: always
-  #   ports:
-  #       - 8081:80
-  #   volumes:
-  #       - /sessions
-  #   links:
-  #       - mysql
+  mysql:
+    image: mariadb
+    restart: always
+    environment:
+        - MYSQL_ROOT_PASSWORD=test_pass
+        - MYSQL_DATABASE=gunnesgard_se
+    volumes:
+        - mariadbdata:/var/lib/mysql
+    ports:
+        - 3306:3306
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin
+    environment:
+        PMA_PORT: 3306
+        PMA_HOST: mysql
+        PMA_PASSWORD: test_pass
+        PMA_USER: root
+    restart: always
+    ports:
+        - 8081:80
+    volumes:
+        - /sessions
+    links:
+        - mysql
 volumes:
   mongodb:
   mongodb_config:

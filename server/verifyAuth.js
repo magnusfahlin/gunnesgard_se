@@ -2,7 +2,7 @@ var jwt = require("jwt-simple");
 
 module.exports = function(req, res, next) {
   if (req.headers["x-auth"]) {
-    if (process.env.NODE_ENV == "test") {
+    if (process.env.NODE_ENV == "test" || process.env.TEST_TOKEN) {
       req.auth =
         req.headers["x-auth"] === process.env.TEST_TOKEN
           ? { username: "testUser" }

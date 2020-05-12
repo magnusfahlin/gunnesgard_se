@@ -22,6 +22,9 @@ const { registerEvent } = require("./controllers/event");
 const { registerPost } = require("./controllers/post");
 const { registerUser } = require("./controllers/user");
 const { registerLogin } = require("./controllers/login");
+const { registerStaticContent } = require("./controllers/staticContent");
+const { registerAlbum } = require("./controllers/album");
+
 const { addUserIfNeeded } = require("./bootstrapUser");
 
 addUserIfNeeded();
@@ -37,6 +40,8 @@ registerPost(app);
 registerEvent(app);
 registerUser(app);
 registerLogin(app);
+registerStaticContent(app);
+registerAlbum(app);
 
 const publicPath = express.static(path.join(__dirname, "/build/client"));
 const indexPath = path.join(__dirname, "/build/client/index.html");
