@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  gunnesgard_backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/app
+      - /app/node_modules
+    ports:
+      - 3001:3001
+      - 9229:9229
+    command: nodemon --inspect=0.0.0.0 server.js

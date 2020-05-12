@@ -1,0 +1,35 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t magnusfahlin/client_test -f ./client/Dockerfile.dev ./client
+  - docker build -t magnusfahlin/server_test -f ./server/Dockerfile.dev ./server
+
+script:
+  - docker run magnusfahlin/client_test npm test -- --coverage
+  - docker run magnusfahlin/server_test npm test -- --coverage
+
+after_success:
+  - docker build -t magnusfahlin/gunnesgard_client ./client
+  - docker build -t magnusfahlin/gunnesgard_nginx ./nginx
+  - docker build -t magnusfahlin/gunnesgard_server ./server
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  # Take those images and push them to docker hub
+  - docker push magnusfahlin/gunnesgard_client
+  - docker push magnusfahlin/gunnesgard_nginx
+  - docker push magnusfahlin/gunnesgard_server
+
+# deploy:
+#   provider: elasticbeanstalk
+#   region: us-west-1
+#   app: multi-docker
+#   env: MultiDocker-env
+#   bucket_name: elasticbeanstalk-us-west-1-306476627547
+#   bucket_path: docker-multi
+#   on:
+#     branch: master
+#   access_key_id: $AWS_ACCESS_KEY
+#   secret_access_key:
+#     secure: $AWS_SECRET_KEY
