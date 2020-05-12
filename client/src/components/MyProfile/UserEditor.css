@@ -1,0 +1,15 @@
+.UserEditor {
+  padding: 10px;
+  width: 100%; }
+  .UserEditor td {
+    width: 50%; }
+  .UserEditor .save-row {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 5px; }
+  .UserEditor .message {
+    min-width: 300px; }
+  .UserEditor .save {
+    margin-right: 10%;
+    float: right;
+    display: block; }

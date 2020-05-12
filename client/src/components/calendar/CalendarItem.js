@@ -18,6 +18,7 @@ class CalendarItem extends Component {
 
 CalendarItem.propTypes = {
     title: PropTypes.string,
+    // eslint-disable-next-line react/no-typos
     createdAt: PropTypes.date
 }
 

@@ -1,0 +1,18 @@
+.AddressBook .AddressList {
+  display: flex;
+  justify-content: center; }
+  .AddressBook .AddressList table {
+    border-collapse: collapse;
+    width: 90%; }
+  .AddressBook .AddressList table,
+  .AddressBook .AddressList th,
+  .AddressBook .AddressList td {
+    padding: 5px; }
+  .AddressBook .AddressList .phone span {
+    display: block; }
+  .AddressBook .AddressList .address span {
+    display: block; }
+  .AddressBook .AddressList th {
+    height: 50px; }
+  .AddressBook .AddressList tr:nth-child(even) {
+    background-color: WhiteSmoke; }

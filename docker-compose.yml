@@ -1,0 +1,86 @@
+version: '3.7'
+
+services:
+  nginx:
+    restart: always
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+      - '3051:80'
+    depends_on:
+      - client
+      - backend
+
+  client:
+    stdin_open: true 
+    build:
+      context: ./client
+      dockerfile: Dockerfile.dev
+    volumes:
+      - /app/node_modules
+      - ./client:/app
+    ports:
+      - 6001:3000
+      - 9222:9222
+    command: npm start
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+  
+  backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile.dev
+    env_file: debuglocaldb.env
+    volumes:
+      - ./server:/app
+      - /app/node_modules
+    ports:
+      - 3001:3001
+      - 9229:9229
+    links:
+      - "mongodb:mongodb"
+    depends_on:
+      - mongodb
+    command: nodemon --inspect=0.0.0.0 server.js
+
+  mongodb:
+    image: mongo:3.6.1
+    container_name: uv-mongodb
+    volumes:
+      - mongodb:/data/db
+      - mongodb_config:/data/configdb
+    ports:
+      - 27017:27017
+    command: mongod
+    
+  # mysql:
+  #   image: mariadb
+  #   restart: always
+  #   environment:
+  #       - MYSQL_ROOT_PASSWORD=test_pass
+  #       - MYSQL_DATABASE=gunnesgard_se
+  #   volumes:
+  #       - mariadbdata:/var/lib/mysql
+  #   ports:
+  #       - 3306:3306
+  # phpmyadmin:
+  #   image: phpmyadmin/phpmyadmin
+  #   container_name: phpmyadmin
+  #   environment:
+  #       PMA_PORT: 3306
+  #       PMA_HOST: mysql
+  #       PMA_PASSWORD: test_pass
+  #       PMA_USER: root
+  #   restart: always
+  #   ports:
+  #       - 8081:80
+  #   volumes:
+  #       - /sessions
+  #   links:
+  #       - mysql
+volumes:
+  mongodb:
+  mongodb_config:
+  mariadbdata:
+      driver: local

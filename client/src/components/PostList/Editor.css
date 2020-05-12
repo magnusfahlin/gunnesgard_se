@@ -1,0 +1,29 @@
+.editor {
+  text-align: center; }
+  .editor textarea {
+    width: 250px;
+    height: 250px; }
+
+.posteditor {
+  width: 98%;
+  margin: 0 auto; }
+
+.posteditor .inputContainer {
+  padding: 1px; }
+
+.posteditor textarea {
+  width: 100%;
+  height: 100px; }
+
+.posteditor .text {
+  width: 100%; }
+
+.posteditor .location {
+  width: 25%; }
+
+.posteditor .titleEditor {
+  font-size: 24px; }
+
+.posteditor .singature {
+  text-align: right;
+  display: block; }

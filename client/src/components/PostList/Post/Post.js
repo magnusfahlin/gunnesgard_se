@@ -52,7 +52,9 @@ Post.propTypes = {
   title: PropTypes.string,
   text: PropTypes.string,
   createdBy: PropTypes.string,
+   // eslint-disable-next-line react/no-typos
   location: PropTypes.location,
+   // eslint-disable-next-line react/no-typos
   createdAt: PropTypes.date
 };
 

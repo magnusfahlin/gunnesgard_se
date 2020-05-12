@@ -17,7 +17,8 @@ const migrateData = function(
   function readAllData(mongoPort, sourceDbName, callback) {
     MongoClient.connect(
       "mongodb://localhost:" + mongoPort + "/" + destDbName,
-      { native_parser: true },
+      { native_parser: true,
+        wtimeout : 30000 },
       function(error, db) {
         if (error) throw error;
         var jobs = 0;
@@ -29,7 +30,7 @@ const migrateData = function(
             ++jobs;
             sourceCollection.find(function(err, items) {
               items.toArray(function(err, items) {
-                itemsToTransform[sourceCollection.s.name] = items;
+                itemsToTransform[sourceCollection.collectionName] = items;
                 finnishedJobs++;
                 jobs--;
               });

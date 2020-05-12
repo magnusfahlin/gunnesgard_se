@@ -92,7 +92,7 @@ const importMySql = function(destDbName, mongoPort, sourceDbOptions, finalCallba
           db.close();
           MysqlCon.end();
         }
-      }, 30000);
+      }, 60000);
     }
   );
 };

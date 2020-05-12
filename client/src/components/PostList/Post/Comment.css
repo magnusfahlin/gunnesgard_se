@@ -1,0 +1,10 @@
+.innerComment {
+  padding: 7px;
+  background-color: WhiteSmoke; }
+
+.comment .singature {
+  text-align: right;
+  display: block; }
+
+.comment input {
+  width: 100%; }
