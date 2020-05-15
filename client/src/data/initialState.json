@@ -30,6 +30,12 @@
     "posts": [],
     "indexByIdMap" : {}
   },
+  "albums": {
+    "loading": true,
+    "error": false,
+    "albums": [],
+    "indexByIdMap" : {}
+  },
   "Calendar": [
     {
       "title": "Julafton",

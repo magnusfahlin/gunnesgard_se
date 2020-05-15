@@ -1,20 +1,20 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import AlbumContainer from "./Album/AlbumContainer.js";
-import PostEditor from "./Editor.js";
+import AlbumEditor from "./Editor.js";
 import Spinner from "../Common/Spinner";
 import ErrorMessage from "../Common/ErrorMessage";
-//import "./AlbumList.css";
+import "./AlbumList.scss";
 
 const AlbumList = props => {
-  let postEditor;
-  if (props.postCreateRequest) {
-    postEditor = <Spinner />;
+  let albumEditor;
+  if (props.albumCreateRequest) {
+    albumEditor = <Spinner />;
   } else if (props.loggedIn) {
-    postEditor = (
-      <PostEditor
-        onCreatePost={(title, text, location) =>
-          props.actions.createPost(title, text, location, props.token)
+    albumEditor = (
+      <AlbumEditor
+        onCreateAlbum={(title, text, location) =>
+          props.actions.createAlbum(title, text, location, props.token)
         }
       />
     );
@@ -25,33 +25,33 @@ const AlbumList = props => {
     loading = <Spinner />;
   }
 
-  let postItems;
+  let albumItems;
   if (props.error) {
-    postItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
+    albumItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
   } else {
-    postItems = props.posts.map(post => (
+    albumItems = props.albums.map(album => (
       <AlbumContainer
-        id={post.id}
-        title={post.title}
-        text={post.text}
-        createdBy={post.createdBy}
-        location={post.location}
-        createdAt={post.createdAt}
-        comments={post.comments}
+        id={album.id}
+        title={album.title}
+      //  text={album.text}
+        createdBy={album.createdBy}
+      //  location={album.location}
+     //   createdAt={album.createdAt}
+       // comments={album.comments}
       />
     ));
 
-    postItems = [postEditor, ...postItems, loading];
+    albumItems = [albumEditor, ...albumItems, loading];
 
-    if (props.postCreateError) {
-      postItems = [
+    if (props.albumCreateError) {
+      albumItems = [
         <ErrorMessage message="Kunde ladda upp inlägget" />,
-        ...postItems
+        ...albumItems
       ];
     }
   }
 
-  return <div className="blogPosts">{postItems}</div>;
+  return <div className="blogAlbums">{albumItems}</div>;
 };
 
 export default AlbumList;

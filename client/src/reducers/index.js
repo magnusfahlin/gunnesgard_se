@@ -1,4 +1,5 @@
 import { combineReducers } from "redux";
+import albums from "./albums";
 import login from "./login";
 import menu from "./menu";
 import posts from "./posts";
@@ -16,6 +17,7 @@ const authPersistConfig = {
 }
 const rootReducer = combineReducers({
   session: persistReducer(authPersistConfig, session),
+  albums,
   login,
   menu,
   modal,
