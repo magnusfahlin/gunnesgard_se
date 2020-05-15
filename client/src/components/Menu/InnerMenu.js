@@ -10,6 +10,11 @@ const menuItems = [
     showAlways: true
   },
   {
+    topic: "Album",
+    link: "/album",
+    showAlways: false
+  },
+  {
     topic: "Adressbok",
     link: "/adressbok",
     showAlways: false

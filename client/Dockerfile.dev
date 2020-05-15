@@ -19,4 +19,5 @@ RUN npm install nodemon -g
 COPY / ./
 
 # start app
-CMD ["node", "start"]
+#CMD ["node", "start"]
+CMD ["nodemon", "--debug", "-L", "--inspect=0.0.0.0:56745"]

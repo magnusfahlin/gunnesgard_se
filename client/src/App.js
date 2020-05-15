@@ -11,6 +11,7 @@ import ModalContainer from "./components/Modal/ModalContainer.js";
 import stateData from "./data/initialState.json";
 import PropTypes from "prop-types";
 import history from "./history";
+import AlbumList from "./components/AlbumList/AlbumList";
 
 const App = ({ store }) => (
   <Router history={history}>
@@ -23,6 +24,7 @@ const App = ({ store }) => (
         </div>
         <div id="center">
           <Route path="/(|start)" component={() => <PostListContainer />} />
+          <Route path="/album" component={() => <AlbumList />} />
           <Route path="/adressbok" component={() => <AddressBookContainer />} />
           <Route path="/minprofil" component={() => <MyProfile />} />
         </div>
