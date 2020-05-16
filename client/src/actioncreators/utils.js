@@ -71,6 +71,23 @@ export const postApi = (dispatch, toDispatch, path, data, token) => {
     .then(response => response.json());
 };
 
+export const postFormDataApi = (dispatch, toDispatch, path, formData, token) => {
+  if (typeof toDispatch === "object") {
+    dispatch(toDispatch);
+  } else {
+    dispatch({ type: toDispatch });
+  }
+
+  return fetch(endpointRoot + path, {
+    method: "POST",
+    headers: createHeaders(token),
+    cache: "no-store",
+    body: formData
+  })
+      .then(handleErrorResponse)
+      .then(response => response.json());
+};
+
 export const patchApi = (dispatch, toDispatch, path, id, data, token) => {
   if (typeof toDispatch === "object") {
     dispatch(toDispatch);

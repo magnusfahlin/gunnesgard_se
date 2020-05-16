@@ -32,6 +32,7 @@ export default function albumsReducer(state = initialState.albums, action) {
             });
 
             return {
+                ...state,
                 loading: false,
                 error: false,
                 albumCreateRequest: false,
@@ -96,24 +97,48 @@ export default function albumsReducer(state = initialState.albums, action) {
                 albums: newAlbums
             };
         }
-        // case Action.POST_COMMENT_CREATE_REQUEST: {
-        //     const index = state.indexByIdMap[action.albumId];
-        //     state.albums[index].photoCreateRequest = true;
-        //     state.albums[index].photoCreateError = false;
-        //
-        //     return {
-        //         ...state
-        //     };
-        // }
-        // case Action.POST_COMMENT_CREATE_FAILURE: {
-        //     const index = state.indexByIdMap[action.albumId];
-        //     state.albums[index].photoCreateRequest = false;
-        //     state.albums[index].photoCreateError = true;
-        //
-        //     return {
-        //         ...state
-        //     };
-        // }
+        case Action.ALBUM_PHOTO_NEW_PHOTO_STAGED: {
+            let photoContainer = action.data.photoContainer;
+            const currentIndex = state.newPhotos.indexOf(photoContainer.tempId)
+            if (currentIndex > -1)
+            {
+                state.newPhotos[currentIndex] = photoContainer;
+            } else {
+                state.newPhotos.push(photoContainer);
+                state.photosIndexByIdMap[photoContainer.tempId] = state.newPhotos.length - 1;
+            }
+
+            return {
+                ...state
+            };
+        }
+        case Action.ALBUM_PHOTO_CREATE_REQUEST: {
+            const index = state.photosIndexByIdMap[action.id];
+            state.newPhotos[index].photoCreateRequest = true;
+
+            return {
+                ...state
+            };
+        }
+        case Action.ALBUM_PHOTO_CREATE_SUCCESS: {
+            const index = state.photosIndexByIdMap[action.id];
+            state.newPhotos = this.state.newPhotos.splice(index, 1);
+            state.photosIndexByIdMap = this.state.photosIndexByIdMap.splice(this.state.list.indexOf(action.id), 1);
+            state.existingPhotos.Add(action)
+
+            return {
+                ...state
+            };
+        }
+        case Action.ALBUM_PHOTO_CREATE_FAILURE: {
+            const index = state.photosIndexByIdMap[action.id];
+            state.newPhotos[index].photoCreateRequest = false;
+            state.newPhotos[index].photoCreateError = true;
+
+            return {
+                ...state
+            };
+        }
         default:
             return state;
     }

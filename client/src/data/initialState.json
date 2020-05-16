@@ -33,6 +33,9 @@
   "albums": {
     "loading": true,
     "error": false,
+      "newPhotos" : [],
+      "existingPhotos" : [],
+      "photosIndexByIdMap" : [],
     "albums": [],
     "indexByIdMap" : {}
   },

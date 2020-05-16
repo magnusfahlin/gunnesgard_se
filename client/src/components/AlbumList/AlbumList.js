@@ -12,11 +12,11 @@ const AlbumList = props => {
     albumEditor = <Spinner />;
   } else if (props.loggedIn) {
     albumEditor = (
-      <AlbumEditor
-        onCreateAlbum={(title, text, location) =>
-          props.actions.createAlbum(title, text, location, props.token)
-        }
-      />
+      <AlbumEditor {...props} />
+    //    onCreateAlbum={(title, text, location) =>
+    //>      props.actions.createAlbum(title, text, location, props.token)
+     //   }
+     // />
     );
   }
 

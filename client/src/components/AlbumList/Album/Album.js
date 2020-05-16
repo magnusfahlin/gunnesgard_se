@@ -10,7 +10,6 @@ const Album = props => {
   return (
     <div className="blogPost">
       <div className="title">{props.title}</div>
-        <Text text={props.text} />
         <div className="author">
           av {props.createdBy}, {props.location} {props.createdAt}
         </div>
