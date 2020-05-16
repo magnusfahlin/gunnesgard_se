@@ -30,6 +30,7 @@ describe("Album API Integration Tests", function () {
                     .attach("file", path.resolve(__dirname, "resources/coronavirus.gif"))
                     .end(function (err, res) {
                         expect(res.statusCode).to.equal(201);
+                        expect(res.body.path).to.equal("/static/albums/" + albumId + "/coronavirus.gif");
                         done();
                     });
             });
@@ -107,8 +108,34 @@ describe("Album API Integration Tests", function () {
         });
     });
 
+    describe("GET an album", function () {
+        it("should album named album1 with photos", function (done) {
+            request(app)
+                .get("/albums/" + albumId)
+                .set("x-auth", "test")
+                .end(function (err, res) {
+                    expect(res.statusCode).equal(200);
+                    expect(res.body.title).to.equal("album1");
+                    expect(res.body.photos.length).to.equal(1);
+                    expect(res.body.photos[0].path).to.equal("/static/albums/" + albumId + "/coronavirus.gif");
+                    done();
+                });
+        });
+    });
+
+    describe("GET an album when NOT logged in", function () {
+        it("should not get any album", function (done) {
+            request(app)
+                .get("/albums/" + albumId)
+                .end(function (err, res) {
+                    expect(res.statusCode).equal(403);
+                    done();
+                });
+        });
+    });
+
     describe("GET a photo served when NOT logged in", function () {
-        it("should not get any photoef", function (done) {
+        it("should not get any photo", function (done) {
             request(app)
                 .get("/static/albums/" + albumId + "/coronavirus.gif")
                 .end(function (err, res) {

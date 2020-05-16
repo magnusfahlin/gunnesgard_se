@@ -1,7 +1,7 @@
-const {createController, CreateGetAllRoute, CreatePostRoute} = require("./controllerFactory.js");
-const {Album} = require("./../models/Album");
+const {CreateGetAllRoute, CreatePostRoute, CreateGetByIdRoute} = require("./controllerFactory.js");
+const {Album, Photo} = require("./../models/Album");
 const multer = require("multer");
-const ObjectID = require("mongodb").ObjectId;
+const ObjectID = require("mongodb").ObjectID;
 
 var fs = require("fs");
 
@@ -33,6 +33,8 @@ const registerAlbum = function (app) {
             },
         ]);
 
+    CreateGetByIdRoute(app, "album", Album);
+
     const authMiddleware = (req, res, next) => {
         if (!req.auth) {
             return res.status(403).send();
@@ -61,7 +63,7 @@ const registerAlbum = function (app) {
             return res.status(400).send("No file received");
         }
 
-        let id = req.params.id;
+        let albumId = req.params.id;
 
         let embeddedDoc = {};
 
@@ -72,9 +74,10 @@ const registerAlbum = function (app) {
         const thumbnailName = req.file.filename.replace(/(\.[^\.]+)$/, '_thumbnail$1');
 
         let photo = {
-            title : req.file.filename,
-            filename : req.file.filename,
-            thumbnail : thumbnailName
+            _id: new ObjectID(),
+            title: req.file.filename,
+            filename: req.file.filename,
+            thumbnail: thumbnailName
         };
 
         let mongoDbInput = {};
@@ -82,24 +85,34 @@ const registerAlbum = function (app) {
         mongoDbInnerInput["photos"] = photo;
         mongoDbInput["$push"] = mongoDbInnerInput;
 
-        Album.update({_id: id}, mongoDbInput).then(
+        Album.update({_id: albumId}, mongoDbInput).then(
             (doc) => {
 
-                let destDir = "./static/albums/" + id + "/";
+                let destDir = "./static/albums/" + albumId + "/";
                 if (!fs.existsSync(destDir)) {
                     fs.mkdirSync(destDir);
                 }
 
                 fs.rename(
                     "./upload/" + req.file.filename,
-                    "./static/albums/" + id + "/" + req.file.filename,
+                    "./static/albums/" + albumId + "/" + req.file.filename,
                     function (err, stats) {
                         if (err) {
                             // TODO: Delete photo
                             res.status(500).send("Failed to move file");
                         }
-                        res.status(201).send(req.file);
-
+                        Album
+                            .findById(albumId)
+                            .then(result => {
+                                if (!result) {
+                                    return res.status(404).send();
+                                }
+                                let createdPhoto = result._doc.photos.id(photo._id);
+                                res.status(201).send(createdPhoto);
+                            })
+                            .catch(e => {
+                                res.status(400).send();
+                            });
                     }
                 );
             },

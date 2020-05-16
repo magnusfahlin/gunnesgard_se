@@ -63,5 +63,6 @@ const AlbumSchema = new Schema(
 );
 
 const Album = mongoose.model("album", AlbumSchema);
+const Photo = mongoose.model("photo", PhotoSchema);
 
-module.exports = {Album};
+module.exports = {Album, Photo};

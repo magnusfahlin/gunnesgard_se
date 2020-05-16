@@ -84,19 +84,7 @@ function CreateGetAllRoute(app, entityName, model, embeddedDocuments) {
     });
 }
 
-const createController = function (
-    app,
-    entityName,
-    model,
-    parseRequest,
-    embeddedDocuments
-) {
-    CreatePostRoute(app, entityName, parseRequest, embeddedDocuments);
-
-    // GET HTTP request is called on /[entityName] path
-    CreateGetAllRoute(app, entityName, model, embeddedDocuments);
-
-    // GET HTTP request is called to retrieve individual entity
+function CreateGetByIdRoute(app, entityName, model) {
     app.get(createEntityPath(entityName) + "/:id", (req, res) => {
         if (!req.auth) {
             return res.status(403).send();
@@ -121,6 +109,22 @@ const createController = function (
                 res.status(400).send();
             });
     });
+}
+
+const createController = function (
+    app,
+    entityName,
+    model,
+    parseRequest,
+    embeddedDocuments
+) {
+    CreatePostRoute(app, entityName, parseRequest, embeddedDocuments);
+
+    // GET HTTP request is called on /[entityName] path
+    CreateGetAllRoute(app, entityName, model, embeddedDocuments);
+
+    // GET HTTP request is called to retrieve individual entity
+    CreateGetByIdRoute(app, entityName, model);
 
     function modifyEmbeddedDoc(
         parameter,
@@ -315,4 +319,4 @@ const createController = function (
         })
 };
 
-module.exports = {createController, CreateGetAllRoute, CreatePostRoute};
+module.exports = {createController, CreateGetAllRoute, CreatePostRoute, CreateGetByIdRoute};
