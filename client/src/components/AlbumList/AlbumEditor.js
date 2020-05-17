@@ -11,7 +11,7 @@ const endpointRoot = process.env.SAME_ORIGIN
     : "http://localhost:" + port + "/";
 
 
-class Editor extends Component {
+class AlbumEditor extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -106,11 +106,11 @@ class Editor extends Component {
     }
 }
 
-Editor.propTypes = {
+AlbumEditor.propTypes = {
     onCreatePhoto: PropTypes.func
 };
 
-export default Editor;
+export default AlbumEditor;
 
 
 // class Editor extends Component {

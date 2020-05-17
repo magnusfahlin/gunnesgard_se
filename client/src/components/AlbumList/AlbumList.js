@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
 import AlbumContainer from "./Album/AlbumContainer.js";
-import AlbumEditor from "./Editor.js";
+import AlbumEditor from "./AlbumEditor.js";
 import Spinner from "../Common/Spinner";
 import ErrorMessage from "../Common/ErrorMessage";
 import "./AlbumList.scss";
