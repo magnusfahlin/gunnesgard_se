@@ -4,12 +4,7 @@ import PropTypes from "prop-types";
 import {v1 as uuidv1} from 'uuid';
 // import "./Editor.scss";
 
-
-const port = process.env.PORT || 3001;
-const endpointRoot = process.env.SAME_ORIGIN
-    ? ""
-    : "http://localhost:" + port + "/";
-
+import {getApiRoot} from "../../environmentConfig"
 
 class AlbumEditor extends Component {
     constructor(props) {
@@ -95,7 +90,7 @@ class AlbumEditor extends Component {
                     {
                         this.props.existingPhotos.map((url, i) => (
                             <div className="col-lg-2" key={i}>
-                                <img src={endpointRoot + url} className="img-rounded img-responsive"
+                                <img src={getApiRoot() + url} className="img-rounded img-responsive"
                                      alt="not available"/><br/>
                             </div>
                         ))

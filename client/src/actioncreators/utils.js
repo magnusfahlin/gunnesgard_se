@@ -1,105 +1,101 @@
-import { MODAL_OPEN } from "../actionTypes";
-
-const port = process.env.PORT || 3001;
-const endpointRoot = process.env.SAME_ORIGIN
-  ? ""
-  : "http://localhost:" + port + "/";
+import {MODAL_OPEN} from "../actionTypes";
+import {getApiRoot} from "../environmentConfig"
 
 const createHeaders = (token, contentType) => {
-  var headers = {
-    Accept: "application/json"
-  };
+    var headers = {
+        Accept: "application/json"
+    };
 
-  if (token) headers["x-Auth"] = token;
+    if (token) headers["x-Auth"] = token;
 
-  if (contentType) headers["Content-Type"] = contentType;
+    if (contentType) headers["Content-Type"] = contentType;
 
-  return headers;
+    return headers;
 };
 
 export function handleError(dispatch, toDispatch, error) {
-  if (error.status == 403) {
-    dispatch({ type: MODAL_OPEN, modalType: "MODAL_LOGGED_OUT" });
-  }
+    if (error.status == 403) {
+        dispatch({type: MODAL_OPEN, modalType: "MODAL_LOGGED_OUT"});
+    }
 
-  if (process.env.NODE_ENV == "development")
-    console.log(error.status + " " + error.message);
+    if (process.env.NODE_ENV == "development")
+        console.log(error.status + " " + error.message);
 
-  if (typeof toDispatch === "object") {
-    dispatch(toDispatch, error);
-  } else {
-    dispatch({ type: toDispatch, error });
-  }
+    if (typeof toDispatch === "object") {
+        dispatch(toDispatch, error);
+    } else {
+        dispatch({type: toDispatch, error});
+    }
 }
 
 function handleErrorResponse(response) {
-  if (!response.ok) {
-    throw {
-      status: response.status,
-      message: response.message
-    };
-  }
-  return response;
+    if (!response.ok) {
+        throw {
+            status: response.status,
+            message: response.message
+        };
+    }
+    return response;
 }
 
 export const getApi = (dispatch, actionType, path, token) => {
-  if (actionType !== null) {
-    dispatch({ type: actionType });
-  }
-  return fetch(endpointRoot + path, {
-    method: "GET",
-    headers: createHeaders(token),
-    cache: "no-store"
-  })
-    .then(handleErrorResponse)
-    .then(response => response.json())
+    if (actionType !== null) {
+        dispatch({type: actionType});
+    }
+    return fetch(getApiRoot() + path, {
+        method: "GET",
+        headers: createHeaders(token),
+        cache: "no-store"
+    })
+        .then(handleErrorResponse)
+        .then(response => response.json())
 };
 
 export const postApi = (dispatch, toDispatch, path, data, token) => {
-  if (typeof toDispatch === "object") {
-    dispatch(toDispatch);
-  } else {
-    dispatch({ type: toDispatch });
-  }
-  return fetch(endpointRoot + path, {
-    method: "POST",
-    headers: createHeaders(token, "application/json"),
-    cache: "no-store",
-    body: JSON.stringify(data)
-  })
-    .then(handleErrorResponse)
-    .then(response => response.json());
+    if (typeof toDispatch === "object") {
+        dispatch(toDispatch);
+    } else {
+        dispatch({type: toDispatch});
+    }
+    return fetch(getApiRoot() + path, {
+        method: "POST",
+        headers: createHeaders(token, "application/json"),
+        cache: "no-store",
+        body: JSON.stringify(data)
+    })
+        .then(handleErrorResponse)
+        .then(response => response.json());
 };
 
 export const postFormDataApi = (dispatch, toDispatch, path, formData, token) => {
-  if (typeof toDispatch === "object") {
-    dispatch(toDispatch);
-  } else {
-    dispatch({ type: toDispatch });
-  }
+    if (typeof toDispatch === "object") {
+        dispatch(toDispatch);
+    } else {
+        dispatch({type: toDispatch});
+    }
 
-  return fetch(endpointRoot + path, {
-    method: "POST",
-    headers: createHeaders(token),
-    cache: "no-store",
-    body: formData
-  })
-      .then(handleErrorResponse)
-      .then(response => response.json());
+    return fetch(getApiRoot() + path, {
+        method: "POST",
+        headers: createHeaders(token),
+        cache: "no-store",
+        body: formData
+    })
+        .then(handleErrorResponse)
+        .then(response => response.json());
 };
 
 export const patchApi = (dispatch, toDispatch, path, id, data, token) => {
-  if (typeof toDispatch === "object") {
-    dispatch(toDispatch);
-  } else {
-    dispatch({ type: toDispatch });
-  }
-  return fetch(endpointRoot + path + "/" + id, {
-    method: "PATCH",
-    headers: createHeaders(token, "application/json"),
-    cache: "no-store",
-    body: JSON.stringify(data)
-  })
-    .then(handleErrorResponse)
-    .then(response => response.json());
+    if (typeof toDispatch === "object") {
+        dispatch(toDispatch);
+    } else {
+        dispatch({type: toDispatch});
+    }
+    return fetch(getApiRoot() + path + "/" + id, {
+        method: "PATCH",
+        headers: createHeaders(token, "application/json"),
+        cache: "no-store",
+        body: JSON.stringify(data)
+    })
+        .then(handleErrorResponse)
+        .then(response => response.json());
 };

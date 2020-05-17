@@ -2,18 +2,21 @@ import React from "react";
 import PropTypes from "prop-types";
 import Text from "../../Common/Text";
 import AlbumPreview from "./AlbumPreview";
+import {getApiRoot} from "../../../environmentConfig"
+
 const AlbumListItem = props => {
 
-  return (
-    <div className="blogPost">
-      <div className="title">{props.album.title}</div>
-        <div className="author">
-          av {props.album.createdBy}, {props.album.location} {props.album.createdAt}
+    return (
+        <div className="blogPost">
+            <div className="title">{props.album.title}</div>
+            <img src={getApiRoot() + props.album.photos[0].path}/>
+            <div className="author">
+                av {props.album.createdBy}, {props.album.location} {props.album.createdAt}
+            </div>
+            <div><AlbumPreview album={props.album}/></div>
+            <hr/>
         </div>
-      <div><AlbumPreview album={props.album} /></div>
-      <hr />
-    </div>
-  );
+    );
 };
 
 // AlbumListItem.propTypes = {
