@@ -12,33 +12,12 @@ export default function albumsReducer(state = initialState.albums, action) {
             };
         }
         case Action.ALBUMS_FETCH_SUCCESS: {
-            let indexByIdMap = {};
-            let i = 0;
-            let newAlbums = [];
-            action.result.forEach(album => {
-                indexByIdMap[album.id] = i++;
-
-                let c_indexByIdMap = {};
-                if (album.photos && Array.isArray(album.photos)) {
-                    album.photos.forEach(photo => {
-                        c_indexByIdMap[photo.id] = i++;
-                    });
-                }
-
-                album.photosIndexByIdMap = c_indexByIdMap;
-                album.photoCreateRequest = false;
-                album.photoCreateError = false;
-                newAlbums.push(album);
-            });
 
             return {
                 ...state,
                 loading: false,
                 error: false,
-                albumCreateRequest: false,
-                albumCreateError: false,
-                indexByIdMap: indexByIdMap,
-                albums: newAlbums
+                albums: action.result,
             };
         }
         case Action.ALBUMS_FETCH_FAILURE: {
@@ -60,41 +39,6 @@ export default function albumsReducer(state = initialState.albums, action) {
                 ...state,
                 albumCreateRequest: false,
                 albumCreateError: true
-            };
-        }
-        case Action.ALBUMS_CREATE_SUCCESS:
-        case Action.ALBUMS_FETCH_SUCCESS: {
-            let album = action.result;
-
-            let c_indexByIdMap = {};
-            let i = 0;
-            album.photos.forEach(photo => {
-                c_indexByIdMap[photo.id] = i++;
-            });
-
-            album.photosIndexByIdMap = c_indexByIdMap;
-            album.photoCreateRequest = false;
-            album.photoCreateError = false;
-
-            let indexByIdMap = state.indexByIdMap;
-            const index = indexByIdMap[album.id];
-            let newAlbums;
-            if (index == undefined) {
-                indexByIdMap = {};
-                state.albums.forEach(album => (indexByIdMap[album.id] = i++));
-                newAlbums = [album, ...state.albums];
-            } else {
-                newAlbums = [
-                    ...state.albums.slice(0, index),
-                    album,
-                    ...state.albums.slice(index + 1)
-                ];
-            }
-            return {
-                loading: false,
-                error: false,
-                indexByIdMap: indexByIdMap,
-                albums: newAlbums
             };
         }
         case Action.ALBUM_PHOTO_NEW_PHOTO_STAGED: {

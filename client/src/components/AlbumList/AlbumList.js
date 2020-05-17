@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import PropTypes from "prop-types";
-import AlbumContainer from "./Album/AlbumContainer.js";
+import AlbumListItem from "./Album/AlbumListItem.js";
 import AlbumEditor from "./AlbumEditor.js";
 import Spinner from "../Common/Spinner";
 import ErrorMessage from "../Common/ErrorMessage";
@@ -30,14 +30,8 @@ const AlbumList = props => {
     albumItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
   } else {
     albumItems = props.albums.map(album => (
-      <AlbumContainer
-        id={album.id}
-        title={album.title}
-      //  text={album.text}
-        createdBy={album.createdBy}
-      //  location={album.location}
-     //   createdAt={album.createdAt}
-       // comments={album.comments}
+      <AlbumListItem
+        album={album}
       />
     ));
 

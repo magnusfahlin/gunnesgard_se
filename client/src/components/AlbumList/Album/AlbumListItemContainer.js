@@ -1,10 +1,10 @@
 import React from "react";
-import Album from "./Album";
+import AlbumListItem from "./AlbumListItem";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
 import * as postsActions from "../../../actioncreators/posts.js";
 
-const AlbumContainer = props => <Album {...props} />;
+const AlbumListItemContainer = props => <AlbumListItem {...props} />;
 
 function mapStateToProps(state, props) {
   // let properties = Object.assign({}, state.posts.posts.byId[props.id]);
@@ -19,4 +19,4 @@ function mapDispatchToProps(dispatch) {
   return { actions: bindActionCreators(postsActions, dispatch) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(AlbumContainer);
+export default connect(mapStateToProps, mapDispatchToProps)(AlbumListItemContainer);
