@@ -1,20 +1,23 @@
 import React from "react";
 import PropTypes from "prop-types";
 import Text from "../../Common/Text";
-import AlbumPreview from "./AlbumPreview";
 import {getApiRoot} from "../../../environmentConfig"
+import SecureImage from "../../Common/SecureImage";
+import "./AlbumListItem.scss"
 
 const AlbumListItem = props => {
 
     return (
-        <div className="blogPost">
-            <div className="title">{props.album.title}</div>
-            <img src={getApiRoot() + props.album.photos[0].path}/>
-            <div className="author">
-                av {props.album.createdBy}, {props.album.location} {props.album.createdAt}
+        <div className="albumListItem">
+            <div className="albumPreview">
+                <SecureImage src={getApiRoot() + props.album.photos[0].thumbnailpath} token={props.token}/>
+                <div className="albumListItemLegend">
+                    <div className="title">{props.album.title}</div>
+                    <div className="author">
+                        av {props.album.createdBy}, {props.album.location} {props.album.createdAt}
+                    </div>
+                </div>
             </div>
-            <div><AlbumPreview album={props.album}/></div>
-            <hr/>
         </div>
     );
 };

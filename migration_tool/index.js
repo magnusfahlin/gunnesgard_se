@@ -87,7 +87,7 @@ function transfomAlbumsAndPhotos(data, transformedData) {
     //       createdBy: bild.namn,
     //       updatedBy: bild.namn,
     //       filename: fileName,
-    //       thumbnailFileName: thumbnailFileName,
+    //       thumbnail: thumbnailFileName,
     //       title: bild.bildnamn,
     //       text: bild.text,
     //       tags: bild.tagstr
@@ -107,7 +107,7 @@ function transfomAlbumsAndPhotos(data, transformedData) {
           createdBy: bild.namn,
           updatedBy: bild.namn,
           filename: fileName,
-          thumbnailFileName: thumbnailFileName,
+          thumbnail: thumbnailFileName,
           title: bild.bildnamn,
           text: bild.text,
           tags: bild.tagstr

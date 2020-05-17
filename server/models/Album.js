@@ -28,7 +28,12 @@ const PhotoSchema = new Schema(
 
 PhotoSchema.virtual('path').get(function () {
     const parent = this.parent();
-    return "/static/albums/" + parent._id + "/" + this.filename
+    return "static/albums/" + parent._id + "/" + this.filename
+});
+
+PhotoSchema.virtual('thumbnailpath').get(function () {
+    const parent = this.parent();
+    return "static/albums/" + parent._id + "/" + this.thumbnail
 });
 
 PhotoSchema.set("toJSON", {

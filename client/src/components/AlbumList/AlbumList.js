@@ -31,7 +31,7 @@ const AlbumList = props => {
   } else {
     albumItems = props.albums.map(album => (
       <AlbumListItem
-        album={album}
+        album={album} token={props.token}
       />
     ));
 
