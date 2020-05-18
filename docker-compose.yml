@@ -19,7 +19,7 @@ services:
       dockerfile: Dockerfile.dev
     volumes:
       - /app/node_modules
-      - ./client:/app
+      - ./client:/app:cached
     ports:
       - 6001:3000
       - 9222:9222
@@ -32,7 +32,7 @@ services:
       dockerfile: Dockerfile.dev
     env_file: debuglocaldb.env
     volumes:
-      - ./server:/app
+      - ./server:/app:cached
       - /app/node_modules
     ports:
       - 3001:3001

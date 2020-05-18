@@ -36,7 +36,7 @@ function transform(data) {
 
 function CopyFileAndThumbnail(bild, destinationDir) {
   let fileName = bild.filnamn.split('/').pop();
-  let fileOnDisk = "./album/" + fileName;
+  let fileOnDisk = "../../../album/" + fileName;
   let destinationFilePath = destinationDir + "/" + fileName;
 
   let thumbnailFileName = fileName.replace(/(\.[^\.]+)$/, '_thumbnail$1');
@@ -59,7 +59,7 @@ function CopyFileAndThumbnail(bild, destinationDir) {
 function transfomAlbumsAndPhotos(data, transformedData) {
   let albumArray = [];
   let i = 0;
-  let limit = 10;
+  let limit = 3;
   data.album.forEach(function (element) {
       i++;
     if (i < 0 | i > limit){

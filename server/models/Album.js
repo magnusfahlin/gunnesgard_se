@@ -18,10 +18,20 @@ const PhotoSchema = new Schema(
         },
         thumbnail: {
             type: String,
-            required: false,
+            required: true,
             minlength: 1,
             trim: true,
-        }
+        },
+        width: {
+            type: Number,
+            required: true,
+            trim: true,
+        },
+        height: {
+            type: Number,
+            required: true,
+            trim: true,
+        },
     },
     createSchemaOptions()
 );

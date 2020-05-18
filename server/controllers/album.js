@@ -2,8 +2,8 @@ const {CreateGetAllRoute, CreatePostRoute, CreateGetByIdRoute} = require("./cont
 const {Album, Photo} = require("./../models/Album");
 const multer = require("multer");
 const ObjectID = require("mongodb").ObjectID;
-
-var fs = require("fs");
+const gm = require("gm");
+const fs = require("fs");
 
 const registerAlbum = function (app) {
     CreatePostRoute(
@@ -64,62 +64,75 @@ const registerAlbum = function (app) {
         }
 
         let albumId = req.params.id;
-
+        let uploadFilePath = "./upload/" + req.file.filename;
         let embeddedDoc = {};
 
         embeddedDoc._id = new ObjectID();
         embeddedDoc.createdBy = req.auth.username;
         embeddedDoc.updatedBy = req.auth.username;
-
-        const thumbnailName = req.file.filename.replace(/(\.[^\.]+)$/, '_thumbnail$1');
-
-        let photo = {
-            _id: new ObjectID(),
-            title: req.file.filename,
-            filename: req.file.filename,
-            thumbnail: thumbnailName
-        };
-
-        let mongoDbInput = {};
-        let mongoDbInnerInput = {};
-        mongoDbInnerInput["photos"] = photo;
-        mongoDbInput["$push"] = mongoDbInnerInput;
-
-        Album.update({_id: albumId}, mongoDbInput).then(
-            (doc) => {
-
-                let destDir = "./static/albums/" + albumId + "/";
-                if (!fs.existsSync(destDir)) {
-                    fs.mkdirSync(destDir);
-                }
-
-                fs.rename(
-                    "./upload/" + req.file.filename,
-                    "./static/albums/" + albumId + "/" + req.file.filename,
-                    function (err, stats) {
-                        if (err) {
-                            // TODO: Delete photo
-                            res.status(500).send("Failed to move file");
-                        }
-                        Album
-                            .findById(albumId)
-                            .then(result => {
-                                if (!result) {
-                                    return res.status(404).send();
-                                }
-                                let createdPhoto = result._doc.photos.id(photo._id);
-                                res.status(201).send(createdPhoto);
-                            })
-                            .catch(e => {
-                                res.status(400).send();
-                            });
-                    }
-                );
-            },
-            (e) => {
-                res.status(400).send(e);
+        gm(uploadFilePath).size(function (err, gmResult) {
+            // TODO: Delete photo
+            if (err) {
+                fs.unlinkSync(uploadFilePath)
+                res.status(500).send("Failed get metadata of  move file");
             }
-        );
+            let width = gmResult.width;
+            let height = gmResult.height;
+
+            const thumbnailName = req.file.filename.replace(/(\.[^\.]+)$/, '_thumbnail$1');
+
+            let photo = {
+                _id: new ObjectID(),
+                title: req.file.filename,
+                filename: req.file.filename,
+                thumbnail: thumbnailName,
+                width: width,
+                height: height,
+            };
+
+            let mongoDbInput = {};
+            let mongoDbInnerInput = {};
+            mongoDbInnerInput["photos"] = photo;
+            mongoDbInput["$push"] = mongoDbInnerInput;
+
+            Album.update({_id: albumId}, mongoDbInput).then(
+                (doc) => {
+
+                    let destDir = "./static/albums/" + albumId + "/";
+                    if (!fs.existsSync(destDir)) {
+                        fs.mkdirSync(destDir);
+                    }
+
+
+                    fs.rename(
+                        uploadFilePath,
+                        "./static/albums/" + albumId + "/" + req.file.filename,
+                        function (err, stats) {
+                            if (err) {
+                                // TODO: Delete photo
+                                res.status(500).send("Failed to move file");
+                            }
+
+                            Album
+                                .findById(albumId)
+                                .then(result => {
+                                    if (!result) {
+                                        return res.status(404).send();
+                                    }
+                                    let createdPhoto = result._doc.photos.id(photo._id);
+                                    res.status(201).send(createdPhoto);
+                                })
+                                .catch(e => {
+                                    res.status(400).send();
+                                });
+                        }
+                    );
+                },
+                (e) => {
+                    res.status(400).send(e);
+                }
+            );
+        });
     });
 };
 

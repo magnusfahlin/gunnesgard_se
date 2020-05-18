@@ -55,7 +55,7 @@ const migrateData = function(
     var collections = data;
     MongoClient.connect(
       "mongodb://localhost:" + mongoPort + "/" + destDbName,
-      { native_parser: true },
+      { native_parser: true, connectTimeoutMS: 20000, wtimeout : 30000 },
       function(error, db) {
         if (error) throw error;
         var jobs = 0;

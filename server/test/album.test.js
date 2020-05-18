@@ -30,7 +30,7 @@ describe("Album API Integration Tests", function () {
                     .attach("file", path.resolve(__dirname, "resources/coronavirus.gif"))
                     .end(function (err, res) {
                         expect(res.statusCode).to.equal(201);
-                        expect(res.body.path).to.equal("/static/albums/" + albumId + "/coronavirus.gif");
+                        expect(res.body.path).to.equal("static/albums/" + albumId + "/coronavirus.gif");
                         done();
                     });
             });
@@ -117,7 +117,9 @@ describe("Album API Integration Tests", function () {
                     expect(res.statusCode).equal(200);
                     expect(res.body.title).to.equal("album1");
                     expect(res.body.photos.length).to.equal(1);
-                    expect(res.body.photos[0].path).to.equal("/static/albums/" + albumId + "/coronavirus.gif");
+                    expect(res.body.photos[0].width).to.equal(128);
+                    expect(res.body.photos[0].height).to.equal(128);
+                    expect(res.body.photos[0].path).to.equal("static/albums/" + albumId + "/coronavirus.gif");
                     done();
                 });
         });
