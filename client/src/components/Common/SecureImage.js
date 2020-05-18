@@ -33,3 +33,32 @@ class SecureImage extends Component {
 }
 
 export default SecureImage;
+
+export function CreateSecureArrayOfSrc(srcArray, token) {
+
+    return axios.all(
+        srcArray.map(s =>
+            axios.get(
+                s,
+                {
+                    responseType: 'arraybuffer',
+                    headers: {"x-Auth": token}
+                })
+                .then(response => {
+                    return btoa(
+                        new Uint8Array(response.data).reduce(
+                            (data, byte) => data + String.fromCharCode(byte),
+                            '',
+                        ),
+                    )
+                })))
+        .then((results) => {
+            let returnValue = new Array();
+            results.forEach(r => returnValue.push({src: "data:;base64," + r}));
+            return returnValue;
+        }, (error) => {
+            let returnValue = new Array();
+            srcArray.forEach(r => returnValue.push({src: "images/missingimage.jpg"}));
+            return returnValue;
+        })
+}

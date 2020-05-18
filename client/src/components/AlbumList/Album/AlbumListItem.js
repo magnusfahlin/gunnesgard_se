@@ -4,8 +4,16 @@ import Text from "../../Common/Text";
 import {getApiRoot} from "../../../environmentConfig"
 import SecureImage from "../../Common/SecureImage";
 import "./AlbumListItem.scss"
+import AlbumGallery from "./AlbumGallery";
+import Comment from "../../PostList/Post/Comment";
 
 const AlbumListItem = props => {
+
+    let album = <div/>;
+
+    if (props.showAlbum) {
+        album =<AlbumGallery album={props.album} token={props.token}/>;
+    }
 
     return (
         <div className="albumListItem">
@@ -18,6 +26,7 @@ const AlbumListItem = props => {
                     </div>
                 </div>
             </div>
+            {album}
         </div>
     );
 };

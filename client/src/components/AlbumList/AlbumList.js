@@ -29,9 +29,9 @@ const AlbumList = props => {
   if (props.error) {
     albumItems = <ErrorMessage message="Kunde inte ladda bloggen" />;
   } else {
-    albumItems = props.albums.map(album => (
+    albumItems = props.albums.map((album, index) => (
       <AlbumListItem
-        album={album} token={props.token}
+        album={album} token={props.token} showAlbum={index == 0}
       />
     ));
 
