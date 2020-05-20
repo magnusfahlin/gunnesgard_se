@@ -17,7 +17,7 @@ const AlbumListItem = props => {
 
     return (
         <div className="albumListItem">
-            <div className="albumPreview">
+            <div className="albumPreview" onClick={() => props.toggleShowAlbum()}>
                 <SecureImage src={getApiRoot() + props.album.photos[0].thumbnailpath} token={props.token}/>
                 <div className="albumListItemLegend">
                     <div className="title">{props.album.title}</div>

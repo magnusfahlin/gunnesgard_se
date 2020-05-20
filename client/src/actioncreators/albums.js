@@ -8,7 +8,7 @@ import {
     ALBUM_PHOTO_NEW_PHOTO_STAGED,
     ALBUM_PHOTO_CREATE_REQUEST,
     ALBUM_PHOTO_CREATE_SUCCESS,
-    ALBUM_PHOTO_CREATE_FAILURE
+    ALBUM_PHOTO_CREATE_FAILURE, ALBUMS_TOGGLE_SHOW_ALBUM
 } from "../actionTypes";
 import {getApi, postApi, postFormDataApi, handleError} from "./utils";
 
@@ -71,4 +71,12 @@ export const createPhoto = (albumId, photoContainer, title, text, token) => disp
                 error
             )
         );
+};
+
+export const toggleShowAlbum = id => dispatch => {
+    dispatch({
+        type: ALBUMS_TOGGLE_SHOW_ALBUM,
+        data : {
+            id: id
+        }});
 };

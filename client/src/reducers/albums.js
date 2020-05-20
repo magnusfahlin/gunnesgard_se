@@ -44,8 +44,7 @@ export default function albumsReducer(state = initialState.albums, action) {
         case Action.ALBUM_PHOTO_NEW_PHOTO_STAGED: {
             let photoContainer = action.data.photoContainer;
             const currentIndex = state.newPhotos.indexOf(photoContainer.tempId)
-            if (currentIndex > -1)
-            {
+            if (currentIndex > -1) {
                 state.newPhotos[currentIndex] = photoContainer;
             } else {
                 state.newPhotos.push(photoContainer);
@@ -79,6 +78,17 @@ export default function albumsReducer(state = initialState.albums, action) {
             state.newPhotos[index].photoCreateRequest = false;
             state.newPhotos[index].photoCreateError = true;
 
+            return {
+                ...state
+            };
+        }
+        case Action.ALBUMS_TOGGLE_SHOW_ALBUM: {
+
+            if (state.albumsToShow.includes(action.data.id)) {
+                state.albumsToShow = state.albumsToShow.filter(id => id !== action.data.id);
+            } else {
+                state.albumsToShow = [...state.albumsToShow, action.data.id];
+            }
             return {
                 ...state
             };

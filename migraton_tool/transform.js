@@ -13,7 +13,7 @@ async function transformData(path, data) {
 
 const createThumbnail = async function (fname, thumbnailFilePath) {
     return new Promise(function (resolve, reject) {
-        gm(fname).gravity('Center').thumb(200, 200, thumbnailFilePath, 100,(err, data) => {
+        gm(fname).gravity('Center').thumb(140, 87, thumbnailFilePath, 100,(err, data) => {
                 if (err) {
                     reject(err);
                 } else {

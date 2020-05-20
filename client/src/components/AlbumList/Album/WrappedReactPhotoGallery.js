@@ -27,7 +27,7 @@ export const WrappedReactPhotoGallery = (props) => {
 
     return (
         <div>
-            <Gallery photos={props.photos} onClick={openLightbox} />
+            <Gallery photos={props.photos} onClick={openLightbox} targetRowHeight={180}/>
             <ModalGateway>
                 {viewerIsOpen ? (
                     <Modal onClose={closeLightbox}>

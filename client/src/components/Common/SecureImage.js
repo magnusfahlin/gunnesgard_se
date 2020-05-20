@@ -1,10 +1,37 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import {getApiRoot} from "../../environmentConfig";
 
 class SecureImage extends Component {
-    state = {source: null};
+    _isMounted = false;
+
+    constructor(props) {
+        super(props);
+        this.state = {source: null};
+    }
 
     componentDidMount() {
+        this._isMounted = true;
+        if (this.props?.src) {
+            this.UpdateImage();
+        }
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
+        // fix Warning: Can't perform a React state update on an unmounted component
+        this.setState = (state,callback)=>{
+            return;
+        };
+    }
+
+    // componentDidUpdate(prevProps, prevState, snapshot) {
+    //     if (this.props?.src) {
+    //         this.UpdateImage();
+    //     }
+    // }
+
+    UpdateImage() {
         axios
             .get(
                 this.props.src,
@@ -37,9 +64,9 @@ export default SecureImage;
 export function CreateSecureArrayOfSrc(srcArray, token) {
 
     return axios.all(
-        srcArray.map(s =>
+        srcArray.map(srcArrayItem =>
             axios.get(
-                s,
+                srcArrayItem.src,
                 {
                     responseType: 'arraybuffer',
                     headers: {"x-Auth": token}
@@ -51,14 +78,18 @@ export function CreateSecureArrayOfSrc(srcArray, token) {
                             '',
                         ),
                     )
-                })))
-        .then((results) => {
-            let returnValue = new Array();
-            results.forEach(r => returnValue.push({src: "data:;base64," + r}));
-            return returnValue;
-        }, (error) => {
-            let returnValue = new Array();
-            srcArray.forEach(r => returnValue.push({src: "images/missingimage.jpg"}));
-            return returnValue;
-        })
+                })
+                .then((result) => {
+                    srcArrayItem.src = "data:;base64," + result
+                })
+                .catch((error) => {
+                    let returnValue = [];
+                    srcArray.forEach(r => {
+                        srcArrayItem.src = "images/missingimage.jpg"
+                    });
+                    return returnValue;
+                }))
+    ).then(() => {
+        return srcArray;
+    });
 }
