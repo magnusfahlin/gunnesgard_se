@@ -1,17 +1,17 @@
 import React, {Component, useEffect, useState} from 'react';
 import axios from 'axios';
 
-const [source, setSource] = useState("images/missingimage.jpg");
-
 function SecureImage(props) {
+    const [source, setSource] = useState("images/missingimage.jpg");
+
     useEffect(() => {
         if (props?.src) {
             axios
                 .get(
-                    this.props.src,
+                    props.src,
                     {
                         responseType: 'arraybuffer',
-                        headers: {"x-Auth": this.props.token}
+                        headers: {"x-Auth": props.token}
                     },
                 )
                 .then(response => {
