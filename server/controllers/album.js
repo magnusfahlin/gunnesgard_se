@@ -5,6 +5,10 @@ const ObjectID = require("mongodb").ObjectID;
 const gm = require("gm");
 const fs = require("fs");
 
+const thumbnailWidth = 140;
+const thumbnailHeight = 86;
+const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
+
 const registerAlbum = function (app) {
     CreatePostRoute(
         app,
@@ -70,49 +74,56 @@ const registerAlbum = function (app) {
         embeddedDoc._id = new ObjectID();
         embeddedDoc.createdBy = req.auth.username;
         embeddedDoc.updatedBy = req.auth.username;
-        gm(uploadFilePath).size(function (err, gmResult) {
-            // TODO: Delete photo
+
+        gm(uploadFilePath).size((err, gmResult) => {
             if (err) {
                 fs.unlinkSync(uploadFilePath)
-                res.status(500).send("Failed get metadata of  move file");
+                res.status(500).send("Failed get metadata of uploaded file");
             }
+
             let width = gmResult.width;
             let height = gmResult.height;
 
-            const thumbnailName = req.file.filename.replace(/(\.[^\.]+)$/, '_thumbnail$1');
+            const photoId = new ObjectID();
+            const finalFileName = photoId + req.file.filename.match(fileExtensionPattern)[0];
+            const thumbnailName = finalFileName.replace(/(\.[^\.]+)$/, '_thumbnail$1');
 
-            let photo = {
-                _id: new ObjectID(),
-                title: req.file.filename,
-                filename: req.file.filename,
-                thumbnail: thumbnailName,
-                width: width,
-                height: height,
-            };
+            const destDir = "./static/albums/" + albumId + "/";;
+            const imageFilePath = destDir + finalFileName;
+            const thumbnailFilePath = destDir + thumbnailName;
 
-            let mongoDbInput = {};
-            let mongoDbInnerInput = {};
-            mongoDbInnerInput["photos"] = photo;
-            mongoDbInput["$push"] = mongoDbInnerInput;
+            if (!fs.existsSync(destDir)) {
+                fs.mkdirSync(destDir);
+            }
 
-            Album.update({_id: albumId}, mongoDbInput).then(
-                (doc) => {
+            fs.renameSync(uploadFilePath, imageFilePath);
 
-                    let destDir = "./static/albums/" + albumId + "/";
-                    if (!fs.existsSync(destDir)) {
-                        fs.mkdirSync(destDir);
+            gm(imageFilePath).gravity('Center').thumb(width, height, thumbnailFilePath, 100, (err, data) => {
+                    if (err) {
+                        fs.unlinkSync(imageFilePath)
+                        res.status(500).send("Failed get metadata of uploaded file");
                     }
 
+                    let photo = {
+                        _id: photoId,
+                        title: finalFileName,
+                        filename: finalFileName,
+                        width: gmResult.width,
+                        height: gmResult.height,
+                        thumbnail: thumbnailName,
+                        thumbnailWidth: thumbnailWidth,
+                        thumbnailHeight: thumbnailHeight,
+                        width: width,
+                        height: height,
+                    };
 
-                    fs.rename(
-                        uploadFilePath,
-                        "./static/albums/" + albumId + "/" + req.file.filename,
-                        function (err, stats) {
-                            if (err) {
-                                // TODO: Delete photo
-                                res.status(500).send("Failed to move file");
-                            }
+                    let mongoDbInput = {};
+                    let mongoDbInnerInput = {};
+                    mongoDbInnerInput["photos"] = photo;
+                    mongoDbInput["$push"] = mongoDbInnerInput;
 
+                    Album.update({_id: albumId}, mongoDbInput).then(
+                        (doc) => {
                             Album
                                 .findById(albumId)
                                 .then(result => {
@@ -127,13 +138,35 @@ const registerAlbum = function (app) {
                                 });
                         }
                     );
-                },
-                (e) => {
-                    res.status(400).send(e);
+                });
+        })}
+    );
+
+
+    const createThumbnail = async function (filePath, thumbnailFilePath, width, height) {
+        return new Promise(function (resolve, reject) {
+            gm(filePath).gravity('Center').thumb(width, height, thumbnailFilePath, 100, (err, data) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(data);
                 }
-            );
-        });
-    });
-};
+            });
+        })
+    }
+
+    const getImageSize = async function (filePath) {
+        return new Promise(function (resolve, reject) {
+            gm(filePath).size((err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result)
+                }
+            });
+        })
+    }
+}
+
 
 module.exports = {registerAlbum};

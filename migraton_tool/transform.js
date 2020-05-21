@@ -20,13 +20,6 @@ const createThumbnail = async function (fname, thumbnailFilePath) {
                     resolve(data);
                 }
             });
-        // sharp(fname).resize(200, 200).toFile(thumbnailFilePath, (err, resizeImage) => {
-        //     if (err) {
-        //         reject(err);
-        //     } else {
-        //         resolve(resizeImage);
-        //     }
-        // });
     })
 }
 

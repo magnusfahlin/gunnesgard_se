@@ -32,6 +32,16 @@ const PhotoSchema = new Schema(
             required: true,
             trim: true,
         },
+        thumbnailWidth: {
+            type: Number,
+            required: true,
+            trim: true,
+        },
+        thumbnailHeight: {
+            type: Number,
+            required: true,
+            trim: true,
+        },
     },
     createSchemaOptions()
 );

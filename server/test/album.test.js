@@ -27,10 +27,10 @@ describe("Album API Integration Tests", function () {
                     .post("/albums/" + albumId + "/photos")
                     .set("x-auth", "test")
                     .field("Content-Type", "multipart/form-data")
-                    .attach("file", path.resolve(__dirname, "resources/coronavirus.gif"))
+                    .attach("file", path.resolve(__dirname, "resources/lena.jpg"))
                     .end(function (err, res) {
                         expect(res.statusCode).to.equal(201);
-                        expect(res.body.path).to.equal("static/albums/" + albumId + "/coronavirus.gif");
+                        expect(res.body.path).to.equal("static/albums/" + albumId + "/" + res.body.id + ".jpg");
                         done();
                     });
             });
@@ -117,9 +117,9 @@ describe("Album API Integration Tests", function () {
                     expect(res.statusCode).equal(200);
                     expect(res.body.title).to.equal("album1");
                     expect(res.body.photos.length).to.equal(1);
-                    expect(res.body.photos[0].width).to.equal(128);
-                    expect(res.body.photos[0].height).to.equal(128);
-                    expect(res.body.photos[0].path).to.equal("static/albums/" + albumId + "/coronavirus.gif");
+                    expect(res.body.photos[0].width).to.equal(750);
+                    expect(res.body.photos[0].height).to.equal(514);
+                    expect(res.body.photos[0].path).to.equal("static/albums/" + albumId + "/" + res.body.photos[0].id + ".jpg");
                     done();
                 });
         });
@@ -139,7 +139,7 @@ describe("Album API Integration Tests", function () {
     describe("GET a photo served when NOT logged in", function () {
         it("should not get any photo", function (done) {
             request(app)
-                .get("/static/albums/" + albumId + "/coronavirus.gif")
+                .get("/static/albums/" + albumId + "/lena.jpg")
                 .end(function (err, res) {
                     expect(res.statusCode).equal(404);
                     done();
@@ -170,16 +170,16 @@ describe("Album API Integration Tests", function () {
 
                     expect(foundAlbum, "album not found").to.be.true;
                     expect(foundPhoto, "photo not found").to.not.equal(undefined);
-                    expect(foundPhoto.filename).to.equal("coronavirus.gif");
-                    expect(foundPhoto.thumbnail).to.equal("coronavirus_thumbnail.gif");
-                    expect(foundPhoto.path).to.equal("/static/albums/" + albumId + "/coronavirus.gif");
+                    expect(foundPhoto.filename).to.equal(foundPhoto.id + ".jpg");
+                    expect(foundPhoto.thumbnail).to.equal(foundPhoto.id + "_thumbnail.jpg");
+                    expect(foundPhoto.path).to.equal("static/albums/" + albumId + "/" + foundPhoto.id + ".jpg");
 
                     request(app)
-                        .get(foundPhoto.path)
+                        .get("/" + foundPhoto.path)
                         .set("x-auth", "test")
                         .end(function (err, res) {
                             expect(res.statusCode).equal(200);
-                            expect(res.type).equal("image/gif");
+                            expect(res.type).equal("image/jpeg");
                             done();
                         });
                 });
