@@ -48,7 +48,7 @@ export const newPhotoStaged = (photoContainer, index) => dispatch => {
 
 export const createPhoto = (albumId, photoContainer, title, text, token) => dispatch => {
     const data = new FormData();
-    data.append("file", photoContainer.photo, photoContainer.photo.name);
+    data.append("file", photoContainer.photo);// photoContainer.photo.name);
    // data.append("title", title);
   //  data.append("text", text);
     postFormDataApi(

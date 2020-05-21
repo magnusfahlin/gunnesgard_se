@@ -5,6 +5,7 @@ import {v1 as uuidv1} from 'uuid';
 // import "./Editor.scss";
 
 import {getApiRoot} from "../../environmentConfig"
+import SecureImage from "../Common/SecureImage";
 
 class AlbumEditor extends Component {
     constructor(props) {
@@ -38,7 +39,7 @@ class AlbumEditor extends Component {
         //  () => {
         this.props.newPhotos.map(container => {
             this.props.actions.createPhoto(
-                "5ebf5b0b753835e4687465b7",
+                "5ec580035eed75729a8ac1ad",
                 container,
                 container.photo.name,
                 "",// this.state.location,
@@ -90,7 +91,7 @@ class AlbumEditor extends Component {
                     {
                         this.props.existingPhotos.map((url, i) => (
                             <div className="col-lg-2" key={i}>
-                                <img src={getApiRoot() + url} className="img-rounded img-responsive"
+                                <SecureImage src={getApiRoot() + url} className="img-rounded img-responsive"
                                      alt="not available"/><br/>
                             </div>
                         ))
