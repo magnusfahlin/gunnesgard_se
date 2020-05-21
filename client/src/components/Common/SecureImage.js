@@ -1,62 +1,35 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect, useState} from 'react';
 import axios from 'axios';
-import {getApiRoot} from "../../environmentConfig";
 
-class SecureImage extends Component {
-    _isMounted = false;
+const [source, setSource] = useState("images/missingimage.jpg");
 
-    constructor(props) {
-        super(props);
-        this.state = {source: null};
-    }
-
-    componentDidMount() {
-        this._isMounted = true;
-        if (this.props?.src) {
-            this.UpdateImage();
+function SecureImage(props) {
+    useEffect(() => {
+        if (props?.src) {
+            axios
+                .get(
+                    this.props.src,
+                    {
+                        responseType: 'arraybuffer',
+                        headers: {"x-Auth": this.props.token}
+                    },
+                )
+                .then(response => {
+                    const base64 = btoa(
+                        new Uint8Array(response.data).reduce(
+                            (data, byte) => data + String.fromCharCode(byte),
+                            '',
+                        ),
+                    );
+                    setSource("data:;base64," + base64)
+                })
+                .catch(error => {
+                    setSource("images/missingimage.jpg");
+                });
         }
-    }
+    }, [])
 
-    componentWillUnmount() {
-        this._isMounted = false;
-        // fix Warning: Can't perform a React state update on an unmounted component
-        this.setState = (state,callback)=>{
-            return;
-        };
-    }
-
-    // componentDidUpdate(prevProps, prevState, snapshot) {
-    //     if (this.props?.src) {
-    //         this.UpdateImage();
-    //     }
-    // }
-
-    UpdateImage() {
-        axios
-            .get(
-                this.props.src,
-                {
-                    responseType: 'arraybuffer',
-                    headers: {"x-Auth": this.props.token}
-                },
-            )
-            .then(response => {
-                const base64 = btoa(
-                    new Uint8Array(response.data).reduce(
-                        (data, byte) => data + String.fromCharCode(byte),
-                        '',
-                    ),
-                );
-                this.setState({source: "data:;base64," + base64});
-            })
-            .catch(error => {
-                this.setState({source: "images/missingimage.jpg"});
-            });
-    }
-
-    render() {
-        return <img src={this.state.source}/>;
-    }
+    return <img src={source}/>;
 }
 
 export default SecureImage;
