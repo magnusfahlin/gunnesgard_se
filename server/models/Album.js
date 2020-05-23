@@ -51,7 +51,7 @@ PhotoSchema.virtual('path').get(function () {
     return "static/albums/" + parent._id + "/" + this.filename
 });
 
-PhotoSchema.virtual('thumbnailpath').get(function () {
+PhotoSchema.virtual('thumbnailPath').get(function () {
     const parent = this.parent();
     return "static/albums/" + parent._id + "/" + this.thumbnail
 });

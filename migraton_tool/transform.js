@@ -11,9 +11,9 @@ async function transformData(path, data) {
     return transformedData;
 }
 
-const createThumbnail = async function (fname, thumbnailFilePath) {
+const createThumbnail = async function (fname, thumbnailFilePath, width, height) {
     return new Promise(function (resolve, reject) {
-        gm(fname).gravity('Center').thumb(140, 87, thumbnailFilePath, 100,(err, data) => {
+        gm(fname).gravity('Center').thumb(width, height, thumbnailFilePath, 100,(err, data) => {
                 if (err) {
                     reject(err);
                 } else {
@@ -60,9 +60,19 @@ async function transfomAlbumsAndPhotos(pathToAlbums, data, transformedData) {
         await Promise.all(data.bilder_ny2.map(async (bild) => {
             if (element.id == bild.albumid) {
 
-                let {fileName, thumbnailFileName} = await CopyFileAndThumbnail(bild, destinationDir);
+                let fileName = bild.filnamn.split('/').pop();
+                let fileOnDisk = "../../../album/" + fileName;
+                let destinationFilePath = destinationDir + "/" + fileName;
+
+                let thumbnailFileName = fileName.replace(/(\.[^\.]+)$/, '_thumbnail$1');
+                let thumbnailFilePath = destinationDir + "/" + thumbnailFileName;
+                fs.copyFileSync(fileOnDisk, destinationFilePath);
 
                 let photoSize = await getImageSize(destinationDir + "/" + fileName);
+                const landscape = photoSize.width > photoSize.height;
+
+                await createThumbnail(fileOnDisk, thumbnailFilePath, landscape ? 140 : 87, landscape ? 87 : 140);
+
                 let thumbnailSize = await getImageSize(destinationDir + "/" + thumbnailFileName);
 
                 photos.push({
@@ -99,19 +109,6 @@ async function transfomAlbumsAndPhotos(pathToAlbums, data, transformedData) {
     }));
 
     transformedData.albums = albumArray;
-}
-
-async function CopyFileAndThumbnail(bild, destinationDir) {
-    let fileName = bild.filnamn.split('/').pop();
-    let fileOnDisk = "../../../album/" + fileName;
-    let destinationFilePath = destinationDir + "/" + fileName;
-
-    let thumbnailFileName = fileName.replace(/(\.[^\.]+)$/, '_thumbnail$1');
-    let thumbnailFilePath = destinationDir + "/" + thumbnailFileName;
-    fs.copyFileSync(fileOnDisk, destinationFilePath);
-    await createThumbnail(fileOnDisk, thumbnailFilePath);
-
-    return {fileName, thumbnailFileName};
 }
 
 function transformPostsAndComments(data, transformedData) {

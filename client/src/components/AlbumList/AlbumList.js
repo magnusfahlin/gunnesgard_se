@@ -1,18 +1,21 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import AlbumListItem from "./Album/AlbumListItem.js";
-import AlbumEditor from "./AlbumEditor.js";
+import AlbumEditor2 from "./AlbumEditor2.js";
 import Spinner from "../Common/Spinner";
 import ErrorMessage from "../Common/ErrorMessage";
 import "./AlbumList.scss";
+import AlbumEditor from "./Editor/AlbumEditor";
 
 const AlbumList = props => {
     let albumEditor;
-    if (props.albumCreateRequest) {
+    if (props.loading) {
         albumEditor = <Spinner/>;
     } else if (props.loggedIn) {
         albumEditor = (
-            <AlbumEditor {...props} />
+            <div>
+            <AlbumEditor album={props.albums.find(x=>x!==undefined)} token={props.token}/>
+            <AlbumEditor2 {...props} /></div>
             //    onCreateAlbum={(title, text, location) =>
             //>      props.actions.createAlbum(title, text, location, props.token)
             //   }

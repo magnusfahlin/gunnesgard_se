@@ -7,7 +7,7 @@ import {v1 as uuidv1} from 'uuid';
 import {getApiRoot} from "../../environmentConfig"
 import SecureImage from "../Common/SecureImage";
 
-class AlbumEditor extends Component {
+class AlbumEditor2 extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -102,11 +102,11 @@ class AlbumEditor extends Component {
     }
 }
 
-AlbumEditor.propTypes = {
+AlbumEditor2.propTypes = {
     onCreatePhoto: PropTypes.func
 };
 
-export default AlbumEditor;
+export default AlbumEditor2;
 
 
 // class Editor extends Component {
