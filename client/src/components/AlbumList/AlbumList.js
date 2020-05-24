@@ -9,12 +9,17 @@ import AlbumEditor from "./Editor/AlbumEditor";
 
 const AlbumList = props => {
     let albumEditor;
+    let ablumToEdit = props.albums.find(x=>x!==undefined);
     if (props.loading) {
         albumEditor = <Spinner/>;
     } else if (props.loggedIn) {
         albumEditor = (
             <div>
-            <AlbumEditor album={props.albums.find(x=>x!==undefined)} token={props.token}/>
+            <AlbumEditor
+                album={ablumToEdit}
+                token={props.token}
+                loading={props.loading}
+                uploadPhoto={(file) => props.actions.createPhoto(ablumToEdit.id, file, props.token)}/>
             <AlbumEditor2 {...props} /></div>
             //    onCreateAlbum={(title, text, location) =>
             //>      props.actions.createAlbum(title, text, location, props.token)

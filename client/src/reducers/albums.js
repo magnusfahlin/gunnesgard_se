@@ -56,8 +56,8 @@ export default function albumsReducer(state = initialState.albums, action) {
             };
         }
         case Action.ALBUM_PHOTO_CREATE_REQUEST: {
-            const index = state.photosIndexByIdMap[action.id];
-            state.newPhotos[index].photoCreateRequest = true;
+          //  const index = state.photosIndexByIdMap[action.id];
+        //    state.newPhotos[index].photoCreateRequest = true;
 
             return {
                 ...state
@@ -74,9 +74,9 @@ export default function albumsReducer(state = initialState.albums, action) {
             };
         }
         case Action.ALBUM_PHOTO_CREATE_FAILURE: {
-            const index = state.photosIndexByIdMap[action.id];
-            state.newPhotos[index].photoCreateRequest = false;
-            state.newPhotos[index].photoCreateError = true;
+            // const index = state.photosIndexByIdMap[action.id];
+            // state.newPhotos[index].photoCreateRequest = false;
+            // state.newPhotos[index].photoCreateError = true;
 
             return {
                 ...state

@@ -1,10 +1,11 @@
 import React, {useState} from "react";
 import SecureImage from "../../Common/SecureImage";
 import {getApiRoot} from "../../../environmentConfig";
-import delete_icon from "./deleted_icon.png"
-import deleted_icon from "./deleted_icon.png"
+import delete_icon from "./delete_icon.png"
 import "./AlbumEditor.scss"
 import Spinner from "../../Common/Spinner";
+import DropzoneWrapper from "./DropzoneWrapper";
+import ProgressBar from "../../Common/ProgressBar";
 
 
 const AlbumEditorExistingItem = (props) => {
@@ -16,9 +17,7 @@ const AlbumEditorExistingItem = (props) => {
     let photo = <SecureImage src={getApiRoot() + props.photo.thumbnailPath} token={props.token}/>;
     if (props.deleted) {
         icons = <div onClick={() => props.unDeletePhoto(props.photo.id)}>ångra</div>;
-        photo = <div className="photo_deleted"><img src={deleted_icon} title={"ta bort"}/></div>
-    } else if (props.loading) {
-        icons = <Spinner/>
+        photo = <div className="photo_deleted"><img src={delete_icon} title={"ta bort"}/></div>
     }
 
     let item =
@@ -58,14 +57,18 @@ const AlbumEditorExistingItem = (props) => {
 }
 
 const AddPhoto = (props) => {
-    return <div>
-        LÄGG TILL BILDER
-    </div>
+
+    return (<DropzoneWrapper/>);
 }
 
 const AlbumEditor = (props) => {
     const [photosForDeletion, setPhotosForDeletion] = useState([]);
     const [photosForUpdate, setPhotosForUpdate] = useState({});
+
+    let status = <div/>;
+    if (props.loading) {
+        status = <ProgressBar/>
+    }
 
     let photos = props.album.photos.map((photo, index) =>
         (<div className={"photoEditorPhoto" + index}>
@@ -83,14 +86,16 @@ const AlbumEditor = (props) => {
                 }}/>
         </div>));
 
-    return <div>
+    return <div className={"albumeditor"}>
+        <div className={"controls"}>
+            <div className={"status"}>{status}</div>
+            <div className={"buttons"}><button>Stäng</button></div>
+        </div>
         <div>{photos.length + " bilder"}</div>
         <div>
-            <AddPhoto/>
+            <DropzoneWrapper uploadPhoto={(file) => props.uploadPhoto(file)}/>
         </div>
-        <div>
-            {photos}
-        </div>
+        <div>{photos}</div>
     </div>;
 }
 export default AlbumEditor;

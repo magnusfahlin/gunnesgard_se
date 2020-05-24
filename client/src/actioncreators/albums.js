@@ -47,27 +47,31 @@ export const newPhotoStaged = (photoContainer, index) => dispatch => {
         }});
 };
 
-export const createPhoto = (albumId, photoContainer, title, text, token) => dispatch => {
+export const createPhoto = (albumId, file, token) => dispatch => {
     const data = new FormData();
-    data.append("file", photoContainer.photo);// photoContainer.photo.name);
+    data.append("file", file);// photoContainer.photo.name);
    // data.append("title", title);
   //  data.append("text", text);
     postFormDataApi(
         dispatch,
         {
-            id : photoContainer.tempId,
             type: ALBUM_PHOTO_CREATE_REQUEST
         },
         "albums/" + albumId + "/photos",
         data,
         token
     )
-        .then(result => dispatch({type: ALBUM_PHOTO_CREATE_SUCCESS, result}))
+        .then(() => getApi(
+            dispatch,
+            ALBUMS_FETCH_REQUEST,
+            "albums?sort=createdAt&sortOrder=desc",
+            token))
+        .then(result => dispatch({type: ALBUMS_FETCH_SUCCESS, result}))
         .catch(error =>
             handleError(
                 dispatch,
                 {
-                    id : photoContainer.tempId,
+                    name : file.name,
                     type: ALBUM_PHOTO_CREATE_FAILURE},
                 error
             )
