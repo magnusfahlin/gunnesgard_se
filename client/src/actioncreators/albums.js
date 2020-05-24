@@ -9,7 +9,7 @@ import {
     ALBUM_PHOTO_CREATE_REQUEST,
     ALBUM_PHOTO_CREATE_SUCCESS,
     ALBUM_PHOTO_CREATE_FAILURE,
-    ALBUMS_TOGGLE_SHOW_ALBUM
+    ALBUMS_TOGGLE_SHOW_ALBUM, POST_FETCH_SUCCESS, ALBUM_FETCH_SUCCESS
 } from "../actionTypes";
 import {getApi, postApi, postFormDataApi, handleError} from "./utils";
 
@@ -41,17 +41,18 @@ export const fetchAlbums = token => dispatch => {
 export const newPhotoStaged = (photoContainer, index) => dispatch => {
     dispatch({
         type: ALBUM_PHOTO_NEW_PHOTO_STAGED,
-        data : {
+        data: {
             photoContainer: photoContainer,
             index
-        }});
+        }
+    });
 };
 
 export const createPhoto = (albumId, file, token) => dispatch => {
     const data = new FormData();
     data.append("file", file);// photoContainer.photo.name);
-   // data.append("title", title);
-  //  data.append("text", text);
+    // data.append("title", title);
+    //  data.append("text", text);
     postFormDataApi(
         dispatch,
         {
@@ -60,28 +61,25 @@ export const createPhoto = (albumId, file, token) => dispatch => {
         "albums/" + albumId + "/photos",
         data,
         token
-    )
-        .then(result => dispatch({
-            type: ALBUM_PHOTO_CREATE_SUCCESS,
-            data : {
-                albumId : albumId,
-                photo: result
-            }}))
-        .catch(error =>
-            handleError(
-                dispatch,
-                {
-                    name : file.name,
-                    type: ALBUM_PHOTO_CREATE_FAILURE},
-                error
-            )
-        );
+    ).then(() => getApi(dispatch, null, "albums/" + albumId, token))
+    .then(result => dispatch({ type: ALBUM_FETCH_SUCCESS, result }))
+    .catch(error =>
+        handleError(
+            dispatch,
+            {
+                name: file.name,
+                type: ALBUM_PHOTO_CREATE_FAILURE
+            },
+            error
+        )
+    );
 };
 
 export const toggleShowAlbum = id => dispatch => {
     dispatch({
         type: ALBUMS_TOGGLE_SHOW_ALBUM,
-        data : {
+        data: {
             id: id
-        }});
+        }
+    });
 };

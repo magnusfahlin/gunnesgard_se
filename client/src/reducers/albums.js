@@ -27,6 +27,15 @@ export default function albumsReducer(state = initialState.albums, action) {
                 error: true
             };
         }
+        case Action.ALBUM_FETCH_SUCCESS: {
+            const album = action.result;
+            const albumIndex = state.albums.map(e => e.id).indexOf(album.id);
+
+            state.albums[albumIndex] = album;
+            return {
+                ...state,
+            };
+        }
         case Action.ALBUMS_CREATE_REQUEST: {
             return {
                 ...state,
@@ -63,15 +72,16 @@ export default function albumsReducer(state = initialState.albums, action) {
                 ...state
             };
         }
-        case Action.ALBUM_PHOTO_CREATE_SUCCESS: {
+    /*    case Action.ALBUM_PHOTO_CREATE_SUCCESS: {
 
             const albumIndex = state.albums.map(e => e.id).indexOf(action.data.albumId);
-            state.albums[albumIndex].photos.push(action.data.photo)
+            let currentPhotos = [...state.albums[albumIndex].photos, action.data.photo]
+            state.albums[albumIndex].photos = currentPhotos;
 
             return {
                 ...state
             };
-        }
+        }*/
         case Action.ALBUM_PHOTO_CREATE_FAILURE: {
             // const index = state.photosIndexByIdMap[action.id];
             // state.newPhotos[index].photoCreateRequest = false;

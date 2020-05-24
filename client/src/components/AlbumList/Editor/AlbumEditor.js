@@ -93,7 +93,7 @@ const AlbumEditor = (props) => {
         </div>
         <div>{photos.length + " bilder"}</div>
         <div>
-            <DropzoneWrapper uploadPhoto={(file) => props.uploadPhoto(file)}/>
+            <DropzoneWrapper uploadPhoto={(file) => props.actions.createPhoto(props.id, file, props.token)}/>
         </div>
         <div>{photos}</div>
     </div>;

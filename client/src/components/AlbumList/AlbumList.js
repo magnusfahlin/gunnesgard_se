@@ -4,21 +4,22 @@ import AlbumListItem from "./Album/AlbumListItem.js";
 import Spinner from "../Common/Spinner";
 import ErrorMessage from "../Common/ErrorMessage";
 import "./AlbumList.scss";
-import AlbumEditor from "./Editor/AlbumEditor";
+import AlbumEditor from "./Editor/AlbumEditorContainer";
 
 const AlbumList = props => {
     let albumEditor;
-    let ablumToEdit = props.albums.find(x => x !== undefined);
     if (props.loading) {
         albumEditor = <Spinner/>;
     } else if (props.loggedIn) {
+        let ablumToEdit = props.albums.find(x => x !== undefined);
         albumEditor = (
             <div>
                 <AlbumEditor
-                    album={ablumToEdit}
+                    id={ablumToEdit.id}
                     token={props.token}
-                    loading={props.loading}
-                    uploadPhoto={(file) => props.actions.createPhoto(ablumToEdit.id, file, props.token)}/>
+                   // loading={props.loading}
+                    //uploadPhoto={(file) => props.actions.createPhoto(ablumToEdit.id, file, props.token)}
+                />
             </div>
         );
     }
