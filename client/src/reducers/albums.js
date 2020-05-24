@@ -64,10 +64,9 @@ export default function albumsReducer(state = initialState.albums, action) {
             };
         }
         case Action.ALBUM_PHOTO_CREATE_SUCCESS: {
-            const index = state.photosIndexByIdMap[action.id];
-            state.newPhotos = this.state.newPhotos.splice(index, 1);
-            state.photosIndexByIdMap = this.state.photosIndexByIdMap.splice(this.state.list.indexOf(action.id), 1);
-            state.existingPhotos.Add(action)
+
+            const albumIndex = state.albums.map(e => e.id).indexOf(action.data.albumId);
+            state.albums[albumIndex].photos.push(action.data.photo)
 
             return {
                 ...state

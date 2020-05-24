@@ -1,7 +1,6 @@
 import React, {Component} from "react";
 import PropTypes from "prop-types";
 import AlbumListItem from "./Album/AlbumListItem.js";
-import AlbumEditor2 from "./AlbumEditor2.js";
 import Spinner from "../Common/Spinner";
 import ErrorMessage from "../Common/ErrorMessage";
 import "./AlbumList.scss";
@@ -9,22 +8,18 @@ import AlbumEditor from "./Editor/AlbumEditor";
 
 const AlbumList = props => {
     let albumEditor;
-    let ablumToEdit = props.albums.find(x=>x!==undefined);
+    let ablumToEdit = props.albums.find(x => x !== undefined);
     if (props.loading) {
         albumEditor = <Spinner/>;
     } else if (props.loggedIn) {
         albumEditor = (
             <div>
-            <AlbumEditor
-                album={ablumToEdit}
-                token={props.token}
-                loading={props.loading}
-                uploadPhoto={(file) => props.actions.createPhoto(ablumToEdit.id, file, props.token)}/>
-            <AlbumEditor2 {...props} /></div>
-            //    onCreateAlbum={(title, text, location) =>
-            //>      props.actions.createAlbum(title, text, location, props.token)
-            //   }
-            // />
+                <AlbumEditor
+                    album={ablumToEdit}
+                    token={props.token}
+                    loading={props.loading}
+                    uploadPhoto={(file) => props.actions.createPhoto(ablumToEdit.id, file, props.token)}/>
+            </div>
         );
     }
 
@@ -39,7 +34,8 @@ const AlbumList = props => {
     } else {
         albumItems = props.albums.map((album, index) => (
             <div>
-                <AlbumListItem album={album} token={props.token} showAlbum={props.albumsToShow.includes(album.id)} toggleShowAlbum={() => props.actions.toggleShowAlbum(album.id)}/>
+                <AlbumListItem album={album} token={props.token} showAlbum={props.albumsToShow.includes(album.id)}
+                               toggleShowAlbum={() => props.actions.toggleShowAlbum(album.id)}/>
             </div>
         ));
 

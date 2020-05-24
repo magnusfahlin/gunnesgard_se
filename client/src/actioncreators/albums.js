@@ -61,12 +61,12 @@ export const createPhoto = (albumId, file, token) => dispatch => {
         data,
         token
     )
-        .then(() => getApi(
-            dispatch,
-            ALBUMS_FETCH_REQUEST,
-            "albums?sort=createdAt&sortOrder=desc",
-            token))
-        .then(result => dispatch({type: ALBUMS_FETCH_SUCCESS, result}))
+        .then(result => dispatch({
+            type: ALBUM_PHOTO_CREATE_SUCCESS,
+            data : {
+                albumId : albumId,
+                photo: result
+            }}))
         .catch(error =>
             handleError(
                 dispatch,
