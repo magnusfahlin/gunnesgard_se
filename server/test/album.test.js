@@ -36,66 +36,93 @@ describe("Album API Integration Tests", function () {
             });
     });
 
-//   describe("Create post when NOT logged in", function() {
-//     it("should get error", function(done) {
-//       const post = {
-//         title: "title",
-//         text: "text"
-//       };
+    describe("Create an album with a photo, then delete the photo", function () {
+        it("should create an album, then delete it", async () => {
+            return new Promise(async (resolve, reject) => {
+                try {
+                    const testAlbum = {
+                        title: "album" + new Date()
+                    };
 
-//       request(app)
-//         .post("/posts")
-//         .send(post)
-//         .end(function(err, res) {
-//           expect(res.statusCode).to.equal(403);
-//           done();
-//         });
-//     });
-//   });
+                    let response = await request(app)
+                        .post("/albums")
+                        .set("x-auth", "test")
+                        .send(testAlbum);
 
-//   describe("Create post", function() {
-//     it("should create a post", function(done) {
-//       const post = {
-//         title: "3_thirdPost",
-//         text: "text"
-//       };
+                    expect(response.statusCode).to.equal(201);
+                    let testAlbumId = response.body.id;
 
-//       request(app)
-//         .post("/posts")
-//         .set("x-auth", "test")
-//         .send(post)
-//         .end(function(err, res) {
-//           expect(res.statusCode).to.equal(201);
-//           let postResponse = res.body;
+                    response = await request(app)
+                        .post("/albums/" + testAlbumId + "/photos")
+                        .set("x-auth", "test")
+                        .field("Content-Type", "multipart/form-data")
+                        .attach("file", path.resolve(__dirname, "resources/lena.jpg"));
 
-//           expect(postResponse.title).to.equal("3_thirdPost");
-//           expect(postResponse.text).to.equal("text");
-//           expect(postResponse.comments).to.be.an("array");
-//           done();
-//         });
-//     });
-//   });
+                    expect(response.statusCode).to.equal(201);
+                    expect(response.body.path).to.equal("static/albums/" + testAlbumId + "/" + response.body.id + ".jpg");
+                    let photoId = response.body.id;
 
-//   // TODO comment is not returned
-//   // describe("Create comment to post", function() {
-//   //   it("should create a post", function(done) {
-//   //     const comment2 = {
-//   //       text: "comment2"
-//   //     };
+                    // Get the photo
+                    response = await request(app)
+                        .get("/albums/" + testAlbumId)
+                        .set("x-auth", "test")
 
-//   //     request(app)
-//   //       .post("/posts/" + post1Id + "/comments")
-//   //       .set("x-auth", "test")
-//   //       .send(comment2)
-//   //       .end(function(err, res) {
-//   //         expect(res.statusCode).to.equal(201);
-//   //         let postResponse = res.body;
+                    expect(response.statusCode).to.equal(200);
+                    let responseAlbum = response.body;
+                    expect(responseAlbum.photos.length).to.equal(1);
 
-//   //         expect(postResponse.text).to.equal("comment2");
-//   //         done();
-//   //       });
-//   //   });
-//   // });
+                    // Try to update the album with no photo  - shouldn't delete any photos
+                    responseAlbum.photos = [];
+                    response = await request(app)
+                        .patch("/albums/" + testAlbumId)
+                        .set("x-auth", "test")
+                        .send(responseAlbum)
+                    expect(response.statusCode).to.equal(200);
+                    expect(responseAlbum.photos.length).to.equal(0);
+
+                    response = await request(app)
+                        .get("/albums/" + testAlbumId)
+                        .set("x-auth", "test")
+
+                    expect(response.statusCode).to.equal(200);
+                    responseAlbum = response.body;
+                    expect(responseAlbum.photos.length).to.equal(1);
+
+                    // Try to delete the album - shouldn't be possible as there are photos
+                    response = await request(app)
+                        .delete("/albums/" + testAlbumId)
+                        .set("x-auth", "test")
+
+                    expect(response.statusCode).to.equal(403);
+
+                    // Delete the photo - should succeed
+                    response = await request(app)
+                        .delete("/albums/" + testAlbumId + "/photos/" + photoId)
+                        .set("x-auth", "test");
+                    expect(response.statusCode).to.equal(204);
+
+                    response = await request(app)
+                        .get("/albums/" + testAlbumId)
+                        .set("x-auth", "test")
+
+                    expect(response.statusCode).to.equal(200);
+                    responseAlbum = response.body;
+                    expect(responseAlbum.photos.length).to.equal(0);
+
+                    // Delete the album - should succeed
+                    response = await request(app)
+                        .delete("/albums/" + testAlbumId)
+                        .set("x-auth", "test")
+
+                    expect(response.statusCode).to.equal(204);
+
+                    resolve();
+                } catch (e) {
+                    reject(e);
+                }
+            });
+        });
+    });
 
     describe("GET albums when NOT logged in", function () {
         it("should not get any albums", function (done) {
@@ -155,7 +182,6 @@ describe("Album API Integration Tests", function () {
                 .end(function (err, res) {
                     expect(res.statusCode).equal(200);
                     expect(res.body).to.be.an("array");
-                    expect(res.body).to.have.lengthOf(1);
 
                     let foundAlbum = false;
                     let foundPhoto = undefined;
@@ -186,82 +212,3 @@ describe("Album API Integration Tests", function () {
         });
     });
 });
-
-//     describe("GET posts with includeEmbeddedDocs = false", function() {
-//       it("should get 3 posts without comments", function(done) {
-//         request(app)
-//           .get("/posts/?includeEmbeddedDocs=false")
-//           .set("x-auth", "test")
-//           .end(function(err, res) {
-//             expect(res.statusCode).equal(200);
-//             expect(res.body).to.be.an("array");
-//             expect(res.body).to.have.lengthOf(3);
-
-//             let foundPost = false;
-//             let foundComment = false;
-//             res.body.forEach(post => {
-//               if (post.title === "2_firstPost")
-//               {
-//                 foundPost = true;
-
-//                 if (post.comments)
-//                 foundComment = post.comments[0].text === "comment1";
-//               }
-//             });
-
-//             expect(foundPost, "post not found").to.be.true;
-//             expect(foundComment, "comment should not be found").to.be.false;
-//             done();
-//           });
-//       });
-//     });
-
-//     describe("GET posts with count argument", function() {
-//       it("should get 2 posts", function(done) {
-//         request(app)
-//           .get("/posts?count=2")
-//           .set("x-auth", "test")
-//           .end(function(err, res) {
-//             expect(res.statusCode).equal(200);
-//             expect(res.body).to.be.an("array");
-//             expect(res.body).to.have.lengthOf(2);
-//             done();
-//           });
-//       });
-//     });
-
-//     describe("GET posts with sorting", function() {
-//       it("should get ascending sorting", function(done) {
-//         request(app)
-//           .get("/posts?sort=title&sortOrder=aSc")
-//           .set("x-auth", "test")
-//           .end(function(err, res) {
-//             expect(res.statusCode).equal(200);
-//             expect(res.body).to.be.an("array");
-//             expect(res.body).to.have.lengthOf(3);
-
-//             expect(res.body[0].title).to.equal("1_secondPost");
-//             expect(res.body[1].title).to.equal("2_firstPost");
-//             expect(res.body[2].title).to.equal("3_thirdPost");
-//             done();
-//           });
-//       });
-
-//       it("should get descending sorting", function(done) {
-//         request(app)
-//           .get("/posts?sort=title&sortOrder=dESc")
-//           .set("x-auth", "test")
-//           .end(function(err, res) {
-//             expect(res.statusCode).equal(200);
-//             expect(res.body).to.be.an("array");
-//             expect(res.body).to.have.lengthOf(3);
-
-//             expect(res.body[0].title).to.equal("3_thirdPost");
-//             expect(res.body[1].title).to.equal("2_firstPost");
-//             expect(res.body[2].title).to.equal("1_secondPost");
-//             done();
-//           });
-//       });
-//     });
-//   });
-//});
