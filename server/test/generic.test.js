@@ -40,7 +40,7 @@ describe("Generic entity API Integration Tests", function() {
       };
       request(app)
         .post("/events")
-        .set("x-auth", "test")
+        .set("x-auth", "testUser")
         .send(event)
         .end(function(err, res) {
           expect(res.statusCode).to.equal(201);
@@ -59,7 +59,50 @@ describe("Generic entity API Integration Tests", function() {
     });
   });
 
-  describe("Update entites", function() {
+    describe("Delete entity", function() {
+        it("should delete an entity, only possible for the creator", function(done) {
+            const event = {
+                text: "event1",
+                date: new Date("2018-01-07T14:38:27.445Z")
+            };
+            request(app)
+                .post("/events")
+                .set("x-auth", "test")
+                .send(event)
+                .end(function(err, res) {
+                    expect(res.statusCode).to.equal(201);
+                    let eventResponse = res.body;
+
+                    request(app)
+                        .delete("/events/" + eventResponse.id)
+                        .send(event)
+                        .end(function(err, res) {
+                            expect(res.statusCode).to.equal(403);
+
+                            request(app)
+                                .delete("/events/" + eventResponse.id)
+                                .set("x-auth", "test2")
+                                .send(event)
+                                .end(function(err, res) {
+                                    expect(res.statusCode).to.equal(403);
+
+                                    request(app)
+                                        .delete("/events/" + eventResponse.id)
+                                        .set("x-auth", "test")
+                                        .send(event)
+                                        .end(function(err, res) {
+                                            expect(res.statusCode).to.equal(204);
+
+                                            done();
+                                        });
+                                });
+                        });
+                });
+        });
+    });
+
+
+    describe("Update entites", function() {
     let event2Id;
     let event2CreatedAt;
     let event2UpdatedAt;
