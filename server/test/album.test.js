@@ -36,92 +36,99 @@ describe("Album API Integration Tests", function () {
             });
     });
 
-    describe("Create an album with a photo, then delete the photo", function () {
-        it("should create an album, then delete it", async () => {
-            return new Promise(async (resolve, reject) => {
-                try {
-                    const testAlbum = {
-                        title: "album" + new Date()
-                    };
-
-                    let response = await request(app)
-                        .post("/albums")
-                        .set("x-auth", "test")
-                        .send(testAlbum);
-
-                    expect(response.statusCode).to.equal(201);
-                    let testAlbumId = response.body.id;
-
-                    response = await request(app)
-                        .post("/albums/" + testAlbumId + "/photos")
-                        .set("x-auth", "test")
-                        .field("Content-Type", "multipart/form-data")
-                        .attach("file", path.resolve(__dirname, "resources/lena.jpg"));
-
-                    expect(response.statusCode).to.equal(201);
-                    expect(response.body.path).to.equal("static/albums/" + testAlbumId + "/" + response.body.id + ".jpg");
-                    let photoId = response.body.id;
-
-                    // Get the photo
-                    response = await request(app)
-                        .get("/albums/" + testAlbumId)
-                        .set("x-auth", "test")
-
-                    expect(response.statusCode).to.equal(200);
-                    let responseAlbum = response.body;
-                    expect(responseAlbum.photos.length).to.equal(1);
-
-                    // Try to update the album with no photo  - shouldn't delete any photos
-                    responseAlbum.photos = [];
-                    response = await request(app)
-                        .patch("/albums/" + testAlbumId)
-                        .set("x-auth", "test")
-                        .send(responseAlbum)
-                    expect(response.statusCode).to.equal(200);
-                    expect(responseAlbum.photos.length).to.equal(0);
-
-                    response = await request(app)
-                        .get("/albums/" + testAlbumId)
-                        .set("x-auth", "test")
-
-                    expect(response.statusCode).to.equal(200);
-                    responseAlbum = response.body;
-                    expect(responseAlbum.photos.length).to.equal(1);
-
-                    // Try to delete the album - shouldn't be possible as there are photos
-                    response = await request(app)
-                        .delete("/albums/" + testAlbumId)
-                        .set("x-auth", "test")
-
-                    expect(response.statusCode).to.equal(403);
-
-                    // Delete the photo - should succeed
-                    response = await request(app)
-                        .delete("/albums/" + testAlbumId + "/photos/" + photoId)
-                        .set("x-auth", "test");
-                    expect(response.statusCode).to.equal(204);
-
-                    response = await request(app)
-                        .get("/albums/" + testAlbumId)
-                        .set("x-auth", "test")
-
-                    expect(response.statusCode).to.equal(200);
-                    responseAlbum = response.body;
-                    expect(responseAlbum.photos.length).to.equal(0);
-
-                    // Delete the album - should succeed
-                    response = await request(app)
-                        .delete("/albums/" + testAlbumId)
-                        .set("x-auth", "test")
-
-                    expect(response.statusCode).to.equal(204);
-
-                    resolve();
-                } catch (e) {
-                    reject(e);
-                }
-            });
+    async function jestPromiseWrapper(callback) {
+        return new Promise(async (resolve, reject) => {
+            try {
+                await callback();
+                resolve()
+            } catch (e) {
+                reject(e)
+            }
         });
+    }
+
+    describe("Verify a workflow", function () {
+        it("should create an album with a photo, then delete the photo, then the album",
+            async () => {
+                return jestPromiseWrapper(
+                    async () => {
+                        const testAlbum = {
+                            title: "album" + new Date()
+                        };
+
+                        let response = await request(app)
+                            .post("/albums")
+                            .set("x-auth", "test")
+                            .send(testAlbum);
+
+                        expect(response.statusCode).to.equal(201);
+                        let testAlbumId = response.body.id;
+
+                        response = await request(app)
+                            .post("/albums/" + testAlbumId + "/photos")
+                            .set("x-auth", "test")
+                            .field("Content-Type", "multipart/form-data")
+                            .attach("file", path.resolve(__dirname, "resources/lena.jpg"));
+
+                        expect(response.statusCode).to.equal(201);
+                        expect(response.body.path).to.equal("static/albums/" + testAlbumId + "/" + response.body.id + ".jpg");
+                        let photoId = response.body.id;
+
+                        // Get the photo
+                        response = await request(app)
+                            .get("/albums/" + testAlbumId)
+                            .set("x-auth", "test")
+
+                        expect(response.statusCode).to.equal(200);
+                        let responseAlbum = response.body;
+                        expect(responseAlbum.photos.length).to.equal(1);
+
+                        // Try to update the album with no photo  - shouldn't delete any photos
+                        responseAlbum.photos = [];
+                        response = await request(app)
+                            .patch("/albums/" + testAlbumId)
+                            .set("x-auth", "test")
+                            .send(responseAlbum)
+                        expect(response.statusCode).to.equal(200);
+                        expect(responseAlbum.photos.length).to.equal(0);
+
+                        response = await request(app)
+                            .get("/albums/" + testAlbumId)
+                            .set("x-auth", "test")
+
+                        expect(response.statusCode).to.equal(200);
+                        responseAlbum = response.body;
+                        expect(responseAlbum.photos.length).to.equal(1);
+
+                        // Try to delete the album - shouldn't be possible as there are photos
+                        response = await request(app)
+                            .delete("/albums/" + testAlbumId)
+                            .set("x-auth", "test")
+
+                        expect(response.statusCode).to.equal(403);
+
+                        // Delete the photo - should succeed
+                        response = await request(app)
+                            .delete("/albums/" + testAlbumId + "/photos/" + photoId)
+                            .set("x-auth", "test");
+                        expect(response.statusCode).to.equal(204);
+
+                        response = await request(app)
+                            .get("/albums/" + testAlbumId)
+                            .set("x-auth", "test")
+
+                        expect(response.statusCode).to.equal(200);
+                        responseAlbum = response.body;
+                        expect(responseAlbum.photos.length).to.equal(0);
+
+                        // Delete the album - should succeed
+                        response = await request(app)
+                            .delete("/albums/" + testAlbumId)
+                            .set("x-auth", "test")
+
+                        expect(response.statusCode).to.equal(204);
+                    });
+            });
     });
 
     describe("GET albums when NOT logged in", function () {

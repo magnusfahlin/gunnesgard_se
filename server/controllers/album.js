@@ -135,7 +135,7 @@ const registerAlbum = function (app) {
     createEmbeddedDocDeleteRoute(app, "album", photoAsEmbeddedDocument, Album);
 
     createPhotoPostRoute(app);
-    
+
     const createThumbnail = async function (filePath, thumbnailFilePath, width, height) {
         return new Promise(function (resolve, reject) {
             gm(filePath).gravity('Center').thumb(width, height, thumbnailFilePath, 100, (err, data) => {
