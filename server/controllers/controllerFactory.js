@@ -240,7 +240,7 @@ function createDeleteRoute(app, entityName, model, embeddedDocuments) {
     }));
 }
 
-function createEmbeddedDocGetRoute(app, entityName, embeddedDocument, model) {
+function createEmbeddedDocGetAllRoute(app, entityName, embeddedDocument, model) {
     app.get(createEntityPath(entityName) + "/:id/" + embeddedDocument.embeddedEntity, (req, res) => {
         let id = req.params.id;
 
@@ -264,8 +264,37 @@ function createEmbeddedDocGetRoute(app, entityName, embeddedDocument, model) {
     });
 }
 
+function createEmbeddedDocGetByIdRoute(app, entityName, embeddedDocument, model) {
+    app.get(createEntityPath(entityName) + "/:id/" + embeddedDocument.embeddedEntity + "/:embeddedId/", (req, res) => {
+        let id = req.params.id;
+        let embeddedId = req.params.embeddedId;
+
+        // Validates id
+        if (!ObjectID.isValid(id)) {
+            return res.status(404).send("ID is not valid");
+        }
+
+        model
+            .findById(id)
+            .then(entity => {
+                if (!entity) {
+                    return res.status(404).send();
+                }
+                const embeddedDoc = entity[embeddedDocument.embeddedEntity].find(emb => emb.id == embeddedId);
+                if (!embeddedDoc) {
+                    res.status(400).send();
+                    return;
+                }
+                res.send(embeddedDoc);
+            })
+            .catch(e => {
+                res.status(400).send();
+            });
+    });
+}
+
 function createEmbeddedDocPostRoute(app, entityName, embeddedDocument, model) {
-    app.post(createEntityPath(entityName) + "/:id/" + embeddedDocument.embeddedEntity, (req, res) => {
+    app.post(createEntityPath(entityName) + "/:id/" + embeddedDocument.embeddedEntity, runAsyncWrapper(async (req, res) => {
         if (!req.auth) {
             return res.status(403).send();
         }
@@ -277,7 +306,7 @@ function createEmbeddedDocPostRoute(app, entityName, embeddedDocument, model) {
         embeddedDoc.createdBy = req.auth.username;
         embeddedDoc.updatedBy = req.auth.username;
 
-        modifyEmbeddedDoc(
+        await modifyEmbeddedDoc(
             "$push",
             model,
             id,
@@ -287,7 +316,7 @@ function createEmbeddedDocPostRoute(app, entityName, embeddedDocument, model) {
             res,
             201
         );
-    });
+    }));
 }
 
 function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
@@ -310,13 +339,13 @@ function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
                 embeddedDoc._id = embeddedId;
                 embeddedDoc.updatedBy = req.auth.username;
 
-                Object.keys(embeddedDoc).forEach(function (key, _) {
+                Object.keys(currentDoc._doc).forEach(function (key, _) {
                     if (!embeddedDoc[key]) {
-                        embeddedDoc[key] = currentDoc[key];
+                        embeddedDoc[key] = currentDoc._doc[key];
                     }
                 });
 
-                modifyEmbeddedDoc(
+                await modifyEmbeddedDoc(
                     "$set",
                     model,
                     id,
@@ -345,7 +374,7 @@ function createEmbeddedDocDeleteRoute(app, entityName, embeddedDocument, model) 
                 let embeddedDoc = {_id: embeddedId};
                 //  embeddedDoc.updatedBy = req.auth.username;
 
-                modifyEmbeddedDoc(
+                await modifyEmbeddedDoc(
                     "$pull",
                     model,
                     id,
@@ -359,39 +388,88 @@ function createEmbeddedDocDeleteRoute(app, entityName, embeddedDocument, model) 
         ));
 }
 
+const defaultOptionsEmbeddedDocsOptions = {
+    createPost: true,
+    createGetAll: true,
+    createGetById: true,
+    createPatch: true,
+    createDelete: true
+}
+
+const defaultOptions = {
+    createPost: true,
+    createGetAll: true,
+    createGetById: true,
+    createPatch: true,
+    createDelete: true,
+    embeddedDocsOptions: {}
+}
+
 const createController = function (
     app,
     entityName,
     model,
     parseRequest,
-    embeddedDocuments
+    embeddedDocuments,
+    options
 ) {
-    createPostRoute(app, entityName, parseRequest, embeddedDocuments);
-
-    // GET HTTP request is called on /[entityName] path
-    createGetAllRoute(app, entityName, model, embeddedDocuments);
-
-    // GET HTTP request is called to retrieve individual entity
-    createGetByIdRoute(app, entityName, model);
-
-    // PATCH HTTP request
-    createPatchRoute(app, entityName, model);
-
-    // HTTP DELETE request routed to /[entityName]/:id
-    createDeleteRoute(app, entityName, model, embeddedDocuments);
-
+    options = Object.assign(defaultOptions, options);
 
     if (embeddedDocuments) {
         embeddedDocuments.forEach(embeddedDocument => {
-            createEmbeddedDocGetRoute(app, entityName, model);
-            createEmbeddedDocPostRoute(app, entityName, embeddedDocument, model);
-            createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model);
-            createEmbeddedDocDeleteRoute(app, entityName, embeddedDocument, model);
+            options.embeddedDocsOptions[embeddedDocument.embeddedEntity] = Object.assign(defaultOptionsEmbeddedDocsOptions, options.embeddedDocsOptions[embeddedDocument.embeddedEntity]);
+        });
+    }
+
+    if (options.createPost) {
+        createPostRoute(app, entityName, parseRequest, embeddedDocuments);
+    }
+
+    // GET HTTP request is called on /[entityName] path
+    if (options.createGetAll) {
+        createGetAllRoute(app, entityName, model, embeddedDocuments);
+    }
+
+    // GET HTTP request is called to retrieve individual entity
+    if (options.createGetById) {
+        createGetByIdRoute(app, entityName, model);
+    }
+
+    // PATCH HTTP request
+    if (options.createPatch) {
+        createPatchRoute(app, entityName, model, embeddedDocuments);
+    }
+    // HTTP DELETE request routed to /[entityName]/:id
+    if (options.createDelete) {
+        createDeleteRoute(app, entityName, model, embeddedDocuments);
+    }
+
+    if (embeddedDocuments) {
+        embeddedDocuments.forEach(embeddedDocument => {
+
+            if (options.embeddedDocsOptions[embeddedDocument.embeddedEntity].createPost) {
+                createEmbeddedDocPostRoute(app, entityName, embeddedDocument, model);
+            }
+
+            if (options.embeddedDocsOptions[embeddedDocument.embeddedEntity].createGetAll) {
+                createEmbeddedDocGetAllRoute(app, entityName, embeddedDocument, model);
+            }
+
+            if (options.embeddedDocsOptions[embeddedDocument.embeddedEntity].createGetById) {
+                createEmbeddedDocGetByIdRoute(app, entityName, embeddedDocument, model);
+            }
+
+            if (options.embeddedDocsOptions[embeddedDocument.embeddedEntity].createPatch) {
+                createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model);
+            }
+            if (options.embeddedDocsOptions[embeddedDocument.embeddedEntity].createDelete) {
+                createEmbeddedDocDeleteRoute(app, entityName, embeddedDocument, model);
+            }
         });
     }
 }
 
-function modifyEmbeddedDoc(
+async function modifyEmbeddedDoc(
     parameter,
     model,
     id,
@@ -411,18 +489,38 @@ function modifyEmbeddedDoc(
     mongoDbInnerInput[embeddedDocName] = embeddedDoc;
     mongoDbInput[parameter] = mongoDbInnerInput;
 
-    model.update({_id: id}, mongoDbInput).then(
-        doc => {
-            res.status(statusCode).send(doc);
-        },
-        e => {
-            res.status(400).send(e);
-        }
-    );
+    await model
+        .update({_id: id}, mongoDbInput).exec()
+        .catch(e => {
+            res.status(400).send();
+        })
+
+    if (res.finished) {
+        return;
+    }
+
+    if (statusCode == 204) // Delete
+    {
+        res.status(statusCode).send();
+        return
+    }
+
+    await model
+        .findById(id).exec()
+        .then(entity => {
+            if (!entity) {
+                return res.status(404).send();
+            }
+            const embeddedDocs = entity[embeddedDocName].find(emb => emb.id == embeddedDoc._id);
+            res.status(statusCode).send(embeddedDocs);
+        })
+        .catch(e => {
+            res.status(500).send();
+        });
 }
 
 async function validateEmbeddedDocDelUpdateOperation(model, id, res, element, embeddedId, req) {
-    await model.findById(id).exec()
+    return await model.findById(id).exec()
         .then(entity => {
 
             if (!entity) {
@@ -443,7 +541,7 @@ async function validateEmbeddedDocDelUpdateOperation(model, id, res, element, em
 
             if (Math.abs(new Date() - embeddedEntity.createdAt > timeLimitForDeletions)) {
                 res.status(403).send("Not possible to do operation because of age");
-
+                return;
             }
 
             return entity;
@@ -458,14 +556,5 @@ function runAsyncWrapper(callback) {
 }
 
 module.exports = {
-    createController,
-    createGetAllRoute,
-    createPostRoute,
-    createGetByIdRoute,
-    createPatchRoute,
-    createDeleteRoute,
-    createEmbeddedDocGetRoute,
-    createEmbeddedDocPostRoute,
-    createEmbeddedDocPatchRoute,
-    createEmbeddedDocDeleteRoute
+    createController
 };

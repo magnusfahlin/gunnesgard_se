@@ -1,5 +1,5 @@
-const {createGetAllRoute, createPostRoute, createGetByIdRoute, createPatchRoute, createDeleteRoute, createEmbeddedDocDeleteRoute, createEmbeddedDocGetRoute, createEmbeddedDocPatchRoute} = require("./controllerFactory.js");
-const {Album, Photo} = require("./../models/Album");
+const {createController} = require("./controllerFactory.js");
+const {Album} = require("./../models/Album");
 const multer = require("multer");
 const ObjectID = require("mongodb").ObjectID;
 const gm = require("gm");
@@ -125,14 +125,13 @@ const registerAlbum = function (app) {
         },
     };
 
-    createPostRoute(app,"album",(req) => new Album({ title: req.body.title })); // Skip embedded docs here - No need for creating photos together with the album
-    createGetAllRoute(app, "album", Album, [photoAsEmbeddedDocument]);
-    createGetByIdRoute(app, "album", Album);
-    createPatchRoute(app, "album", Album, [photoAsEmbeddedDocument]);
-    createDeleteRoute(app, "album", Album, [photoAsEmbeddedDocument]);
-    createEmbeddedDocGetRoute(app, "album", photoAsEmbeddedDocument, Album);
-    createEmbeddedDocPatchRoute(app, "album", photoAsEmbeddedDocument, Album);
-    createEmbeddedDocDeleteRoute(app, "album", photoAsEmbeddedDocument, Album);
+    createController(
+        app,
+        "album",
+        Album,
+        (req) => new Album({title: req.body.title}),
+        [photoAsEmbeddedDocument],
+        {embeddedDocsOptions: {photos: {createPost: false}}});
 
     createPhotoPostRoute(app);
 

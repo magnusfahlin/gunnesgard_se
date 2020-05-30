@@ -1,5 +1,7 @@
 "use strict";
 
+const {jestPromiseWrapper} = require("./utils");
+
 const app = require("../server"),
     path = require('path'),
     chai = require("chai"),
@@ -35,17 +37,6 @@ describe("Album API Integration Tests", function () {
                     });
             });
     });
-
-    async function jestPromiseWrapper(callback) {
-        return new Promise(async (resolve, reject) => {
-            try {
-                await callback();
-                resolve()
-            } catch (e) {
-                reject(e)
-            }
-        });
-    }
 
     describe("Verify a workflow", function () {
         it("should create an album with a photo, then delete the photo, then the album",
