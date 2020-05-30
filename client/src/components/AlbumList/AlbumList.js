@@ -7,21 +7,24 @@ import "./AlbumList.scss";
 import AlbumEditor from "./Editor/AlbumEditorContainer";
 
 const AlbumList = props => {
-    let albumEditor;
+    let albumEditor = <div/>;
     if (props.loading) {
         albumEditor = <Spinner/>;
     } else if (props.loggedIn) {
         let ablumToEdit = props.albums.find(x => x !== undefined);
-        albumEditor = (
-            <div>
-                <AlbumEditor
-                    id={ablumToEdit.id}
-                    token={props.token}
-                   // loading={props.loading}
-                    //uploadPhoto={(file) => props.actions.createPhoto(ablumToEdit.id, file, props.token)}
-                />
-            </div>
-        );
+
+        if (ablumToEdit) {
+            albumEditor = (
+                <div>
+                    <AlbumEditor
+                        id={ablumToEdit.id}
+                        token={props.token}
+                        // loading={props.loading}
+                        //uploadPhoto={(file) => props.actions.createPhoto(ablumToEdit.id, file, props.token)}
+                    />
+                </div>
+            );
+        }
     }
 
     let loading;

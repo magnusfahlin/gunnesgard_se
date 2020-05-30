@@ -32,7 +32,7 @@ const AlbumEditorExistingItem = (props) => {
                         defaultValue={props.photo.title}
                         placeholder="Bildnamnn"
                         className="text"
-                        disabled={"props.deleted"}
+                        disabled={props.deleted}
                         onChange={event => props.updatePhoto(props.photo.id, {title: event.target.value})}
                     />
                 </div>
@@ -42,7 +42,7 @@ const AlbumEditorExistingItem = (props) => {
                         defaultValue={props.photo.text}
                         placeholder="Beskrivande text"
                         className="text"
-                        disabled={"props.deleted"}
+                        disabled={props.deleted}
                         onChange={event => props.updatePhoto(props.photo.id, {text: event.target.value})}
                     />
                 </div>
