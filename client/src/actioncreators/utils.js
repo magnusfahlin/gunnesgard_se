@@ -99,3 +99,18 @@ export const patchApi = (dispatch, toDispatch, path, id, data, token) => {
         .then(handleErrorResponse)
         .then(response => response.json());
 };
+
+export const multipleRestApi = (dispatch, toDispatch, patches, token) => {
+    if (typeof toDispatch === "object") {
+        dispatch(toDispatch);
+    } else {
+        dispatch({type: toDispatch});
+    }
+
+    return Promise.all(patches.map(patch => fetch(getApiRoot() + patch.path, {
+        method: patch.method,
+        headers: createHeaders(token,  patch.data ? "application/json" : undefined),
+        cache: "no-store",
+        body: patch.data ? JSON.stringify(patch.data) : undefined
+    })));
+};

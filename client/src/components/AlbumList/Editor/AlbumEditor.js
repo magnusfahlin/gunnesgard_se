@@ -65,11 +65,6 @@ const AlbumEditor = (props) => {
     const [photosForDeletion, setPhotosForDeletion] = useState([]);
     const [photosForUpdate, setPhotosForUpdate] = useState({});
 
-    let status = <div/>;
-    if (props.loading) {
-        status = <ProgressBar/>
-    }
-
     let photos = props.album.photos.map((photo, index) =>
         (<div className={"photoEditorPhoto" + index}>
             <AlbumEditorExistingItem
@@ -86,12 +81,36 @@ const AlbumEditor = (props) => {
                 }}/>
         </div>));
 
+    let status;
+    if (props.albumModificationStatus?.loading)
+    {
+        status =  <div><ProgressBar/></div>;
+    }
+    else if (props.albumModificationStatus?.errors)
+    {
+        status = props.albumModificationStatus.errors.map(error => {
+            let operation = error.method == "DELETE" ? "ta bort" : "ändra";
+            let photo = props.album.photos.find(p => p.id === error.id);
+            let photoTitle = photo.title ? photo.title : "bild nummer " + props.album.photos.indexOf(photo) + 1;
+            return <div>Kunde inte {operation} {photoTitle}</div>;
+        })
+    } else {
+        status = <div>{photos.length} bilder</div>;
+    };
+
     return <div className={"albumeditor"}>
         <div className={"controls"}>
             <div className={"status"}>{status}</div>
-            <div className={"buttons"}><button>Stäng</button></div>
+            <div className={"buttons"}>
+                <button onClick={() => {
+                    props.actions.modifyAlbum(props.album.id, photosForUpdate, photosForDeletion, props.token)
+                    setPhotosForUpdate({});
+                    setPhotosForDeletion([]);
+                }}>
+                    Stäng
+                </button>
+            </div>
         </div>
-        <div>{photos.length + " bilder"}</div>
         <div>
             <DropzoneWrapper uploadPhoto={(file) => props.actions.createPhoto(props.id, file, props.token)}/>
         </div>

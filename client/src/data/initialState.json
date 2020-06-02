@@ -38,7 +38,8 @@
       "photosIndexByIdMap" : [],
     "albums": [],
     "indexByIdMap" : {},
-    "albumsToShow" : []
+    "albumsToShow" : [],
+    "albumModificationStatus": {}
   },
   "Calendar": [
     {

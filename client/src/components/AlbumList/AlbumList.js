@@ -34,7 +34,7 @@ const AlbumList = props => {
 
     let albumItems;
     if (props.error) {
-        albumItems = <ErrorMessage message="Kunde inte ladda bloggen"/>;
+        albumItems = <ErrorMessage message="Kunde inte ladda albumen"/>;
     } else {
         albumItems = props.albums.map((album, index) => (
             <div>
@@ -47,7 +47,7 @@ const AlbumList = props => {
 
         if (props.albumCreateError) {
             albumItems = [
-                <ErrorMessage message="Kunde ladda upp inlägget"/>,
+                <ErrorMessage message="Kunde ladda upp bilden"/>,
                 ...albumItems
             ];
         }

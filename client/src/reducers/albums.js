@@ -43,11 +43,20 @@ export default function albumsReducer(state = initialState.albums, action) {
                 AlbumCreateError: false
             };
         }
-        case Action.ALBUMS_CREATE_FAILURE: {
+        case Action.ALBUM_MODIFICATION_REQUEST: {
+            state.albumModificationStatus[action.data.albumId] = {loading : true};
+
             return {
                 ...state,
                 albumCreateRequest: false,
-                albumCreateError: true
+                albumCreateError: false
+            };
+        }
+        case Action.ALBUM_MODIFICATION_FINNISHED: {
+            state.albumModificationStatus[action.data.albumId] = {errors : action.data.errors};
+
+            return {
+                ...state
             };
         }
         case Action.ALBUM_PHOTO_NEW_PHOTO_STAGED: {
