@@ -118,6 +118,99 @@ describe("Album API Integration Tests", function () {
                             .set("x-auth", "test")
 
                         expect(response.statusCode).to.equal(204);
+
+                        response = await request(app)
+                            .post("/albums")
+                            .set("x-auth", "test")
+
+                        responseAlbum = response.body;
+                        expect(responseAlbum.photos.length).to.equal(0);
+                    });
+            });
+    });
+
+    describe("Verify a workflow", function () {
+        it("should create an album with two photos",
+            async () => {
+                return jestPromiseWrapper(
+                    async () => {
+                        const testAlbum = {
+                            title: "album" + new Date()
+                        };
+
+                        let response = await request(app)
+                            .post("/albums")
+                            .set("x-auth", "test")
+                            .send(testAlbum);
+
+                        expect(response.statusCode).to.equal(201);
+                        let testAlbumId = response.body.id;
+
+                        response = await request(app)
+                            .post("/albums/" + testAlbumId + "/photos")
+                            .set("x-auth", "test")
+                            .field("Content-Type", "multipart/form-data")
+                            .attach("file", path.resolve(__dirname, "resources/lena.jpg"));
+
+                        expect(response.statusCode).to.equal(201);
+                        expect(response.body.path).to.equal("static/albums/" + testAlbumId + "/" + response.body.id + ".jpg");
+                        let photoId = response.body.id;
+
+                        response = await request(app)
+                            .post("/albums/" + testAlbumId + "/photos")
+                            .set("x-auth", "test")
+                            .field("Content-Type", "multipart/form-data")
+                            .attach("file", path.resolve(__dirname, "resources/lena.jpg"));
+
+                        expect(response.statusCode).to.equal(201);
+                        expect(response.body.path).to.equal("static/albums/" + testAlbumId + "/" + response.body.id + ".jpg");
+                        let photo2Id = response.body.id;
+
+                        // Get the photos
+                        response = await request(app)
+                            .get("/albums/" + testAlbumId + "/photos")
+                            .set("x-auth", "test")
+
+                        expect(response.statusCode).to.equal(200);
+                        let responsePhotos = response.body;
+                        expect(responsePhotos.length).to.equal(2);
+
+                        // Update photo 2
+                        response = await request(app)
+                            .patch("/albums/" + testAlbumId + "/photos/" + photo2Id)
+                            .set("x-auth", "test")
+                            .send({title: "a new title"})
+                        expect(response.statusCode).to.equal(200);
+                        let responsePhoto = response.body;
+                        expect(responsePhoto.id).to.equal(photo2Id);
+                        expect(responsePhoto.title).to.equal("a new title");
+
+                        // Get the photos
+                        response = await request(app)
+                            .get("/albums/" + testAlbumId + "/photos")
+                            .set("x-auth", "test")
+
+                        expect(response.statusCode).to.equal(200);
+                        responsePhotos = response.body;
+                        expect(responsePhotos.length).to.equal(2);
+
+                        // Delete the photos
+                        response = await request(app)
+                            .delete("/albums/" + testAlbumId + "/photos/" + photoId)
+                            .set("x-auth", "test");
+                        expect(response.statusCode).to.equal(204);
+
+                        response = await request(app)
+                            .delete("/albums/" + testAlbumId + "/photos/" + photo2Id)
+                            .set("x-auth", "test");
+                        expect(response.statusCode).to.equal(204);
+
+                        // Delete the album
+                        response = await request(app)
+                            .delete("/albums/" + testAlbumId)
+                            .set("x-auth", "test")
+
+                        expect(response.statusCode).to.equal(204);
                     });
             });
     });

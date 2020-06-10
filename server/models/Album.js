@@ -82,7 +82,7 @@ const AlbumSchema = new Schema(
         },
         photos: {
             type: [PhotoSchema],
-        },
+        }
     },
     createSchemaOptions()
 );
