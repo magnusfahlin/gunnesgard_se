@@ -53,7 +53,7 @@ export default function albumsReducer(state = initialState.albums, action) {
             };
         }
         case Action.ALBUM_MODIFICATION_FINNISHED: {
-            state.albumModificationStatus[action.data.albumId] = {errors : action.data.errors};
+                state.albumModificationStatus[action.data.albumId] = {errors : action.data.errors};
 
             return {
                 ...state

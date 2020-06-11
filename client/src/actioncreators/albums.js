@@ -84,7 +84,7 @@ export const modifyAlbum = (albumId, photoUpdates, photoDeletion, token) => disp
         .then(responses => {
             let errors = [];
             responses.forEach((r, index) => {
-                if (r.status != 200 || r.status != 204 || r.status != 204) {
+                if (r.status != 200 && r.status != 204 && r.status != 204) {
                     errors.push({
                         id: patches[index].id,
                         method: patches[index].method,

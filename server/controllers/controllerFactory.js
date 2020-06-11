@@ -366,7 +366,7 @@ function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
                 }
 
                 const embeddedDoc = embeddedDocument.embeddedEntityParser(req);
-                embeddedDoc._id  = ObjectID(embeddedId);
+                embeddedDoc._id = ObjectID(embeddedId);
 
                 const existing = await model
                     .findOne({_id: id}).exec()
@@ -391,12 +391,13 @@ function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
                     }
                 });
 
-                currentDoc._doc.updatedBy = req.auth.username;
+                currentEmbeddedDoc._doc.updatedBy = req.auth.username;
 
                 embeddedEntities[embeddedEntities.findIndex(el => el.id === embeddedId)] = currentEmbeddedDoc;
                 existing[embeddedDocument.embeddedEntity] = embeddedEntities;
 
-                const savedEntity = await existing.save()
+                existing.markModified(embeddedDocument.embeddedEntity);
+                const savedEntity = await existing.save({validateBeforeSave: false})
                     .catch(e => {
                         res.status(500).send();
                     })
@@ -438,7 +439,7 @@ function createEmbeddedDocDeleteRoute(app, entityName, embeddedDocument, model) 
 
                 existing[embeddedDocument.embeddedEntity] = existing[embeddedDocument.embeddedEntity].filter(embedded => embedded.id !== embeddedId);
 
-                await existing.save()
+                await existing.save({validateBeforeSave: false})
                     .catch(e => {
                         res.status(500).send();
                     })
