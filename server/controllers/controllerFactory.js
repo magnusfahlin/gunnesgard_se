@@ -357,18 +357,20 @@ function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
                     return res.status(403).send();
                 }
 
-                let id = req.params.id;
-                let embeddedId = req.params.embeddedId;
+                const id = req.params.id;
+                const embeddedId = req.params.embeddedId;
+                const username = req.auth.username;
+                const embeddedEntityName = embeddedDocument.embeddedEntity;
 
                 // Validates id
                 if (!ObjectID.isValid(id) || !ObjectID.isValid(embeddedId)) {
                     return res.status(404).send("ID is not valid");
                 }
 
-                let currentDoc = await validateEmbeddedDocDelUpdateOperation(model, id, res, embeddedDocument, embeddedId, req);
+                const validationError = await validateEmbeddedDocDelUpdateOperation(model, id, embeddedEntityName, embeddedId, username);
 
-                if (res.finished) {
-                    return;
+                if (validationError) {
+                    return res.status(validationError.status).send(validationError.body);
                 }
 
                 const embeddedDoc = embeddedDocument.embeddedEntityParser(req);
@@ -384,7 +386,7 @@ function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
                     return;
                 }
 
-                const embeddedEntities = existing[embeddedDocument.embeddedEntity];
+                const embeddedEntities = existing[embeddedEntityName];
                 let currentEmbeddedDoc = embeddedEntities[embeddedEntities.findIndex(el => el.id.toString() === embeddedId)];
 
                 if (!currentEmbeddedDoc) {
@@ -400,9 +402,9 @@ function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
                 currentEmbeddedDoc._doc.updatedBy = req.auth.username;
 
                 embeddedEntities[embeddedEntities.findIndex(el => el.id === embeddedId)] = currentEmbeddedDoc;
-                existing[embeddedDocument.embeddedEntity] = embeddedEntities;
+                existing[embeddedEntityName] = embeddedEntities;
 
-                existing.markModified(embeddedDocument.embeddedEntity);
+                existing.markModified(embeddedEntityName);
                 const savedEntity = await existing.save({validateBeforeSave: false})
                     .catch(e => {
                         res.status(500).send();
@@ -412,7 +414,7 @@ function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
                     return;
                 }
 
-                const savedEmbeddedEntities = savedEntity[embeddedDocument.embeddedEntity];
+                const savedEmbeddedEntities = savedEntity[embeddedEntityName];
                 res.status(200).send(savedEmbeddedEntities[savedEmbeddedEntities.findIndex(el => el.id.toString() === embeddedId)]);
             }
         ));
@@ -421,42 +423,55 @@ function createEmbeddedDocPatchRoute(app, entityName, embeddedDocument, model) {
 function createEmbeddedDocDeleteRoute(app, entityName, embeddedDocument, model) {
     app.delete(createEntityPath(entityName) + "/:id/" + embeddedDocument.embeddedEntity + "/:embeddedId/",
         runAsyncWrapper(async (req, res) => {
-                let id = req.params.id;
-                let embeddedId = req.params.embeddedId;
-                await validateEmbeddedDocDelUpdateOperation(model, id, res, embeddedDocument, embeddedId, req);
+                const id = req.params.id;
+                const embeddedId = req.params.embeddedId;
+                const username = req.auth.username;
+                const embeddedEntityName = embeddedDocument.embeddedEntity;
 
-                if (res.finished) {
-                    return;
-                }
+                const {status, body} = await innerEmbeddedDocDeleteRoute(model, embeddedEntityName, id, embeddedId, username);
 
-                if (!ObjectID.isValid(id) || !ObjectID.isValid(embeddedId)) {
-                    return res.status(404).send("ID is not valid");
-                }
-
-                const existing = await model
-                    .findOne({_id: id}).exec()
-                    .catch(e => {
-                        res.status(404).send();
-                    })
-
-                if (res.finished) {
-                    return;
-                }
-
-                existing[embeddedDocument.embeddedEntity] = existing[embeddedDocument.embeddedEntity].filter(embedded => embedded.id !== embeddedId);
-
-                await existing.save({validateBeforeSave: false})
-                    .catch(e => {
-                        res.status(500).send();
-                    })
-
-                if (res.finished) {
-                    return;
-                }
-
-                res.status(204).send();
+                return res.status(status).send(body);
             }
         ));
+}
+
+async function innerEmbeddedDocDeleteRoute(model, embeddedEntityName, id, embeddedId, username) {
+    const validationError = await validateEmbeddedDocDelUpdateOperation(model, id, embeddedEntityName, embeddedId, username);
+
+    if (validationError) {
+        return validationError;
+    }
+
+    if (!ObjectID.isValid(id) || !ObjectID.isValid(embeddedId)) {
+        return {
+            status: 400,
+            body: "Id is not valid",
+        };
+    }
+
+    const existing = await model
+        .findOne({_id: id}).exec()
+        .catch(e => {
+            return {
+                status: 404,
+                body: "Not found",
+            };
+        })
+
+    existing[embeddedEntityName] = existing[embeddedEntityName].filter(embedded => embedded.id !== embeddedId);
+
+    await existing.save({validateBeforeSave: false})
+        .catch(e => {
+            return {
+                status: 500,
+                body: "Internal server error",
+            };
+        })
+
+    return {
+        status: 204,
+        body: "",
+    };
 }
 
 const defaultOptionsEmbeddedDocsOptions = {
@@ -540,32 +555,40 @@ const createController = function (
     }
 }
 
-async function validateEmbeddedDocDelUpdateOperation(model, id, res, element, embeddedId, req) {
+async function validateEmbeddedDocDelUpdateOperation(model, id, embeddedEntityName, embeddedId, username) {
     return await model.findById(id).exec()
         .then(entity => {
 
             if (!entity) {
-                res.status(404).send("Not found");
-                return;
+                return {
+                    status: 404,
+                    body: "Not found",
+                };
             }
 
-            const embeddedEntity = entity[element.embeddedEntity].find(embedded => embedded.id === embeddedId)
+            const embeddedEntity = entity[embeddedEntityName].find(embedded => embedded.id === embeddedId)
             if (!embeddedEntity) {
-                res.status(404).send("Not found");
-                return;
+                return {
+                    status: 404,
+                    body: "Not found",
+                };
             }
 
-            if (embeddedEntity.createdBy !== req.auth.username) {
-                res.status(403).send("Not creating user");
-                return;
+            if (embeddedEntity.createdBy !== username) {
+                return {
+                    status: 403,
+                    body: "This must be done by the user creating the item",
+                };
             }
 
             if (Math.abs(new Date() - embeddedEntity.createdAt > timeLimitForDeletions)) {
-                res.status(403).send("Not possible to do operation because of age");
-                return;
+                return {
+                    status: 403,
+                    body: "Not possible to do operation because of age",
+                };
             }
 
-            return entity;
+            return false;
         });
 }
 
