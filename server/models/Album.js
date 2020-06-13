@@ -10,6 +10,12 @@ const PhotoSchema = new Schema(
             minlength: 1,
             trim: true,
         },
+        text: {
+            type: String,
+            required: false,
+            minlength: 1,
+            trim: true,
+        },
         filename: {
             type: String,
             required: true,

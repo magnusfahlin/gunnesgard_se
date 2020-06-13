@@ -1,5 +1,5 @@
-const {createController} = require("./controllerFactory.js");
-const {Album} = require("./../models/Album");
+const {createController, runAsyncWrapper, innerEmbeddedDocDeleteRoute} = require("./controllerFactory.js");
+const {Album, Photo} = require("./../models/Album");
 const multer = require("multer");
 const ObjectID = require("mongodb").ObjectID;
 const gm = require("gm");
@@ -9,17 +9,51 @@ const thumbnailWidth = 140;
 const thumbnailHeight = 86;
 const fileExtensionPattern = /\.([0-9a-z]+)(?=[?#])|(\.)(?:[\w]+)$/gmi;
 
+const authMiddleware = (req, res, next) => {
+    if (!req.auth) {
+        return res.status(403).send();
+    }
+    next();
+};
+
+function createPhotoDeleteRoute(app, photoAsEmbeddedDocument) {
+
+    app.delete("/albums/:id/photos/:embeddedId",
+        runAsyncWrapper(async (req, res) => {
+                const id = req.params.id;
+                const embeddedId = req.params.embeddedId;
+                const username = req.auth.username;
+                const embeddedEntityName = "photos";
+
+                const {status, body} = await innerEmbeddedDocDeleteRoute(Album, embeddedEntityName, id, embeddedId, username);
+
+                if (status != 204) {
+                    res.status(status).send(body);
+                    return;
+                }
+
+                try {
+                    fs.unlinkSync("./static/albums/" + id + "/" + body.filename);
+                } catch (e) {
+                    // do not care
+                }
+
+                try {
+                    fs.unlinkSync("./static/albums/" + id + "/" + body.thumbnail);
+                } catch (e) {
+                    // do not care
+                }
+
+                res.status(status).send(body);
+            }
+        ));
+}
+
 function createPhotoPostRoute(app) {
-    const authMiddleware = (req, res, next) => {
-        if (!req.auth) {
-            return res.status(403).send();
-        }
-        next();
-    };
 
     app.use("/albums/:id/photos", authMiddleware);
 
-    var storage = multer.diskStorage({
+    const storage = multer.diskStorage({
         destination: function (req, file, cb) {
             cb(null, "./upload");
         },
@@ -131,9 +165,11 @@ const registerAlbum = function (app) {
         Album,
         (req) => new Album({title: req.body.title}),
         [photoAsEmbeddedDocument],
-        {embeddedDocsOptions: {photos: {createPost: false}}});
+        {embeddedDocsOptions: {photos: {createPost: false, createDelete: false}}});
 
     createPhotoPostRoute(app);
+
+    createPhotoDeleteRoute(app, photoAsEmbeddedDocument);
 
     const createThumbnail = async function (filePath, thumbnailFilePath, width, height) {
         return new Promise(function (resolve, reject) {

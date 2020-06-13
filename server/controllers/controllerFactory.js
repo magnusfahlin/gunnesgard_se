@@ -458,7 +458,15 @@ async function innerEmbeddedDocDeleteRoute(model, embeddedEntityName, id, embedd
             };
         })
 
-    existing[embeddedEntityName] = existing[embeddedEntityName].filter(embedded => embedded.id !== embeddedId);
+    const toDelete = existing[embeddedEntityName].find(embedded => embedded.id === embeddedId);
+    if (!toDelete){
+        return {
+            status: 404,
+            body: "Not found",
+        };
+    }
+
+    existing[embeddedEntityName] = existing[embeddedEntityName].filter(embedded => embedded.id !== toDelete.id);
 
     await existing.save({validateBeforeSave: false})
         .catch(e => {
@@ -470,7 +478,7 @@ async function innerEmbeddedDocDeleteRoute(model, embeddedEntityName, id, embedd
 
     return {
         status: 204,
-        body: "",
+        body: toDelete.toJSON(),
     };
 }
 
@@ -600,5 +608,7 @@ function runAsyncWrapper(callback) {
 }
 
 module.exports = {
-    createController
+    createController,
+    runAsyncWrapper,
+    innerEmbeddedDocDeleteRoute
 };
