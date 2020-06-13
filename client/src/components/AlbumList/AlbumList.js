@@ -11,20 +11,15 @@ const AlbumList = props => {
     if (props.loading) {
         albumEditor = <Spinner/>;
     } else if (props.loggedIn) {
-        let ablumToEdit = props.albums.find(x => x !== undefined);
-
-        if (ablumToEdit) {
-            albumEditor = (
-                <div>
-                    <AlbumEditor
-                        id={ablumToEdit.id}
-                        token={props.token}
-                        // loading={props.loading}
-                        //uploadPhoto={(file) => props.actions.createPhoto(ablumToEdit.id, file, props.token)}
-                    />
-                </div>
-            );
-        }
+        // let albumToEdit = props.albums.find(x => x !== undefined);
+        //
+        // if (albumToEdit) {
+        //     albumEditor = (
+        //         <div>
+        //             <AlbumEditor id={albumToEdit.id} token={props.token} />
+        //         </div>
+        //     );
+        // }
     }
 
     let loading;

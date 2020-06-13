@@ -1,18 +1,23 @@
-import React from "react";
-import PropTypes from "prop-types";
-import Text from "../../Common/Text";
+import React, {useState} from "react";
 import {getApiRoot} from "../../../environmentConfig"
 import SecureImage from "../../Common/SecureImage";
 import "./AlbumListItem.scss"
 import AlbumGallery from "./AlbumGallery";
-import Comment from "../../PostList/Post/Comment";
+import AlbumEditor from "../Editor/AlbumEditorContainer";
 
 const AlbumListItem = props => {
 
+    const [editMode, setEditMode] = useState(false);
     let album = <div/>;
+    let buttonRow = <div/>;
 
     if (props.showAlbum) {
-        album =<AlbumGallery album={props.album} token={props.token}/>;
+        buttonRow = <div className="buttonRow"><button onClick={() => setEditMode(!editMode)}>Redigera</button></div>;
+        if (editMode){
+            album = <AlbumEditor id={props.album.id} token={props.token} />
+        } else {
+            album = <AlbumGallery album={props.album} token={props.token}/>;
+        }
     }
 
     return (
@@ -26,6 +31,7 @@ const AlbumListItem = props => {
                     </div>
                 </div>
             </div>
+            {buttonRow}
             {album}
         </div>
     );
