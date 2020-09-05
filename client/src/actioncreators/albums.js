@@ -50,9 +50,18 @@ export const newPhotoStaged = (photoContainer, index) => dispatch => {
     });
 };
 
-export const modifyAlbum = (albumId, photoUpdates, photoDeletion, token) => dispatch => {
+export const modifyAlbum = (albumId, albumDeletion, albumUpdates, photoUpdates, photoDeletion, token) => dispatch => {
 
     let patches = [];
+
+    if (Object.keys(albumUpdates).length > 0) {
+        patches.push({
+            id: albumId,
+            method: "PATCH",
+            path: "albums/" + albumId,
+            data: albumUpdates
+        });
+    }
 
     photoDeletion.forEach(photoIdToDelete => {
         delete photoUpdates[photoIdToDelete]
@@ -77,12 +86,31 @@ export const modifyAlbum = (albumId, photoUpdates, photoDeletion, token) => disp
         dispatch,
         {
             type: ALBUM_MODIFICATION_REQUEST,
-            data : {albumId: albumId}
+            data: {albumId: albumId}
         },
         patches,
         token)
         .then(responses => {
             let errors = [];
+            if (albumDeletion) {
+                const deletePatch = [];
+                deletePatch.push({
+                    id: albumId,
+                    method: "DELETE",
+                    path: "albums/" + albumId
+                });
+                (async () =>
+                    await multipleRestApi(
+                        dispatch,
+                        {
+                            type: ALBUM_MODIFICATION_REQUEST,
+                            data: {albumId: albumId}
+                        },
+                        patches,
+                        token)
+                        .then(deleteResponses => responses.concat(...deleteResponses)))();
+            }
+
             responses.forEach((r, index) => {
                 if (r.status != 200 && r.status != 204 && r.status != 204) {
                     errors.push({
@@ -92,11 +120,13 @@ export const modifyAlbum = (albumId, photoUpdates, photoDeletion, token) => disp
                 }
             });
 
-            dispatch({type: ALBUM_MODIFICATION_FINNISHED,
-                data : {
-                    albumId : albumId,
-                    errors : errors
-                }});
+            dispatch({
+                type: ALBUM_MODIFICATION_FINNISHED,
+                data: {
+                    albumId: albumId,
+                    errors: errors
+                }
+            });
         })
         .then(() => getApi(dispatch, null, "albums/" + albumId, token))
         .then(result => dispatch({type: ALBUM_FETCH_SUCCESS, result}))
