@@ -26,7 +26,7 @@
     "express-mongo-sanitize": "^2.0.0",
     "jwt-simple": "^0.5.6",
     "mongodb": "^3.5.7",
-    "mongoose": "^5.9.13"
+    "mongoose": "^5.13.15"
   },
   "devDependencies": {
     "better-npm-run": "^0.1.1",
